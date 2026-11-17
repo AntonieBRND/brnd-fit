@@ -104,7 +104,9 @@ textarea.in { min-height: 80px; resize: vertical; }
 
 /* Home */
 .hhead { display: flex; align-items: center; gap: 12px; padding-top: 6px; }
-.face { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; font-weight: 900; font-size: 19px; color: var(--on-orange); flex: none; border: 0; position: relative; }
+.face { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; font-family: 'Doto', 'DotGothic16', monospace; font-weight: 900; font-size: 21px; color: #fff; flex: none; border: 0; position: relative;
+  background: radial-gradient(130% 130% at 30% 20%, color-mix(in srgb, var(--uc, var(--blue)) 60%, #0a0d14) 0%, #0a0d14 85%);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--uc, var(--blue)) 85%, transparent), 0 6px 18px color-mix(in srgb, var(--uc, var(--blue)) 30%, transparent); }
 .face::after { content: ""; position: absolute; right: 0; top: 1px; width: 11px; height: 11px; border-radius: 50%; background: var(--orange); border: 2px solid var(--bg); }
 .hhead .t { flex: 1; min-width: 0; }
 .hhead small { color: var(--muted); font-size: 13px; display: block; }
@@ -153,7 +155,9 @@ textarea.in { min-height: 80px; resize: vertical; }
 .li small { color: var(--muted); font-size: 12px; display: block; }
 .li .chev { width: 18px; height: 18px; stroke: var(--muted); fill: none; stroke-width: 2; }
 .who-mini { display: inline-flex; align-items: center; gap: 5px; }
-.dotu { width: 16px; height: 16px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 9px; font-weight: 900; color: var(--on-orange); }
+.dotu { width: 16px; height: 16px; border-radius: 50%; display: inline-grid; place-items: center; font-family: 'Doto', 'DotGothic16', monospace; font-size: 10px; font-weight: 900; color: #fff; line-height: 1;
+  background: radial-gradient(130% 130% at 30% 20%, color-mix(in srgb, var(--uc, var(--blue)) 60%, #0a0d14) 0%, #0a0d14 85%); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--uc, var(--blue)) 85%, transparent); animation: dotu-in .5s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes dotu-in { from { opacity: 0; transform: scale(.6); } }
 
 /* Ontdek */
 .tabsrow { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
@@ -766,7 +770,12 @@ nav.tabs .pill3 button { border: 0; background: transparent; width: 58px; height
 .pill3 svg { width: 23px; height: 23px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 nav.tabs .pill3 button[aria-current="page"] { background: var(--surface-3); color: #fff; }
 nav.tabs .plus2 { border: 0; width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(120% 120% at 30% 20%, #ffb07a 0%, var(--orange) 45%, #c2410c 100%); box-shadow: 0 10px 28px rgba(255,107,26,.45), inset 0 1px 0 rgba(255,255,255,.35); animation: blip 3s cubic-bezier(.2,.7,.3,1) infinite; --c: var(--orange); }
-nav.tabs .plus2 svg { width: 26px; height: 26px; stroke: #0a0d14; fill: none; stroke-width: 2.6; stroke-linecap: round; }
+nav.tabs .plus2 svg { width: 24px; height: 24px; fill: #0a0d14; stroke: none; }
+nav.tabs .plus2 .pxplus rect { animation: px-in .5s cubic-bezier(.2,.8,.2,1) both; }
+nav.tabs .plus2 .pxplus rect:nth-child(odd) { animation-delay: .06s; }
+@keyframes px-in { from { opacity: 0; transform: scale(.2); transform-box: fill-box; transform-origin: center; } }
+nav.tabs .plus2:hover .pxplus, nav.tabs .plus2:focus-visible .pxplus { transform: rotate(90deg); }
+nav.tabs .plus2 .pxplus { transition: transform .45s cubic-bezier(.2,.8,.2,1); }
 nav.tabs .plus2:active { transform: scale(.94); }
 /* trainingsoverzicht */
 .dcard { position: relative; overflow: hidden; border-radius: 30px; min-height: 300px; margin-top: 52px; display: flex; align-items: flex-end; padding: 22px; background: radial-gradient(80% 70% at 85% 25%, rgba(79,142,236,.35), transparent 70%), linear-gradient(160deg, #13264c, #070b14); isolation: isolate; }
@@ -943,6 +952,39 @@ td.r, th.r { text-align: right; font-variant-numeric: tabular-nums; }
 .toast { position: fixed; left: 50%; transform: translateX(-50%); top: calc(14px + env(safe-area-inset-top, 0px)); z-index: 50; background: var(--white); color: var(--bg); padding: 11px 18px; border-radius: 999px; font-weight: 600; max-width: calc(100% - 32px); box-shadow: 0 8px 24px rgba(0,0,0,.5); }
 @media (max-width: 380px) { .welcome h1 { font-size: 34px; } .t4 .v { font-size: 15px; } .tm .opt { font-size: 14px; padding-right: 14px; } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* Trainingen per maand: slanke staafjes */
+.mcard { text-align: left; width: 100%; color: inherit; font: inherit; cursor: pointer; transition: transform .25s cubic-bezier(.2,.8,.2,1), border-color .25s; }
+.mcard:active { transform: scale(.985); }
+.mcard .chev { width: 18px; height: 18px; stroke: var(--muted); fill: none; stroke-width: 2; }
+.mstrip { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; margin: 8px 0 4px; }
+.mstrip__c { display: grid; justify-items: center; gap: 8px; }
+.mstrip__c .dotnum { color: #9fb3d6; }
+.mstrip__c.on .dotnum { color: #fff; }
+.mstrip__t { position: relative; height: 70px; display: flex; align-items: flex-end; gap: 4px; padding: 0 2px; }
+.mstrip__t::before { content: ""; position: absolute; inset: 0 auto 0 50%; width: 1px; background: linear-gradient(180deg, transparent, rgba(255,255,255,.07)); }
+.mstrip__t i { width: 7px; border-radius: 99px; background: linear-gradient(180deg, var(--blue-hi), rgba(79,142,236,.12)); animation: sbar-in .8s cubic-bezier(.2,.8,.2,1) both; transform-origin: bottom; }
+.mstrip__t i.o { background: linear-gradient(180deg, rgba(255,255,255,.4), rgba(255,255,255,.04)); }
+.mstrip__c.on .mstrip__t i:first-child { box-shadow: 0 0 14px rgba(122,174,255,.7); }
+.mstrip__c span { font-size: 11px; color: var(--muted); text-transform: capitalize; }
+.mstrip__c.on span { color: #fff; font-weight: 700; }
+.sp__t em { font-style: normal; color: var(--muted); font-size: 11px; margin-left: 4px; }
+h2.mhead { text-transform: capitalize; }
+.stat-hero__tip .muted { display: block; margin-top: 4px; font-size: 12px; }
+
+/* Meer beweging: binnenkomen bij scrollen, indrukken, tellers */
+.reveal { opacity: 0; transform: translateY(18px) scale(.985); }
+.reveal.in { opacity: 1; transform: none; transition: opacity .6s cubic-bezier(.2,.8,.2,1), transform .6s cubic-bezier(.2,.8,.2,1); }
+.card, .li, .pick, .ach, .wbtn, .pillbtn, .chip { -webkit-tap-highlight-color: transparent; }
+button.card:active, .li:active, .pick:active, .ach:active, .chip:active { transform: scale(.975); transition: transform .12s; }
+.li, .pick, button.card { transition: transform .3s cubic-bezier(.2,.8,.2,1), background-color .2s; }
+.status-pill .status-pill__n svg { transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+.status-pill:hover .status-pill__n svg, .status-pill:active .status-pill__n svg { transform: translateX(3px); }
+.status-pill .status-pill__n { animation: nudge 2.8s cubic-bezier(.2,.8,.2,1) 1.2s infinite; }
+@keyframes nudge { 0%, 70%, 100% { transform: none; } 80% { transform: translateX(3px); } 90% { transform: translateX(0); } }
+.whero h1 { animation: title-in .9s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes title-in { from { opacity: 0; transform: translateY(16px); filter: blur(6px); } }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } .status-pill .status-pill__n, .whero h1, .dotu { animation: none; } }
 </style>
 
 <div class="loader" id="loader" aria-hidden="true"><div class="loader__bg"></div>
@@ -955,7 +997,7 @@ td.r, th.r { text-align: right; font-variant-numeric: tabular-nums; }
       <button data-tab="browse" aria-label="Ontdek"><svg viewBox="0 0 24 24"><path d="M2 9v6M5 6v12M19 6v12M22 9v6M5 12h14"/></svg></button>
       <button data-tab="progress" aria-label="Voortgang"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></button>
     </div>
-    <button data-tab="train" class="plus2" aria-label="Nieuw toevoegen"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+    <button data-tab="train" class="plus2" aria-label="Nieuw toevoegen"><svg class="pxplus" viewBox="0 0 7 7"><rect x="3" y="0" width=".84" height=".84" rx=".2"/><rect x="3" y="1" width=".84" height=".84" rx=".2"/><rect x="3" y="2" width=".84" height=".84" rx=".2"/><rect x="0" y="3" width=".84" height=".84" rx=".2"/><rect x="1" y="3" width=".84" height=".84" rx=".2"/><rect x="2" y="3" width=".84" height=".84" rx=".2"/><rect x="3" y="3" width=".84" height=".84" rx=".2"/><rect x="4" y="3" width=".84" height=".84" rx=".2"/><rect x="5" y="3" width=".84" height=".84" rx=".2"/><rect x="6" y="3" width=".84" height=".84" rx=".2"/><rect x="3" y="4" width=".84" height=".84" rx=".2"/><rect x="3" y="5" width=".84" height=".84" rx=".2"/><rect x="3" y="6" width=".84" height=".84" rx=".2"/></svg></button>
   </div></div>
 </nav>
 <div id="sheet-root"></div>
@@ -1185,10 +1227,15 @@ function setsThisWeek(u) {
   for (const w of activityOf(u)) if (parseDate(w.date) >= ws) for (const e of w.ex || []) if (out[e.group] != null) out[e.group] += e.sets?.length || 0;
   return out;
 }
+function nextPlanFor(u, fitOnly = false) {
+  return S.data.plans.filter((x) => (x.user === u || x.partner === u) && x.date >= todayStr() && tplById(x.tpl) && (!fitOnly || !tplById(x.tpl).sport))
+    .sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time))[0] || null;
+}
+// Standaard training = de eerstvolgende geplande; anders de laatst gedane fitness-training.
 function nextTpl(u) {
-  const last = workoutsOf(u).find((w) => ['push', 'pull', 'legs'].includes(w.tpl));
-  const order = ['push', 'pull', 'legs'];
-  return tplById(last ? order[(order.indexOf(last.tpl) + 1) % 3] : 'push');
+  const pl = nextPlanFor(u, true); if (pl) return tplById(pl.tpl);
+  const last = workoutsOf(u).find((w) => tplById(w.tpl) && !tplById(w.tpl).sport);
+  return tplById(last ? last.tpl : 'push');
 }
 function streakWeeks(u) {
   const goal = profile(u).weekly || 3; const ws = activityOf(u);
@@ -1613,8 +1660,8 @@ const LEVELS = ['Makkelijk', 'Gemiddeld', 'Zwaar'];
 const levelIcon = (l) => `<span class="lvl-ic">${[0, 1, 2].map((i) => `<i class="${i <= l ? 'on' : ''}"></i>`).join('')}</span>`;
 const TIMES = ['06:30', '07:00', '08:00', '09:30', '12:00', '17:00', '18:00', '19:00', '20:00'];
 const GROUP_ORDER = ['shoulders', 'triceps', 'biceps', 'chest', 'back', 'legs', 'abs'];
-const faceHtml = (u, size = 46) => `<span class="face" style="background:${u.color};width:${size}px;height:${size}px;font-size:${Math.round(size * 0.42)}px">${esc(u.name[0])}</span>`;
-const dotu = (u) => `<span class="dotu" style="background:${u.color}">${esc(u.name[0])}</span>`;
+const faceHtml = (u, size = 46) => `<span class="face" style="--uc:${u.color};width:${size}px;height:${size}px;font-size:${Math.round(size * 0.46)}px">${esc(u.name[0])}</span>`;
+const dotu = (u) => `<span class="dotu" style="--uc:${u.color}">${esc(u.name[0])}</span>`;
 // Avatargroep: één rondje = alleen, twee overlappende rondjes = samen
 const avs = (ids) => `<span class="avs" title="${[...new Set(ids)].filter(Boolean).map((id) => esc(userOf(id).name)).join(' & ')}">${[...new Set(ids)].filter(Boolean).map((id) => dotu(userOf(id))).join('')}</span>`;
 const wAvs = (w) => avs([w.user, w.partner]);
@@ -2018,7 +2065,7 @@ function healthSettings() {
     : `<div class="hk"><div class="hk__row"><small>Jouw code</small><code id="hk-code">${esc(code)}</code><button class="btn sm" data-act="copy" data-v="${esc(code)}">Kopieer</button></div></div>
     ${c.shortcutUrl ? `<ol class="hk__steps">
         <li><a class="btn cta wide" href="${esc(c.shortcutUrl)}" target="_blank" rel="noopener">Opdracht installeren</a></li>
-        <li>Tik op <b>Kopieer</b> hierboven. Open de opdracht <b>BRND FIT</b>, tik op het bovenste tekstvak en plak je code.</li>
+        <li>Tik op <b>Kopieer</b> hierboven. Open de opdracht <b>BRND FIT</b>, tik op het bovenste <b>Tekst</b>-blok, wis de code die er staat en plak jouw code.</li>
         ${auto}
       </ol>`
     : `<details class="hk__more" open><summary>Opdracht maken (eenmalig, 5 min)</summary><ol class="hk__steps">
@@ -2085,11 +2132,10 @@ function viewHome() {
   const ST = statusOf(); const heroBtn = draft ? `<button class="wbtn" data-act="resume">Hervat training</button>` : `<button class="wbtn status-pill" data-act="go" data-r="progress">Bekijk voortgang<span class="status-pill__n"><svg viewBox="0 0 7 7" width="15" height="15" fill="currentColor" aria-hidden="true"><rect x="3" y="0" width=".82" height=".82" rx=".2"/><rect x="4" y="1" width=".82" height=".82" rx=".2"/><rect x="5" y="2" width=".82" height=".82" rx=".2"/><rect x="0" y="3" width=".82" height=".82" rx=".2"/><rect x="1" y="3" width=".82" height=".82" rx=".2"/><rect x="2" y="3" width=".82" height=".82" rx=".2"/><rect x="3" y="3" width=".82" height=".82" rx=".2"/><rect x="4" y="3" width=".82" height=".82" rx=".2"/><rect x="5" y="3" width=".82" height=".82" rx=".2"/><rect x="6" y="3" width=".82" height=".82" rx=".2"/><rect x="5" y="4" width=".82" height=".82" rx=".2"/><rect x="4" y="5" width=".82" height=".82" rx=".2"/><rect x="3" y="6" width=".82" height=".82" rx=".2"/></svg></span></button>`;
   const nextBlock = myNext.length
     ? `<div class="tcar" id="tcar" data-hscroll="tcar">${myNext.map(nextCard).join('')}</div>${myNext.length > 1 ? `<div class="tdots">${myNext.map((_, i) => `<button data-act="tdot" data-i="${i}" class="${i ? '' : 'on'}" aria-label="Training ${i + 1}"></button>`).join('')}</div>` : ''}`
-    : `<button class="card nextempty" data-act="add-open" data-mode="plan"><span class="pend__ic" style="--c:var(--blue)">${IC.clock}</span><div><b>Nog niks ingepland</b><small>Volgende in jullie schema: ${esc(nt.short)} · ${meta.min} min</small></div>${IC.chev.replace('<svg', '<svg class="chev"')}</button>`;
+    : `<button class="card nextempty" data-act="add-open" data-mode="plan"><span class="pend__ic" style="--c:var(--blue)">${IC.clock}</span><div><b>Nog niks ingepland</b><small>Tik om je volgende training vast te zetten</small></div>${IC.chev.replace('<svg', '<svg class="chev"')}</button>`;
   const ach = [
     ['Trainingen', dotNum(days), `${days}/${goal}`, days / goal],
     ['Actieve tijd', dotNum(Math.round(wMin)), 'min', wMin / 180],
-    ['Sets', dotNum(wSets), 'deze week', wSets / 60],
     ['Calorieën', dotNum(nf(wKcal, 0)), 'kcal', wKcal / 1500],
     ['Op schema', dotNum(streakWeeks(S.me)), 'weken', streakWeeks(S.me) / 8],
   ];
@@ -2115,12 +2161,12 @@ function viewHome() {
     <section class="card wprog"><div class="mini__h"><span><b>Weekvoortgang</b><br><small class="muted">${pct >= 100 ? 'Weekdoel gehaald, top!' : 'Ga zo door, je maakt mooie progressie.'}</small></span></div>
       <div class="wprog__pct">${dotNum(pct + '%', 'xl')}</div>
       ${fadeBar(frac)}
-      <div class="wprog__f"><span>Trainingen: <b>${days}/${goal}</b></span><span>Vandaag: <b>${dSets} sets · ${hm(dMin)}</b></span></div></section>
+      <div class="wprog__f"><span>Trainingen: <b>${days}/${goal}</b></span><span>Vandaag: <b>${hm(dMin)}</b></span></div></section>
     <div class="sec"><h2>Deze week</h2><button class="link" data-act="go" data-r="progress">Alles</button></div>
     <div class="achs" data-hscroll="achs">${ach.map(([k, v, s2, f], i) => `<div class="ach ${i === 0 ? 'hi' : ''}"><span class="k">${k}</span>${i % 2 ? ring(Math.min(1, f), '') : `<div class="ach__v">${v}</div>`}<small>${i % 2 ? `${v.replace('dotnum', 'dotnum sm')} ${s2}` : s2}</small></div>`).join('')}</div>
     <div class="sec"><h2>Komende trainingen</h2><button class="link" data-act="add-open" data-mode="plan">Plannen</button></div>
     ${plans.length ? `<div class="list">${upShow.map(planItem).join('')}</div>${moreBtn('up', plans.length, S.more.up)}` : '<div class="card empty">Nog niks gepland. Tik op Plannen om een training vast te zetten.</div>'}
-    <div class="sec"><h2>Recente trainingen</h2><button class="link" data-act="go" data-r="progress">Alles</button></div>
+    <div class="sec"><h2>Recente trainingen</h2><button class="link" data-act="go" data-r="trainings">Alles</button></div>
     ${recent.length ? `<div class="list">${recShow.map(wItem).join('')}</div>${moreBtn('rec', recent.length, S.more.rec)}` : '<div class="card empty">Nog geen trainingen. Start hierboven je eerste.</div>'}
     ${S.mode === 'local' ? '<p class="banner">Opgeslagen op dit toestel.</p>' : ''}
   </div>`;
@@ -2338,7 +2384,7 @@ function workoutModal(w) {
   return `<div class="lb__hero">${phDiv(ph)}<div class="lb__hero-t"><span class="plate ${tp?.cls || 't-custom'}">${esc(tp?.short || 'Eigen')}</span><h2>${esc(tp?.name || w.name || 'Training')}</h2>
       <small>${fmtDate(w.date, { weekday: 'long', day: 'numeric', month: 'long' })}</small></div></div>
     <div class="lb__who">${dotu(us)} <b>${esc(us.name)}</b> <span class="muted">· ${withTxt(w)}</span>${w.manual ? ' <span class="muted">· achteraf toegevoegd</span>' : ''}</div>
-    <div class="lb__stats"><div><b>${min || '–'}</b><small>min</small></div><div><b>${(w.ex || []).length}</b><small>oefeningen</small></div><div><b>${nf(kcal, 0)}</b><small>kcal</small></div></div>
+    <div class="lb__stats"><div><b>${min || '–'}</b><small>min</small></div><div><b>${(w.ex || []).length}</b><small>${(w.ex || []).length === 1 ? 'oefening' : 'oefeningen'}</small></div><div><b>${nf(kcal, 0)}</b><small>kcal</small></div></div>
     <div class="lb__ex">${top.map((e) => { const best = e.sets.reduce((a, s) => (setScore(s, e.kind) > setScore(a, e.kind) ? s : a), e.sets[0]);
       return `<div class="exl"><span>${esc(e.name)}</span><span class="muted num">${best ? `${e.sets.length}× · beste ${fmtSet(best, e.kind)}` : 'invullen'}</span>${twinLine(twinOf(w), e.id)}</div>`; }).join('')}
       ${(w.ex || []).length > 3 ? `<div class="muted small">+ ${(w.ex || []).length - 3} oefeningen meer</div>` : ''}</div>
@@ -2355,7 +2401,7 @@ function dayModal(d) {
 function wItem(w) {
   const { st, tp, us, ph, kcal } = wSummary(w);
   return `<button class="li" data-act="w-open" data-id="${w.id}"><span class="th ${ph ? '' : 'ic'}">${ph ? `<img src="${ph}" alt="">` : IC.dumbbell}</span>
-    <div style="min-width:0"><b>${esc(tp?.short || 'Eigen')} · ${fmtDate(w.date, { weekday: 'short', day: 'numeric', month: 'short' })}${w.pending && w.user === S.me ? ' <span class="pr">invullen</span>' : ''}</b><small class="who-mini">${wAvs(w)} ${isSport(w) ? durMin(w) + ' min' + (w.result ? ' · ' + resTxt(w).toLowerCase() : '') : (w.ex || []).length + ' oefeningen'} · ${nf(kcal, 0)} kcal</small></div>${IC.chev.replace('<svg', '<svg class="chev"')}</button>`;
+    <div style="min-width:0"><b>${esc(tp?.short || 'Eigen')} · ${fmtDate(w.date, { weekday: 'short', day: 'numeric', month: 'short' })}${w.pending && w.user === S.me ? ' <span class="pr">invullen</span>' : ''}</b><small class="who-mini">${wAvs(w)} ${isSport(w) ? durMin(w) + ' min' + (w.result ? ' · ' + resTxt(w).toLowerCase() : '') : (w.ex || []).length + ((w.ex || []).length === 1 ? ' oefening' : ' oefeningen')} · ${nf(kcal, 0)} kcal</small></div>${IC.chev.replace('<svg', '<svg class="chev"')}</button>`;
 }
 
 // ---------- Kalender & lijst (Voortgang) ----------
@@ -2394,7 +2440,7 @@ function viewWorkout() {
   return `<div class="wrap screen full">
     <div class="dhero has-ph" style="height:280px">${phDiv(ph)}<div class="tb"><button class="circle" data-act="back" aria-label="Terug">${IC.back}</button><span>Training</span><span></span></div>
       <div class="tt"><span class="plate ${tp?.cls || 't-custom'}">${esc(tp?.short || 'Eigen')}</span><h1>${esc(tp?.short || 'Training')}</h1><small>${fmtDate(w.date, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</small></div></div>
-    <div class="statbar"><div>${IC.clock}<b>${min || '–'}</b><small>Minuten</small></div><div>${IC.flame}<b>${nf(kcal, 0)}</b><small>kcal</small></div><div>${IC.grid}<b>${(w.ex || []).length}</b><small>Oefeningen</small></div></div>
+    <div class="statbar"><div>${IC.clock}<b>${min || '–'}</b><small>Minuten</small></div><div>${IC.flame}<b>${nf(kcal, 0)}</b><small>kcal</small></div><div>${IC.grid}<b>${(w.ex || []).length}</b><small>${(w.ex || []).length === 1 ? 'Oefening' : 'Oefeningen'}</small></div></div>
     <section class="card"><div class="sec" style="margin:0"><h2>Wie</h2></div>
       <div class="who-mini" style="font-size:15px">${dotu(us)} <b>${esc(us.name)}</b> <span class="muted">${partnerOf(w) ? `trainde samen met ${esc(partnerOf(w).name)}` : 'trainde alleen'}</span></div>
       ${w.start ? `<p class="muted small" style="margin:0">Begonnen om ${new Date(w.start).toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })}${w.manual ? ' · achteraf toegevoegd' : ''}</p>` : ''}</section>
@@ -2450,6 +2496,29 @@ function animateEnter(dir) {
   for (const d of root.querySelectorAll(':scope > .dock .btn')) d.animate([{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'none' }], { duration: 420, delay: 180, easing: 'cubic-bezier(.2, .8, .2, 1)', fill: 'backwards' });
 }
 
+// Kaarten onder de vouw komen zacht binnen als je scrolt
+let revIO = null;
+function reveal() {
+  if (REDUCE || !('IntersectionObserver' in window)) return;
+  revIO?.disconnect();
+  revIO = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); revIO.unobserve(e.target); } }), { rootMargin: '0px 0px -40px 0px' });
+  const vh = innerHeight;
+  $('#app').querySelectorAll('.screen > .card, .screen > section, .screen > .list, .screen > .achs, .screen > .sec').forEach((el) => {
+    if (el.getBoundingClientRect().top < vh - 20) return;
+    el.classList.add('reveal'); revIO.observe(el);
+  });
+}
+// Cijfers optellen bij binnenkomen van een pagina
+function countUp() {
+  if (REDUCE) return;
+  $('#app').querySelectorAll('.dotnum').forEach((el) => {
+    const m = /^(\d{1,4})(%?)$/.exec(el.textContent.trim()); if (!m || +m[1] < 2) return;
+    const end = +m[1]; const t0 = performance.now(); const dur = 700 + Math.min(500, end * 4);
+    const step = (t) => { const p = Math.min(1, (t - t0) / dur); el.textContent = Math.round(end * (1 - Math.pow(1 - p, 3))) + m[2]; if (p < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+}
+
 // ---------- Router ----------
 const ROOT = ['home', 'browse', 'progress', 'profile'];
 function go(name, params = {}, { replace = false } = {}) {
@@ -2480,7 +2549,7 @@ function doRender() {
   if (S.mode === 'loading') { app.innerHTML = '<div class="wrap screen"><div class="card empty">Gegevens laden…</div></div>'; nav.hidden = true; return; }
   if (!S.me) { app.innerHTML = viewWelcome(); nav.hidden = true; renderSheet(); return; }
   const r = S.route.name;
-  const views = { planex: viewPlanEx, add: viewAdd, planform: viewPlanForm, padel: viewPadel, workout: viewWorkout, log: viewLog, home: viewHome, browse: viewBrowse, progress: viewProgress, profile: viewProfile, detail: viewDetail, muscles: viewMuscles, ready: viewReady, active: viewActive, done: viewDone, body: viewBody, settings: viewSettings, records: viewProgress };
+  const views = { planex: viewPlanEx, add: viewAdd, planform: viewPlanForm, padel: viewPadel, workout: viewWorkout, log: viewLog, home: viewHome, browse: viewBrowse, progress: viewProgress, trainings: viewTrainings, profile: viewProfile, detail: viewDetail, muscles: viewMuscles, ready: viewReady, active: viewActive, done: viewDone, body: viewBody, settings: viewSettings, records: viewProgress };
   if (r === 'active' && !draft) S.route = { name: 'home' };
   const y = window.scrollY;
   const hs = {}; app.querySelectorAll('[data-hscroll]').forEach((el) => { hs[el.dataset.hscroll] = el.scrollLeft; });
@@ -2498,7 +2567,8 @@ function doRender() {
   });
   setupCarousel();
   document.documentElement.classList.remove('nav-up'); document.documentElement.classList.toggle('scrolled', scrollY > 8);
-  if (S.nav) { animateEnter(S.nav); S.nav = null; }
+  if (S.nav) { animateEnter(S.nav); S.nav = null; countUp(); }
+  reveal();
   if (S.pop) { const el = document.querySelector(`.set[data-ei="${S.pop[0]}"][data-si="${S.pop[1]}"]`); el?.classList.add('pop'); S.pop = null; }
   renderSheet();
   renderModal();
@@ -2756,7 +2826,7 @@ function viewDone() {
   return `<div class="wrap screen full">
     <div class="done-panel"><div class="ok"><span>${IC.check}</span></div><h1>${isSport(D.w) ? (D.w.result === 'won' ? 'Gewonnen!' : 'Lekker gespeeld!') : 'Gefeliciteerd!'}</h1>
       <p>${isSport(D.w) ? `Je padelpotje is opgeslagen${D.w.partner ? ` en ${esc(other().name)} ziet het ook` : ''}.` : `${D.w.manual ? 'Je training is achteraf toegevoegd.' : 'Je training is opgeslagen.'} ${D.w.partner ? `Samen met ${esc(other().name)} getraind. ${esc(other().name)} vult zijn eigen gewichten in.` : `${esc(other().name)} ziet hem ook terug in de app.`}`}</p>
-      <div class="st"><div><b>${D.w.dur || '<1'}</b><small>minuten</small></div>${isSport(D.w) ? `<div><b class="w">${intTxt(D.w)}</b><small>intensiteit</small></div>` : `<div><b>${(D.w.ex || []).length}</b><small>oefeningen</small></div>`}<div><b>${nf(kcalOf(D.w), 0)}</b><small>kcal</small></div>${isSport(D.w) ? `<div><b class="w">${resTxt(D.w) || '–'}</b><small>uitslag</small></div>` : ''}</div>
+      <div class="st"><div><b>${D.w.dur || '<1'}</b><small>minuten</small></div>${isSport(D.w) ? `<div><b class="w">${intTxt(D.w)}</b><small>intensiteit</small></div>` : `<div><b>${(D.w.ex || []).length}</b><small>${(D.w.ex || []).length === 1 ? 'oefening' : 'oefeningen'}</small></div>`}<div><b>${nf(kcalOf(D.w), 0)}</b><small>kcal</small></div>${isSport(D.w) ? `<div><b class="w">${resTxt(D.w) || '–'}</b><small>uitslag</small></div>` : ''}</div>
       ${D.prs.length ? `<div class="chips" style="justify-content:center">${D.prs.map((p) => `<span class="pr">PR ${esc(p.name)}</span>`).join('')}</div>` : ''}</div>
     <section class="card"><h2>Notitie</h2>
       <textarea class="in" id="done-note" placeholder="Hoe voelde het? Energie, pijntjes, muziek…">${esc(D.note)}</textarea></section>
@@ -2808,12 +2878,12 @@ function stepStats(u = S.me) {
 function statusOf(u = S.me) {
   const p = profile(u); const ws = weekStart(Date.now());
   const days = new Set(activityOf(u).filter((w) => parseDate(w.date) >= ws).map((w) => w.date)).size;
-  const parts = [{ k: 'Training', v: Math.min(1, days / (p.weekly || 3)), w: 0.4 }];
-  const R = recovery(u, todayStr()); if (R) parts.push({ k: 'Herstel', v: R.score / 100, w: 0.35 });
-  const st = stepStats(u); if (st) parts.push({ k: 'Beweging', v: Math.min(1, st.avg / st.goal), w: 0.25 });
+  const parts = [{ k: 'Training', v: Math.min(1, days / (p.weekly || 3)), w: 0.4, d: `${days} van ${p.weekly || 3} deze week` }];
+  const R = recovery(u, todayStr()); if (R) parts.push({ k: 'Herstel', v: R.score / 100, w: 0.35, d: R.last ? `${hmin(R.last)} geslapen` : 'op basis van je slaap' });
+  const st = stepStats(u); if (st) parts.push({ k: 'Beweging', v: Math.min(1, st.avg / st.goal), w: 0.25, d: `gem. ${nf(Math.round(st.avg / 100) / 10, 1)}k stappen` });
   const tw = parts.reduce((a, x) => a + x.w, 0);
   const score = Math.round((parts.reduce((a, x) => a + x.v * x.w, 0) / tw) * 100);
-  const label = score >= 80 ? 'Topvorm' : score >= 60 ? 'Goed bezig' : score >= 40 ? 'Kan beter' : 'Rustig opbouwen';
+  const label = score >= 80 ? 'Topvorm' : score >= 60 ? 'Goed bezig' : score >= 40 ? 'Op weg' : 'Opbouwen';
   return { score, label, parts, R };
 }
 
@@ -2846,21 +2916,9 @@ function viewProgress() {
     <div class="bar-top"><span></span><h1>Voortgang</h1><span></span></div>
     <section class="stat-hero">
       <div class="stat-hero__l"><span class="whero__eye">Jouw status vandaag</span>${dotNum(st.score, 'xxl')}<b>${st.label}</b></div>
-      <div class="stat-hero__r">${st.parts.map((x) => `<div class="sp"><div class="sp__t"><span>${x.k}</span><b>${Math.round(x.v * 100)}%</b></div>${fadeBar(x.v)}</div>`).join('')}</div>
-      <p class="stat-hero__tip">${st.R ? st.R.tip : 'Koppel Apple Gezondheid (Profiel) voor slaap en stappen; dan wordt je status completer.'}</p>
+      <div class="stat-hero__r">${st.parts.map((x) => `<div class="sp"><div class="sp__t"><span>${x.k} <em>${x.d}</em></span><b>${Math.round(x.v * 100)}%</b></div>${fadeBar(x.v)}</div>`).join('')}</div>
+      <p class="stat-hero__tip">${st.R ? st.R.tip + ' ' : ''}<span class="muted">Je status (0 tot 100) telt je trainingen van deze week, je herstel uit slaap en je stappen bij elkaar op.${st.parts.length < 3 ? ' Koppel Apple Gezondheid (Profiel) voor een completer beeld.' : ''}</span></p>
     </section>
-
-    <div class="sec"><h2>Sport</h2></div>
-    <section class="card mini"><div class="mini__h"><span><b>Trainingen per maand</b><br><small class="muted">${thisM} deze maand · ${thisM >= lastM ? (thisM - lastM ? `${thisM - lastM} meer` : 'evenveel') : `${lastM - thisM} minder`} dan vorige maand</small></span></div>
-      ${barsChart(months.map((m, i) => ({ v: mineM[i], l: m.toLocaleDateString('nl-NL', { month: 'short' }).replace('.', ''), t: `${mineM[i]} trainingen`, hi: i === 5 })), { fmt: (v) => v })}
-      <div class="legend"><span style="--c:${u.color}"><i></i>${esc(u.name)}</span><span class="muted small">${esc(other().name)}: ${otherM[5]} deze maand</span></div></section>
-    ${calendarCard()}
-    ${duelCard()}
-    <section class="card"><div class="sec" style="margin:0"><h2>Per oefening</h2></div>${whoSegL('exWho')}
-      ${exList.length ? `<label class="f">Oefening<select class="in" id="prog-ex">${exList.map((e) => `<option value="${e.id}" ${e.id === S.progEx ? 'selected' : ''}>${esc(e.name)}</option>`).join('')}</select></label>
-      <div class="chips">${Object.entries(metricLabel).map(([k, l]) => `<button class="chip" data-act="metric" data-m="${k}" aria-pressed="${S.progMetric === k}">${l}</button>`).join('')}</div>
-      ${lineChart(series, { unit, emptyMsg: 'Deze oefening is nog niet gedaan.' })}${legend(exUsers)}` : '<div class="empty">Log een training en je ziet hier per oefening je lijn omhoog gaan.</div>'}</section>
-    ${recordsCard()}
 
     <div class="sec"><h2>Slaap</h2><button class="link" data-act="sleep">Invullen</button></div>
     <section class="card mini">${sl ? `<div class="mini__h"><span><b>Gemiddeld ${hmin(sl.avg)}</b><br><small class="muted">afgelopen 7 nachten · doel ${hmin(sl.goal)}</small></span>${vtag(sl.verdict)}</div>
@@ -2874,10 +2932,39 @@ function viewProgress() {
       <div class="fb"><p>${sp.verdict[2]}</p></div>`
       : '<div class="empty">Nog geen stappen. Koppel Apple Gezondheid via Profiel, of tik op Invullen.</div>'}</section>
 
+    <div class="sec"><h2>Sport</h2><button class="link" data-act="go" data-r="trainings">Alle trainingen</button></div>
+    <button class="card mini mcard" data-act="go" data-r="trainings"><div class="mini__h"><span><b>Trainingen per maand</b><br><small class="muted">${thisM} deze maand · ${thisM >= lastM ? (thisM - lastM ? `${thisM - lastM} meer` : 'evenveel') : `${lastM - thisM} minder`} dan vorige maand</small></span>${IC.chev.replace('<svg', '<svg class="chev"')}</div>
+      ${monthStrip(months, mineM, otherM)}
+      <div class="legend"><span style="--c:${u.color}"><i></i>${esc(u.name)}</span><span style="--c:rgba(255,255,255,.35)"><i></i>${esc(other().name)}</span></div></button>
+    <section class="card"><div class="sec" style="margin:0"><h2>Per oefening</h2></div>${whoSegL('exWho')}
+      ${exList.length ? `<label class="f">Oefening<select class="in" id="prog-ex">${exList.map((e) => `<option value="${e.id}" ${e.id === S.progEx ? 'selected' : ''}>${esc(e.name)}</option>`).join('')}</select></label>
+      <div class="chips">${Object.entries(metricLabel).map(([k, l]) => `<button class="chip" data-act="metric" data-m="${k}" aria-pressed="${S.progMetric === k}">${l}</button>`).join('')}</div>
+      ${lineChart(series, { unit, emptyMsg: 'Deze oefening is nog niet gedaan.' })}${legend(exUsers)}` : '<div class="empty">Log een training en je ziet hier per oefening je lijn omhoog gaan.</div>'}</section>
+    ${recordsCard()}
+
     <div class="sec"><h2>Gewicht</h2><button class="link" data-act="go" data-r="body">Metingen</button></div>
     <section class="card mini">${lastW != null ? `<div class="mini__h"><span>${dotNum(nf(lastW) + ' kg')}<br><small class="muted">laatste meting · ${fmtDate(wts[wts.length - 1].date)}</small></span>${dW != null && wts.length > 1 ? `<span class="vtag ${Math.abs(dW) < 0.4 ? 'good' : 'warn'}">${dW > 0 ? '+' : ''}${nf(dW)} kg</span>` : ''}</div>
       ${lineChart([{ name: u.name, color: u.color, points: wts.map((m) => ({ x: parseDate(m.date), y: m.weight })) }], { unit: ' kg', h: 160 })}
       <div class="fb"><p>${wTrend} ${wGoal}</p></div>` : '<div class="empty">Nog geen weging. Voeg er een toe via Metingen.</div>'}</section>
+  </div>`;
+}
+function monthStrip(months, mine, oth) {
+  const mx = Math.max(4, ...mine, ...oth);
+  return `<div class="mstrip">${months.map((m, i) => `<div class="mstrip__c ${i === months.length - 1 ? 'on' : ''}">${dotNum(mine[i], 'sm')}
+    <div class="mstrip__t"><i style="height:${Math.max(4, (mine[i] / mx) * 100)}%;animation-delay:${i * 70}ms"></i><i class="o" style="height:${Math.max(4, (oth[i] / mx) * 100)}%;animation-delay:${i * 70 + 40}ms"></i></div>
+    <span>${m.toLocaleDateString('nl-NL', { month: 'short' }).replace('.', '')}</span></div>`).join('')}</div>`;
+}
+
+// ---------- Alle trainingen (lijst) ----------
+function viewTrainings() {
+  const ids = whoIds(S.listWho || 'both');
+  const all = dedupPairs(S.data.workouts.filter((w) => ids.includes(w.user) || (ids.includes(w.partner) && !w.pair))).sort((a, b) => parseDate(b.date) - parseDate(a.date) || (b.end || 0) - (a.end || 0));
+  const byM = new Map(); for (const w of all) { const k = w.date.slice(0, 7); (byM.get(k) || byM.set(k, []).get(k)).push(w); }
+  return `<div class="wrap screen full home6">
+    <div class="bar-top"><button class="circle" data-act="back" aria-label="Terug">${IC.back}</button><h1>Alle trainingen</h1><button class="circle" data-act="add-open" data-mode="log" aria-label="Training toevoegen"><svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round"><path d="M12 5v14M5 12h14"/></svg></button></div>
+    ${whoSegL('listWho')}
+    ${all.length ? [...byM.entries()].map(([k, ws]) => `<div class="sec"><h2 class="mhead">${new Date(parseDate(k + '-01')).toLocaleDateString('nl-NL', { month: 'long', year: 'numeric' })}</h2><span class="muted small">${ws.length} ${ws.length === 1 ? 'training' : 'trainingen'}</span></div>
+      <div class="list">${ws.map(wItem).join('')}</div>`).join('') : '<div class="card empty">Nog geen trainingen.</div>'}
   </div>`;
 }
 
@@ -2942,7 +3029,7 @@ function viewBody() {
   const series = (k) => ms.filter((m) => m[k] != null);
   const tile = ([k, l, un]) => { const s = series(k); if (!s.length) return ''; const last = s[s.length - 1][k], first = s[0][k], d = Math.round((last - first) * 10) / 10;
     return `<div class="ach"><span class="k">${l}</span><div class="ach__v">${dotNum(nf(last))}</div><small>${un}${s.length > 1 ? ` · <b class="${d > 0 ? 'up' : d < 0 ? 'down' : ''}">${d > 0 ? '+' : ''}${nf(d)}</b>` : ''}</small></div>`; };
-  const lastW = latestBody(S.me, 'weight'); const tiles = fields.map(tile).join('');
+  const lastW = latestBody(S.me, 'weight'); const tiles = fields.filter(([k]) => k !== 'weight' && k !== 'fat').map(tile).join('');
   const goalFrac = p.goalWeight && lastW && series('weight').length ? (() => { const start = series('weight')[0].weight; const tot = Math.abs(start - p.goalWeight) || 1; return Math.max(0, Math.min(1, 1 - Math.abs(lastW - p.goalWeight) / tot)); })() : null;
   const wSeries = (S.bodyBoth ? USERS : [u]).map((x) => ({ name: x.name, color: x.color, points: bodyOf(x.id).filter((m) => m.weight != null).map((m) => ({ x: parseDate(m.date), y: m.weight })) }));
   return `<div class="wrap screen full home6">
@@ -2972,12 +3059,12 @@ function renderSheet() {
   const head = (t) => `<div class="sheet-head"><div class="row" style="justify-content:space-between"><h2>${t}</h2><button class="iconbtn" data-act="sheet-close" aria-label="Sluiten">${IC.x}</button></div></div>`;
   let title = '', body = '';
   if (S.sheet.type === 'plus') {
-    const nt = nextTpl(S.me);
+    const npl = nextPlanFor(S.me); const nt = npl ? tplById(npl.tpl) : null;
     title = 'Nieuwe training';
     body = `<div class="eyebrow">Nu trainen</div>${draft ? `<button class="pick" data-act="resume"><span><b>Hervat je training</b><br><small>${esc(tplById(draft.tpl)?.short || 'Eigen')} · ${mmss(elapsed() / 1000)} bezig</small></span>${IC.chev.replace('<svg', '<svg width="18" height="18" style="stroke:var(--muted);fill:none;stroke-width:2"')}</button>
       <button class="btn danger" data-act="discard" data-confirm>Training annuleren</button>` : `
-      <button class="pick" data-act="start" data-tpl="${nt.id}"><span><b>Start ${esc(nt.short)}</b><br><small>Volgende in jullie schema: ${esc(nt.name)}</small></span><span class="pr">Aanrader</span></button>
-      ${allTpl().filter((t) => t.id !== nt.id && t.cat === 'split').map((t) => `<button class="pick" data-act="start" data-tpl="${t.id}"><span><b>${esc(t.short)}</b><br><small>${esc(t.name)}</small></span></button>`).join('')}
+      ${nt ? `<button class="pick" data-act="start" data-tpl="${nt.id}" data-time="${npl.time}"><span><b>${nt.sport ? 'Log' : 'Start'} ${esc(nt.short)}</b><br><small>Gepland: ${relDay(npl.date).toLowerCase()} om ${npl.time}</small></span><span class="pr">Volgende</span></button>` : ''}
+      ${allTpl().filter((t) => t.id !== nt?.id && t.cat === 'split').map((t) => `<button class="pick" data-act="start" data-tpl="${t.id}"><span><b>${esc(t.short)}</b><br><small>${esc(t.name)}</small></span></button>`).join('')}
       <button class="pick" data-act="go" data-r="muscles"><span><b>Kies doelspieren</b><br><small>Stel zelf een training samen</small></span></button>
       <button class="pick" data-act="start" data-tpl=""><span><b>Lege training</b><br><small>Oefeningen kies je onderweg</small></span></button>`}
       <div class="eyebrow grp-title">Loggen of inplannen</div>
