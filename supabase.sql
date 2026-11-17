@@ -48,3 +48,12 @@ begin
 end $$;
 revoke all on function public.ingest_health(text, date, numeric, numeric, numeric) from public;
 grant execute on function public.ingest_health(text, date, numeric, numeric, numeric) to anon, authenticated;
+
+-- Eenvoudige variant voor de opdracht op de iPhone: alleen code + waarden, datum = vandaag (NL-tijd).
+create or replace function public.brnd_sync(
+  code text, stappen numeric default null, slaap numeric default null, kcal numeric default null
+) returns text language sql security definer set search_path = public as $$
+  select public.ingest_health(code, (now() at time zone 'Europe/Amsterdam')::date, stappen, kcal, slaap);
+$$;
+revoke all on function public.brnd_sync(text, numeric, numeric, numeric) from public;
+grant execute on function public.brnd_sync(text, numeric, numeric, numeric) to anon, authenticated;

@@ -3,4 +3,6 @@
 window.BRNDFIT = {
   supabaseUrl: 'https://sdugbjbfhcdbzjgjahje.supabase.co',
   supabaseKey: 'sb_publishable_WuBZZuTaCkPPfQaB9VN9WQ_gHEiKEj0',
+  // iCloud-link van de opdracht 'BRND FIT' (Opdrachten-app). Leeg = stappen om hem zelf te maken.
+  shortcutUrl: '',
 };
