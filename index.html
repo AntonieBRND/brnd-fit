@@ -198,7 +198,7 @@ textarea.in { min-height: 80px; resize: vertical; }
 .dhero .tt h1 { font-size: 30px; }
 .dhero .tt small { color: #c8d7f4; font-size: 13px; }
 .dhero .tt .lv { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #c8d7f4; font-weight: 600; }
-.statbar { margin-top: -40px; position: relative; z-index: 1; background: var(--surface); border-radius: 22px; padding: 14px 6px; display: grid; grid-template-columns: repeat(4, 1fr); }
+.statbar { margin-top: -40px; position: relative; z-index: 1; background: var(--surface); border-radius: 22px; padding: 14px 6px; display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); }
 .statbar div { display: grid; justify-items: center; gap: 2px; text-align: center; border-right: 1px solid var(--line); }
 .statbar div:last-child { border-right: 0; }
 .statbar svg { width: 20px; height: 20px; stroke: var(--blue-hi); fill: none; stroke-width: 2; margin-bottom: 4px; }
@@ -228,7 +228,6 @@ textarea.in { min-height: 80px; resize: vertical; }
 .review { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
 .review .hd { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
 .review p { margin: 4px 0 0; font-size: 13px; color: #c9d3e6; }
-.stars { color: var(--orange); letter-spacing: 1px; font-size: 13px; }
 .dock { position: fixed; left: 0; right: 0; bottom: 0; z-index: 7; padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)); padding-top: 24px; background: linear-gradient(transparent, var(--bg) 40%); }
 .dock .note { text-align: center; font-size: 12px; color: var(--muted); margin-top: 8px; display: flex; justify-content: center; gap: 6px; align-items: center; }
 
@@ -328,9 +327,6 @@ textarea.in { min-height: 80px; resize: vertical; }
 .done-panel .st b.w { font-size: 15px; line-height: 1.6; font-stretch: 100%; }
 .done-panel .st small { font-size: 12px; font-weight: 600; opacity: .75; }
 .done-panel .pr { background: var(--bg); color: var(--orange); }
-.starpick { display: flex; gap: 6px; justify-content: center; }
-.starpick button { border: 0; background: none; font-size: 34px; color: var(--surface-3); padding: 0 2px; line-height: 1; }
-.starpick button.on { color: var(--orange); }
 .pr { display: inline-block; background: var(--orange); color: var(--on-orange); font-weight: 800; font-size: 11px; padding: 2px 8px; border-radius: 999px; letter-spacing: .03em; }
 
 /* Profiel */
@@ -443,7 +439,7 @@ textarea.in { min-height: 80px; resize: vertical; }
 .today h2, .dhero .tt h1, .welcome h1 { text-transform: uppercase; letter-spacing: -.005em; font-stretch: 115%; font-weight: 900; }
 .today h2 { font-size: 34px; }
 .sec h2 { font-size: 19px; }
-.done-panel .st { grid-template-columns: repeat(4, 1fr); }
+.done-panel .st { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); }
 
 .credit { margin: -6px 0 0; font-size: 10.5px; color: var(--muted); text-align: center; opacity: .7; }
 
@@ -471,7 +467,7 @@ textarea.in { min-height: 80px; resize: vertical; }
 .lb__hero-t h2 { font-size: 22px; }
 .lb__hero-t small { color: #c8d7f4; }
 .lb__who { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 14px; }
-.lb__stats { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--surface-2); border-radius: 16px; padding: 12px 4px; text-align: center; }
+.lb__stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); background: var(--surface-2); border-radius: 16px; padding: 12px 4px; text-align: center; }
 .lb__stats div { display: grid; border-right: 1px solid var(--line); }
 .lb__stats div:last-child { border-right: 0; }
 .lb__stats b { font-size: 19px; font-weight: 800; font-variant-numeric: tabular-nums; }
@@ -848,6 +844,48 @@ nav.tabs .plus2:active { transform: scale(.94); }
 .hk__row code, .hk__steps code { font-size: 12px; overflow-wrap: anywhere; color: var(--blue-hi); }
 .hk__steps { margin: 0; padding-left: 20px; display: grid; gap: 8px; font-size: 13px; color: #c9d3e6; }
 
+/* v8: status, grafieken, profiel */
+.dotnum.xxl { font-size: 76px; line-height: .9; }
+.stat-hero { position: relative; overflow: hidden; border-radius: 30px; padding: 22px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px 18px; align-items: center; background: radial-gradient(80% 90% at 0% 0%, rgba(79,142,236,.35), transparent 60%), linear-gradient(160deg, #13264c, #070b14); border: 1px solid rgba(255,255,255,.06); }
+.stat-hero__l { display: grid; gap: 6px; }
+.stat-hero__l b { font-size: 15px; }
+.stat-hero__r { display: grid; gap: 10px; min-width: 0; }
+.sp { display: grid; gap: 4px; }
+.sp__t { display: flex; justify-content: space-between; font-size: 12px; color: #c8d7f4; }
+.sp .fbar { height: 18px; }
+.sp .fbar b { top: -3px; bottom: -3px; width: 4px; }
+.stat-hero__tip { grid-column: 1 / -1; margin: 0; font-size: 13px; color: #c9d3e6; background: rgba(5,7,12,.35); border-radius: 14px; padding: 10px 12px; }
+.vtag { font-size: 11px; font-weight: 800; border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
+.vtag.good { background: color-mix(in srgb, var(--blue) 22%, transparent); color: var(--blue-hi); }
+.vtag.warn { background: color-mix(in srgb, var(--soft-orange) 20%, transparent); color: var(--soft-orange); }
+.vtag.bad { background: color-mix(in srgb, #e84e3d 22%, transparent); color: #ff8a7d; }
+.fb { display: grid; gap: 6px; background: var(--surface-2); border-radius: 14px; padding: 10px 12px; }
+.fb p { margin: 0; font-size: 13px; color: #c9d3e6; }
+.bch { display: grid; gap: 6px; }
+.bch__plot { position: relative; height: 110px; display: flex; align-items: flex-end; gap: 5px; }
+.bch__col { flex: 1; height: 100%; display: flex; align-items: flex-end; }
+.bch__col i { width: 100%; border-radius: 6px; background: linear-gradient(180deg, var(--bc, #9cc2ff), rgba(79,142,236,.25)); animation: sbar-in .6s cubic-bezier(.2,.8,.2,1) both; transform-origin: bottom; }
+.bch__col i:not(.ok):not(.low) { background: var(--surface-3); }
+.bch__col i.low { background: linear-gradient(180deg, var(--soft-orange), rgba(255,178,122,.2)); }
+.bch__col i.hi { box-shadow: 0 0 14px rgba(122,174,255,.5); }
+.bch__goal { position: absolute; left: 0; right: 0; border-top: 1px dashed rgba(255,255,255,.35); z-index: 1; pointer-events: none; }
+.bch__goal em { position: absolute; right: 0; top: -16px; font-style: normal; font-size: 10px; color: var(--muted); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+.bch__lab { display: flex; gap: 5px; }
+.bch__lab span { flex: 1; text-align: center; font-size: 10px; color: var(--muted); }
+.status-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px 6px 6px; }
+.status-pill__n { width: 32px; height: 32px; border-radius: 50%; background: #0a0d14; color: #fff; display: grid; place-items: center; font-family: 'Doto', 'DotGothic16', monospace; font-weight: 900; font-size: 15px; }
+.pcard { position: relative; overflow: hidden; border-radius: 30px; min-height: 260px; padding: 22px; display: flex; flex-direction: column; justify-content: flex-end; gap: 10px; background: radial-gradient(70% 60% at 80% 20%, rgba(79,142,236,.35), transparent 70%), linear-gradient(160deg, #13264c, #070b14); isolation: isolate; }
+.pcard .ph { z-index: -2; } .pcard .ph::after { display: none; }
+.pcard__fade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, transparent 35%, rgba(5,7,12,.85)); }
+.pcard__face { position: absolute; top: 22px; right: 22px; }
+.pcard__face .face::after { display: none; }
+.pcard__t h1 { font-stretch: 62%; font-weight: 900; font-size: 44px; line-height: .95; }
+.pcard__t p { margin: 6px 0 0; font-size: 14px; color: #c8d7f4; }
+.ach small b.up { color: var(--soft-orange); } .ach small b.down { color: var(--blue-hi); }
+.mrow { display: flex; justify-content: space-between; align-items: center; gap: 10px; background: var(--surface-2); border-radius: 14px; padding: 10px 12px; }
+.mrow b { display: block; font-size: 14px; } .mrow small { color: var(--muted); font-size: 12px; }
+@media (max-width: 380px) { .stat-hero { grid-template-columns: 1fr; } }
+
 /* Navigatie */
 nav.tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 7; padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)); pointer-events: none; }
 nav.tabs .wrap { pointer-events: auto; }
@@ -921,7 +959,6 @@ td.r, th.r { text-align: right; font-variant-numeric: tabular-nums; }
 <div id="modal-root"></div>
 <input type="file" id="photo-in" accept="image/*" hidden>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
 <script>
 'use strict';
 // ---------- Basis ----------
@@ -1751,7 +1788,7 @@ function viewSportWorkout(w, mine) {
     <div class="dhero has-ph" style="height:260px">${phDiv(ph)}${ph ? '' : `<span class="padel-hero__ic big">${PADEL_ICON}</span>`}<div class="tb"><button class="circle" data-act="back" aria-label="Terug">${IC.back}</button><span>Padel</span><span></span></div>
       <div class="tt"><span class="plate t-padel">Padel</span><h1>${w.result ? resTxt(w) : 'Padel'}</h1><small>${fmtDate(w.date, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</small></div></div>
     <div class="statbar"><div>${IC.clock}<b>${durMin(w)}</b><small>Minuten</small></div><div>${IC.flame}<b>${nf(kcalOf(w), 0)}</b><small>kcal</small></div><div>${IC.bolt}<b style="font-size:14px">${intTxt(w)}</b><small>Intensiteit</small></div><div>${IC.trophy}<b style="font-size:14px">${resTxt(w) || '–'}</b><small>Uitslag</small></div></div>
-    <section class="card"><div class="sec" style="margin:0"><h2>Wie</h2>${w.rating ? `<span class="stars">${'★'.repeat(w.rating)}${'☆'.repeat(5 - w.rating)}</span>` : ''}</div>
+    <section class="card"><div class="sec" style="margin:0"><h2>Wie</h2></div>
       <div class="who-mini" style="font-size:15px">${dotu(us)} <b>${esc(us.name)}</b> <span class="muted">${partnerOf(w) ? `speelde samen met ${esc(partnerOf(w).name)}` : 'speelde zonder ' + esc(other().name)}</span></div>
       ${w.start ? `<p class="muted small" style="margin:0">Begonnen om ${new Date(w.start).toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })}</p>` : ''}</section>
     ${w.score ? `<section class="card"><h2>Score</h2><p class="padel-score">${esc(w.score)}</p></section>` : ''}
@@ -1851,7 +1888,7 @@ function recordsCard() {
       <div class="rec__top">${dotu(top.u)}<b>${fmtSet(top.r.best.s, top.r.best.kind)}</b>${top.r.best.kind === 'kg' ? `<small>1RM ${nf(top.r.best.sc)}</small>` : ''}<small class="rec__d">${fmtDate(top.r.best.date)}</small></div>
       ${rs.slice(1).map((x) => `<div class="rec__sub">${dotu(x.u)}<span>${fmtSet(x.r.best.s, x.r.best.kind)}</span>${x.r.best.kind === 'kg' ? `<small>1RM ${nf(x.r.best.sc)}</small>` : ''}</div>`).join('')}</div>`;
   }).join('');
-  return `<section class="card"><div class="sec" style="margin:0"><h2>Records</h2><button class="link" data-act="go" data-r="records">Alles</button></div><div class="recs">${rows}</div></section>`;
+  return `<section class="card"><div class="sec" style="margin:0"><h2>Records</h2></div><div class="recs">${rows}</div></section>`;
 }
 
 // ---------- Supabase (losse app): inloggen + gedeelde opslag ----------
@@ -1964,12 +2001,11 @@ function sleepCard(d) {
     ${R ? `<p class="sleepc__adv">${R.advice}</p>` : ''}</button>`;
 }
 function healthSettings() {
-  if (S.mode !== 'supa') return `<section class="card"><h2>Apple Gezondheid</h2><p class="muted small" style="margin:0">Automatisch koppelen werkt in de losse BRND FIT-app (via de website). Hier vul je stappen en slaap zelf in via de kaarten op Home.</p>
-    <label class="f">Slaapdoel (uren)<input class="in num" id="p-sleep" inputmode="decimal" value="${profile().sleepGoal ?? 8}"></label></section>`;
+  if (S.mode !== 'supa') return `<section class="card"><h2>Apple Gezondheid</h2><p class="muted small" style="margin:0">Automatisch koppelen werkt in de losse BRND FIT-app (via de website). Hier vul je stappen en slaap zelf in via de kaarten op Home.</p></section>`;
   const c = SB.cfg(); const url = `${c.supabaseUrl}/rest/v1/rpc/ingest_health`;
   const code = S.healthToken || profile().hkToken || '';
   return `<section class="card"><h2>Apple Gezondheid</h2>
-    <label class="f">Slaapdoel (uren)<input class="in num" id="p-sleep" inputmode="decimal" value="${profile().sleepGoal ?? 8}"></label>
+    
     <p class="muted small" style="margin:0">Je iPhone stuurt elke dag automatisch je stappen, actieve kcal en slaap naar BRND FIT via een automatisering in de app Opdrachten.</p>
     ${code ? `<div class="hk"><div class="hk__row"><small>Koppelcode</small><code id="hk-code">${esc(code)}</code><button class="btn sm" data-act="copy" data-v="${esc(code)}">Kopieer</button></div>
       <div class="hk__row"><small>URL</small><code>${esc(url)}</code><button class="btn sm" data-act="copy" data-v="${esc(url)}">Kopieer</button></div>
@@ -2034,8 +2070,8 @@ function viewHome() {
   const moreBtn = (k, total, open) => (total > 5 ? `<button class="btn ghost wide more-btn" data-act="more" data-k="${k}">${open ? 'Minder tonen' : `Bekijk meer (${total - 5})`}<span class="more-chev ${open ? 'up' : ''}">${IC.chev}</span></button>` : '');
   const hm = (m) => (m >= 60 ? Math.floor(m / 60) + 'u ' + (m % 60) + 'm' : m + 'm');
   const heroPh = photoUrl('welcome') || tplPhoto(nt);
-  const title = pct >= 100 ? 'Week<br>gehaald.' : pct >= 50 ? 'Je bent<br>goed bezig' : days ? 'Lekker<br>bezig' : 'Je lijf is<br>er klaar<br>voor';
-  const heroBtn = draft ? `<button class="wbtn" data-act="resume">Hervat training</button>` : myNext[0] && myNext[0].date === todayStr() ? `<button class="wbtn" data-act="start" data-tpl="${myNext[0].tpl}" data-plan="${myNext[0].id}" data-time="${myNext[0].time}">Start ${esc(tplById(myNext[0].tpl)?.short || 'training')}</button>` : `<button class="wbtn" data-act="start" data-tpl="${nt.id}">Start ${esc(nt.short)}</button>`;
+  const title = pct >= 100 ? 'Week<br>gehaald.' : pct >= 50 ? 'Je bent<br>goed bezig' : days ? 'Lekker<br>bezig' : 'Let\'s go<br>champ';
+  const ST = statusOf(); const heroBtn = draft ? `<button class="wbtn" data-act="resume">Hervat training</button>` : `<button class="wbtn status-pill" data-act="go" data-r="progress"><span class="status-pill__n">${ST.score}</span>Bekijk voortgang</button>`;
   const nextBlock = myNext.length
     ? `<div class="tcar" id="tcar" data-hscroll="tcar">${myNext.map(nextCard).join('')}</div>${myNext.length > 1 ? `<div class="tdots">${myNext.map((_, i) => `<button data-act="tdot" data-i="${i}" class="${i ? '' : 'on'}" aria-label="Training ${i + 1}"></button>`).join('')}</div>` : ''}`
     : `<button class="card nextempty" data-act="add-open" data-mode="plan"><span class="pend__ic" style="--c:var(--blue)">${IC.clock}</span><div><b>Nog niks ingepland</b><small>Volgende in jullie schema: ${esc(nt.short)} · ${meta.min} min</small></div>${IC.chev.replace('<svg', '<svg class="chev"')}</button>`;
@@ -2291,11 +2327,11 @@ function workoutModal(w) {
   return `<div class="lb__hero">${phDiv(ph)}<div class="lb__hero-t"><span class="plate ${tp?.cls || 't-custom'}">${esc(tp?.short || 'Eigen')}</span><h2>${esc(tp?.name || w.name || 'Training')}</h2>
       <small>${fmtDate(w.date, { weekday: 'long', day: 'numeric', month: 'long' })}</small></div></div>
     <div class="lb__who">${dotu(us)} <b>${esc(us.name)}</b> <span class="muted">· ${withTxt(w)}</span>${w.manual ? ' <span class="muted">· achteraf toegevoegd</span>' : ''}</div>
-    <div class="lb__stats"><div><b>${min || '–'}</b><small>min</small></div><div><b>${st.sets}</b><small>sets</small></div><div><b>${nf(kcal, 0)}</b><small>kcal</small></div><div><b>${nf(st.vol / 1000, 1)}</b><small>ton</small></div></div>
+    <div class="lb__stats"><div><b>${min || '–'}</b><small>min</small></div><div><b>${(w.ex || []).length}</b><small>oefeningen</small></div><div><b>${nf(kcal, 0)}</b><small>kcal</small></div></div>
     <div class="lb__ex">${top.map((e) => { const best = e.sets.reduce((a, s) => (setScore(s, e.kind) > setScore(a, e.kind) ? s : a), e.sets[0]);
       return `<div class="exl"><span>${esc(e.name)}</span><span class="muted num">${best ? `${e.sets.length}× · beste ${fmtSet(best, e.kind)}` : 'invullen'}</span>${twinLine(twinOf(w), e.id)}</div>`; }).join('')}
       ${(w.ex || []).length > 3 ? `<div class="muted small">+ ${(w.ex || []).length - 3} oefeningen meer</div>` : ''}</div>
-    ${w.prs?.length || w.rating ? `<div class="row">${w.prs?.length ? `<span class="pr">${w.prs.length} PR</span>` : ''}${w.rating ? `<span class="stars">${'★'.repeat(w.rating)}${'☆'.repeat(5 - w.rating)}</span>` : ''}</div>` : ''}
+    ${w.prs?.length ? `<div class="row"><span class="pr">${w.prs.length} PR</span></div>` : ''}
     ${w.pending && w.user === S.me ? `<button class="btn cta wide" data-act="edit-w" data-id="${w.id}">Vul je gewichten in</button><button class="btn ghost" data-act="w-more" data-id="${w.id}">Lees meer</button>` : w.pending ? `<p class="muted small" style="margin:0">${esc(userOf(w.user).name)} moet de gewichten nog invullen.</p><button class="btn cta wide" data-act="w-more" data-id="${w.id}">Lees meer</button>` : `<button class="btn cta wide" data-act="w-more" data-id="${w.id}">Lees meer</button>`}`;
 }
 function dayModal(d) {
@@ -2308,7 +2344,7 @@ function dayModal(d) {
 function wItem(w) {
   const { st, tp, us, ph, kcal } = wSummary(w);
   return `<button class="li" data-act="w-open" data-id="${w.id}"><span class="th ${ph ? '' : 'ic'}">${ph ? `<img src="${ph}" alt="">` : IC.dumbbell}</span>
-    <div style="min-width:0"><b>${esc(tp?.short || 'Eigen')} · ${fmtDate(w.date, { weekday: 'short', day: 'numeric', month: 'short' })}${w.pending && w.user === S.me ? ' <span class="pr">invullen</span>' : ''}</b><small class="who-mini">${wAvs(w)} ${isSport(w) ? durMin(w) + ' min' + (w.result ? ' · ' + resTxt(w).toLowerCase() : '') : st.sets + ' sets'} · ${nf(kcal, 0)} kcal</small></div>${IC.chev.replace('<svg', '<svg class="chev"')}</button>`;
+    <div style="min-width:0"><b>${esc(tp?.short || 'Eigen')} · ${fmtDate(w.date, { weekday: 'short', day: 'numeric', month: 'short' })}${w.pending && w.user === S.me ? ' <span class="pr">invullen</span>' : ''}</b><small class="who-mini">${wAvs(w)} ${isSport(w) ? durMin(w) + ' min' + (w.result ? ' · ' + resTxt(w).toLowerCase() : '') : (w.ex || []).length + ' oefeningen'} · ${nf(kcal, 0)} kcal</small></div>${IC.chev.replace('<svg', '<svg class="chev"')}</button>`;
 }
 
 // ---------- Kalender & lijst (Voortgang) ----------
@@ -2347,8 +2383,8 @@ function viewWorkout() {
   return `<div class="wrap screen full">
     <div class="dhero has-ph" style="height:280px">${phDiv(ph)}<div class="tb"><button class="circle" data-act="back" aria-label="Terug">${IC.back}</button><span>Training</span><span></span></div>
       <div class="tt"><span class="plate ${tp?.cls || 't-custom'}">${esc(tp?.short || 'Eigen')}</span><h1>${esc(tp?.short || 'Training')}</h1><small>${fmtDate(w.date, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</small></div></div>
-    <div class="statbar"><div>${IC.clock}<b>${min || '–'}</b><small>Minuten</small></div><div>${IC.flame}<b>${nf(kcal, 0)}</b><small>kcal</small></div><div>${IC.grid}<b>${st.sets}</b><small>Sets</small></div><div>${IC.bolt}<b>${nf(st.vol / 1000, 1)}</b><small>Ton</small></div></div>
-    <section class="card"><div class="sec" style="margin:0"><h2>Wie</h2>${w.rating ? `<span class="stars">${'★'.repeat(w.rating)}${'☆'.repeat(5 - w.rating)}</span>` : ''}</div>
+    <div class="statbar"><div>${IC.clock}<b>${min || '–'}</b><small>Minuten</small></div><div>${IC.flame}<b>${nf(kcal, 0)}</b><small>kcal</small></div><div>${IC.grid}<b>${(w.ex || []).length}</b><small>Oefeningen</small></div></div>
+    <section class="card"><div class="sec" style="margin:0"><h2>Wie</h2></div>
       <div class="who-mini" style="font-size:15px">${dotu(us)} <b>${esc(us.name)}</b> <span class="muted">${partnerOf(w) ? `trainde samen met ${esc(partnerOf(w).name)}` : 'trainde alleen'}</span></div>
       ${w.start ? `<p class="muted small" style="margin:0">Begonnen om ${new Date(w.start).toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })}${w.manual ? ' · achteraf toegevoegd' : ''}</p>` : ''}</section>
     ${w.prs?.length ? `<section class="card"><h2>Nieuwe records</h2><div class="chips">${w.prs.map((p) => `<span class="pr">${esc(p.name)} · ${nf(p.value)}</span>`).join('')}</div></section>` : ''}
@@ -2433,7 +2469,7 @@ function doRender() {
   if (S.mode === 'loading') { app.innerHTML = '<div class="wrap screen"><div class="card empty">Gegevens laden…</div></div>'; nav.hidden = true; return; }
   if (!S.me) { app.innerHTML = viewWelcome(); nav.hidden = true; renderSheet(); return; }
   const r = S.route.name;
-  const views = { planex: viewPlanEx, add: viewAdd, planform: viewPlanForm, padel: viewPadel, workout: viewWorkout, log: viewLog, home: viewHome, browse: viewBrowse, progress: viewProgress, profile: viewProfile, detail: viewDetail, muscles: viewMuscles, ready: viewReady, active: viewActive, done: viewDone, body: viewBody, settings: viewSettings, records: viewRecords };
+  const views = { planex: viewPlanEx, add: viewAdd, planform: viewPlanForm, padel: viewPadel, workout: viewWorkout, log: viewLog, home: viewHome, browse: viewBrowse, progress: viewProgress, profile: viewProfile, detail: viewDetail, muscles: viewMuscles, ready: viewReady, active: viewActive, done: viewDone, body: viewBody, settings: viewSettings, records: viewProgress };
   if (r === 'active' && !draft) S.route = { name: 'home' };
   const y = window.scrollY;
   const hs = {}; app.querySelectorAll('[data-hscroll]').forEach((el) => { hs[el.dataset.hscroll] = el.scrollLeft; });
@@ -2709,10 +2745,9 @@ function viewDone() {
   return `<div class="wrap screen full">
     <div class="done-panel"><div class="ok"><span>${IC.check}</span></div><h1>${isSport(D.w) ? (D.w.result === 'won' ? 'Gewonnen!' : 'Lekker gespeeld!') : 'Gefeliciteerd!'}</h1>
       <p>${isSport(D.w) ? `Je padelpotje is opgeslagen${D.w.partner ? ` en ${esc(other().name)} ziet het ook` : ''}.` : `${D.w.manual ? 'Je training is achteraf toegevoegd.' : 'Je training is opgeslagen.'} ${D.w.partner ? `Samen met ${esc(other().name)} getraind. ${esc(other().name)} vult zijn eigen gewichten in.` : `${esc(other().name)} ziet hem ook terug in de app.`}`}</p>
-      <div class="st"><div><b>${D.w.dur || '<1'}</b><small>minuten</small></div>${isSport(D.w) ? `<div><b class="w">${intTxt(D.w)}</b><small>intensiteit</small></div>` : `<div><b>${st.sets}</b><small>sets</small></div>`}<div><b>${nf(kcalOf(D.w), 0)}</b><small>kcal</small></div>${isSport(D.w) ? `<div><b class="w">${resTxt(D.w) || '–'}</b><small>uitslag</small></div>` : `<div><b>${nf(st.vol / 1000, 1)}</b><small>ton</small></div>`}</div>
+      <div class="st"><div><b>${D.w.dur || '<1'}</b><small>minuten</small></div>${isSport(D.w) ? `<div><b class="w">${intTxt(D.w)}</b><small>intensiteit</small></div>` : `<div><b>${(D.w.ex || []).length}</b><small>oefeningen</small></div>`}<div><b>${nf(kcalOf(D.w), 0)}</b><small>kcal</small></div>${isSport(D.w) ? `<div><b class="w">${resTxt(D.w) || '–'}</b><small>uitslag</small></div>` : ''}</div>
       ${D.prs.length ? `<div class="chips" style="justify-content:center">${D.prs.map((p) => `<span class="pr">PR ${esc(p.name)}</span>`).join('')}</div>` : ''}</div>
-    <section class="card"><h2 style="text-align:center">Hoe was je training?</h2>
-      <div class="starpick">${[1, 2, 3, 4, 5].map((n) => `<button data-act="rate" data-n="${n}" class="${n <= D.rating ? 'on' : ''}" aria-label="${n} sterren">★</button>`).join('')}</div>
+    <section class="card"><h2>Notitie</h2>
       <textarea class="in" id="done-note" placeholder="Hoe voelde het? Energie, pijntjes, muziek…">${esc(D.note)}</textarea></section>
     <button class="btn cta wide plain" data-act="done-close">Sluiten</button>
   </div>`;
@@ -2722,78 +2757,119 @@ function viewDone() {
 function stageBox() {
   return `<div class="stagebox"><div id="stage-slot"></div><button class="stage-toggle ${S.bodyBoth ? 'on' : ''}" data-act="both" aria-pressed="${S.bodyBoth}">${S.bodyBoth ? `<span class="avs">${dotu(USERS[0])}${dotu(USERS[1])}</span>Samen` : `${IC.users}Naast ${esc(other().name)}`}</button><span class="stage-cap">sleep om te draaien</span></div>`;
 }
-function viewProfile() {
-  const u = userOf(S.me); const p = profile(); const ws = activityOf();
-  const first = ws.length ? parseDate(ws[ws.length - 1].date) : null;
-  const weeks = first ? Math.max(1, Math.ceil((Date.now() - first) / (7 * DAY))) : 0;
-  const ml = muscleLevels(S.me); const uph = photoUrl('user_' + S.me);
-  return `<div class="wrap screen" style="padding-top:0">
-    <div class="phero ${uph ? 'has-ph' : ''}"><div class="tb"><button class="circle" data-act="back" aria-label="Terug">${IC.back}</button><span></span><button class="circle" data-act="go" data-r="settings" aria-label="Instellingen">${IC.gear}</button></div>
-      ${uph ? `<div class="pcover">${phDiv(uph)}</div>` : stageBox()}
-      <div class="ov"><div><h1>${esc(u.name)}</h1><small>Push · Pull · Legs · Padel</small></div></div></div>
-    <section class="card"><h2>Over</h2><p class="bio">${esc(p.bio || 'Nog geen bio. Schrijf iets over jezelf via Instellingen.')}</p>
-      <div class="trio"><div><small>Ervaring</small><b>${weeks} ${weeks === 1 ? 'week' : 'weken'}</b></div><div><small>Voltooid</small><b>${ws.length}</b></div><div><small>Records</small><b>${prCount(S.me)}</b></div></div></section>
-    ${uph ? `<section class="card" style="padding:0;overflow:hidden">${stageBox()}</section>` : ''}
-    <p class="credit">3D-anatomie: Z-Anatomy (CC BY-SA 4.0), gebaseerd op BodyParts3D © DBCLS.</p>
-    <section class="card"><div class="sec" style="margin:0"><h2>Spierlevel</h2><span class="muted small">groeit met je kracht</span></div>
-      <div class="levels">${Object.entries(GROUPS).map(([g, n]) => `<div class="lvl"><div class="t"><span>${n}</span><span class="num muted">${Math.round(ml[g] * 100)}</span></div><div class="track"><div class="fill" style="width:${Math.max(2, ml[g] * 100)}%"></div></div></div>`).join('')}</div></section>
-    <section class="card menu-list">
-      <button data-act="go" data-r="body"><span>Lichaam & metingen</span>${IC.chev}</button>
-      <button data-act="go" data-r="records"><span>Records</span>${IC.chev}</button>
-      <button data-act="together-go"><span>Samen met ${esc(other().name)}</span>${IC.chev}</button>
-      <button data-act="go" data-r="settings"><span>Instellingen</span>${IC.gear.replace('<svg', '<svg class="mi"')}</button>
-      <button data-act="switch-user"><span>Wissel naar ${esc(other().name)}</span>${IC.swap}</button>
+// ---------- Staafgrafiek met fade (slaap, stappen, maanden) ----------
+function barsChart(items, { goal = 0, max = 0, fmt = (v) => v, cls = '' } = {}) {
+  const mx = Math.max(max, goal * 1.15, ...items.map((x) => x.v), 1);
+  return `<div class="bch ${cls}"><div class="bch__plot">${goal ? `<span class="bch__goal" style="bottom:${(goal / mx) * 100}%"><em>${fmt(goal)}</em></span>` : ''}
+    ${items.map((x, i) => `<div class="bch__col" title="${esc(x.t || '')}"><i class="${x.v ? (goal && x.v < goal * 0.9 ? 'low' : 'ok') : ''} ${x.hi ? 'hi' : ''}" style="height:${x.v ? Math.max(4, (x.v / mx) * 100) : 3}%;animation-delay:${i * 30}ms;${x.c ? '--bc:' + x.c : ''}"></i></div>`).join('')}</div>
+    <div class="bch__lab">${items.map((x) => `<span>${x.l || ''}</span>`).join('')}</div></div>`;
+}
+const lastDays = (n, d = todayStr()) => Array.from({ length: n }, (_, i) => dateKey(parseDate(d) - (n - 1 - i) * DAY));
+const dayLetter = (d) => ['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za'][new Date(parseDate(d)).getDay()];
+
+// ---------- Status: sport + slaap + beweging gecombineerd ----------
+function sleepStats(u = S.me) {
+  const days = lastDays(14).map((d) => ({ d, m: sleepOf(u, d) })); const w = days.slice(7).filter((x) => x.m);
+  if (!w.length) return null;
+  const avg = w.reduce((a, x) => a + x.m, 0) / w.length; const goal = sleepGoal(u);
+  const sd = Math.sqrt(w.reduce((a, x) => a + (x.m - avg) ** 2, 0) / w.length);
+  const h = avg / 60;
+  const verdict = h < 6 ? ['Te weinig', 'bad', 'Volwassenen hebben 7 tot 9 uur slaap nodig. Met minder dan 6 uur herstellen je spieren slechter en wordt sterker worden lastiger.']
+    : h < 7 ? ['Iets te weinig', 'warn', 'Je zit net onder de gezonde 7 tot 9 uur. Een half uur eerder naar bed maakt al verschil voor je herstel.']
+    : h <= 9.2 ? ['Gezond', 'good', 'Je slaapt binnen de gezonde 7 tot 9 uur. Precies goed voor spierherstel en energie.']
+    : ['Veel', 'warn', 'Je slaapt meer dan 9 uur. Prima na zware weken; slaap je structureel zoveel en ben je toch moe, let er dan op.'];
+  const extra = [];
+  if (avg < goal - 20) extra.push(`Je haalt je doel van ${hmin(goal)} gemiddeld ${hmin(goal - avg)} niet.`);
+  if (sd > 60) extra.push('Je slaap wisselt veel per nacht; een vast ritme helpt bij herstel.');
+  return { days, avg, goal, sd, verdict, extra };
+}
+function stepStats(u = S.me) {
+  const goal = profile(u).stepGoal || 10000; const days = lastDays(14).map((d) => ({ d, v: stepsOf(u, d) })); const w = days.slice(7).filter((x) => x.v);
+  if (!w.length) return null;
+  const avg = w.reduce((a, x) => a + x.v, 0) / w.length;
+  const verdict = avg < 5000 ? ['Weinig beweging', 'bad', 'Onder de 5.000 stappen per dag beweeg je weinig. Een wandeling van 20 minuten is al zo’n 2.500 stappen extra.']
+    : avg < 7500 ? ['Redelijk', 'warn', 'Je zit tussen 5.000 en 7.500 stappen. Voor je gezondheid is 7.500 tot 10.000 per dag ideaal.']
+    : avg < 10000 ? ['Goed', 'good', 'Mooi, je zit in de gezonde zone van 7.500 tot 10.000 stappen.']
+    : ['Top', 'good', 'Meer dan 10.000 stappen per dag, top voor je conditie en extra verbranding.'];
+  const kcal = days.slice(7).reduce((a, x) => a + stepKcal(u, x.d), 0);
+  return { days, avg, goal, verdict, kcal };
+}
+function statusOf(u = S.me) {
+  const p = profile(u); const ws = weekStart(Date.now());
+  const days = new Set(activityOf(u).filter((w) => parseDate(w.date) >= ws).map((w) => w.date)).size;
+  const parts = [{ k: 'Training', v: Math.min(1, days / (p.weekly || 3)), w: 0.4 }];
+  const R = recovery(u, todayStr()); if (R) parts.push({ k: 'Herstel', v: R.score / 100, w: 0.35 });
+  const st = stepStats(u); if (st) parts.push({ k: 'Beweging', v: Math.min(1, st.avg / st.goal), w: 0.25 });
+  const tw = parts.reduce((a, x) => a + x.w, 0);
+  const score = Math.round((parts.reduce((a, x) => a + x.v * x.w, 0) / tw) * 100);
+  const label = score >= 80 ? 'Topvorm' : score >= 60 ? 'Goed bezig' : score >= 40 ? 'Kan beter' : 'Rustig opbouwen';
+  return { score, label, parts, R };
+}
+
+// ---------- Voortgang & status ----------
+function viewProgress() {
+  const u = userOf(S.me); const st = statusOf(); const sl = sleepStats(); const sp = stepStats(); const p = profile();
+  // trainingen per maand (6 maanden)
+  const now = new Date(); const months = Array.from({ length: 6 }, (_, i) => new Date(now.getFullYear(), now.getMonth() - 5 + i, 1));
+  const mCount = (id, m) => new Set(activityOf(id).filter((w) => w.date.startsWith(`${m.getFullYear()}-${String(m.getMonth() + 1).padStart(2, '0')}`)).map((w) => w.date)).size;
+  const mineM = months.map((m) => mCount(S.me, m)), otherM = months.map((m) => mCount(other().id, m));
+  const thisM = mineM[5], lastM = mineM[4];
+  // gewicht
+  const wts = bodyOf().filter((m) => m.weight != null); const lastW = wts.length ? wts[wts.length - 1].weight : null;
+  const w30 = wts.filter((m) => parseDate(m.date) <= Date.now() - 28 * DAY).pop() || wts[0];
+  const dW = lastW != null && w30 ? Math.round((lastW - w30.weight) * 10) / 10 : null;
+  const wTrend = dW == null || wts.length < 2 ? 'Nog te weinig metingen voor een trend.' : Math.abs(dW) < 0.4 ? 'Je gewicht is stabiel.' : dW > 0 ? `Je bent ${nf(dW)} kg aangekomen.` : `Je bent ${nf(-dW)} kg afgevallen.`;
+  const wGoal = p.goalWeight && lastW ? (Math.abs(lastW - p.goalWeight) < 0.5 ? 'Je zit op je doelgewicht.' : `Nog ${nf(Math.abs(lastW - p.goalWeight))} kg tot je doel van ${nf(p.goalWeight)} kg.`) : '';
+  // per oefening
+  const exUsers = whoIds(S.exWho || 'both').map(userOf);
+  const used = new Map(); for (const x of USERS) for (const w of workoutsOf(x.id)) for (const e of w.ex || []) if (e.sets?.length) used.set(e.id, (used.get(e.id) || 0) + 1);
+  const exList = [...used.entries()].sort((a, b) => b[1] - a[1]).map(([id]) => exById(id) || { id, name: S.data.workouts.flatMap((w) => w.ex || []).find((e) => e.id === id)?.name || id, kind: 'kg' });
+  if (!S.progEx || !used.has(S.progEx)) S.progEx = exList[0]?.id || null;
+  const cur = exList.find((e) => e.id === S.progEx);
+  const metricLabel = { e1rm: 'Geschat 1RM', top: 'Beste set', vol: 'Volume' };
+  const series = cur ? exUsers.map((x) => ({ name: x.name, color: x.color, points: exHistory(x.id, cur.id).map((h) => ({ x: h.t, y: S.progMetric === 'e1rm' ? Math.round(h.e1 * 10) / 10 : S.progMetric === 'top' ? h.top : h.vol })) })) : [];
+  const unit = cur?.kind === 'time' && S.progMetric !== 'vol' ? 's' : cur?.kind === 'bw' && S.progMetric === 'top' ? '' : ' kg';
+  const legend = (us) => (us.length > 1 ? `<div class="legend">${us.map((x) => `<span style="--c:${x.color}"><i></i>${x.name}</span>`).join('')}</div>` : '');
+  const vtag = (v) => `<span class="vtag ${v[1]}">${v[0]}</span>`;
+  return `<div class="wrap screen home6">
+    <div class="bar-top"><span></span><h1>Voortgang</h1><span></span></div>
+    <section class="stat-hero">
+      <div class="stat-hero__l"><span class="whero__eye">Jouw status vandaag</span>${dotNum(st.score, 'xxl')}<b>${st.label}</b></div>
+      <div class="stat-hero__r">${st.parts.map((x) => `<div class="sp"><div class="sp__t"><span>${x.k}</span><b>${Math.round(x.v * 100)}%</b></div>${fadeBar(x.v)}</div>`).join('')}</div>
+      <p class="stat-hero__tip">${st.R ? st.R.tip : 'Koppel Apple Gezondheid (Profiel) voor slaap en stappen; dan wordt je status completer.'}</p>
     </section>
+
+    <div class="sec"><h2>Sport</h2></div>
+    <section class="card mini"><div class="mini__h"><span><b>Trainingen per maand</b><br><small class="muted">${thisM} deze maand · ${thisM >= lastM ? (thisM - lastM ? `${thisM - lastM} meer` : 'evenveel') : `${lastM - thisM} minder`} dan vorige maand</small></span></div>
+      ${barsChart(months.map((m, i) => ({ v: mineM[i], l: m.toLocaleDateString('nl-NL', { month: 'short' }).replace('.', ''), t: `${mineM[i]} trainingen`, hi: i === 5 })), { fmt: (v) => v })}
+      <div class="legend"><span style="--c:${u.color}"><i></i>${esc(u.name)}</span><span class="muted small">${esc(other().name)}: ${otherM[5]} deze maand</span></div></section>
+    ${calendarCard()}
+    ${duelCard()}
+    <section class="card"><div class="sec" style="margin:0"><h2>Per oefening</h2></div>${whoSegL('exWho')}
+      ${exList.length ? `<label class="f">Oefening<select class="in" id="prog-ex">${exList.map((e) => `<option value="${e.id}" ${e.id === S.progEx ? 'selected' : ''}>${esc(e.name)}</option>`).join('')}</select></label>
+      <div class="chips">${Object.entries(metricLabel).map(([k, l]) => `<button class="chip" data-act="metric" data-m="${k}" aria-pressed="${S.progMetric === k}">${l}</button>`).join('')}</div>
+      ${lineChart(series, { unit, emptyMsg: 'Deze oefening is nog niet gedaan.' })}${legend(exUsers)}` : '<div class="empty">Log een training en je ziet hier per oefening je lijn omhoog gaan.</div>'}</section>
+    ${recordsCard()}
+
+    <div class="sec"><h2>Slaap</h2><button class="link" data-act="sleep">Invullen</button></div>
+    <section class="card mini">${sl ? `<div class="mini__h"><span><b>Gemiddeld ${hmin(sl.avg)}</b><br><small class="muted">afgelopen 7 nachten · doel ${hmin(sl.goal)}</small></span>${vtag(sl.verdict)}</div>
+      ${barsChart(sl.days.map((x, i) => ({ v: x.m, l: i % 2 ? '' : dayLetter(x.d), t: `${fmtDate(x.d)}: ${x.m ? hmin(x.m) : 'geen data'}`, hi: i === 13 })), { goal: sl.goal, fmt: (v) => hmin(v) })}
+      <div class="fb"><p>${sl.verdict[2]}</p>${sl.extra.map((x) => `<p>${x}</p>`).join('')}${st.R ? `<p><b>Herstel ${st.R.score}/100:</b> ${st.R.tip}</p>` : ''}</div>`
+      : '<div class="empty">Nog geen slaapgegevens. Koppel Apple Gezondheid via Profiel, of tik op Invullen.</div>'}</section>
+
+    <div class="sec"><h2>Stappen</h2><button class="link" data-act="steps">Invullen</button></div>
+    <section class="card mini">${sp ? `<div class="mini__h"><span><b>Gemiddeld ${nf(Math.round(sp.avg), 0)} stappen</b><br><small class="muted">per dag · ± ${nf(sp.kcal, 0)} kcal extra deze week</small></span>${vtag(sp.verdict)}</div>
+      ${barsChart(sp.days.map((x, i) => ({ v: x.v, l: i % 2 ? '' : dayLetter(x.d), t: `${fmtDate(x.d)}: ${nf(x.v, 0)} stappen`, hi: i === 13 })), { goal: sp.goal, fmt: (v) => nf(v / 1000, 0) + 'k' })}
+      <div class="fb"><p>${sp.verdict[2]}</p></div>`
+      : '<div class="empty">Nog geen stappen. Koppel Apple Gezondheid via Profiel, of tik op Invullen.</div>'}</section>
+
+    <div class="sec"><h2>Gewicht</h2><button class="link" data-act="go" data-r="body">Metingen</button></div>
+    <section class="card mini">${lastW != null ? `<div class="mini__h"><span>${dotNum(nf(lastW) + ' kg')}<br><small class="muted">laatste meting · ${fmtDate(wts[wts.length - 1].date)}</small></span>${dW != null && wts.length > 1 ? `<span class="vtag ${Math.abs(dW) < 0.4 ? 'good' : 'warn'}">${dW > 0 ? '+' : ''}${nf(dW)} kg</span>` : ''}</div>
+      ${lineChart([{ name: u.name, color: u.color, points: wts.map((m) => ({ x: parseDate(m.date), y: m.weight })) }], { unit: ' kg', h: 160 })}
+      <div class="fb"><p>${wTrend} ${wGoal}</p></div>` : '<div class="empty">Nog geen weging. Voeg er een toe via Metingen.</div>'}</section>
   </div>`;
 }
-function viewSettings() {
-  const p = profile();
-  return `<div class="wrap screen full">
-    <div class="bar-top"><button class="circle" data-act="back" aria-label="Terug">${IC.back}</button><h1>Profiel bewerken</h1><span></span></div>
-    <section class="card">
-      <label class="f">Over jou<textarea class="in" id="p-bio" placeholder="Bijv. doel: 100 kg bankdrukken voor de zomer">${esc(p.bio || '')}</textarea></label>
-      <div class="grid2">
-        <label class="f">Lengte (cm)<input class="in num" id="p-height" inputmode="numeric" value="${p.height ?? ''}"></label>
-        <label class="f">Geboortejaar<input class="in num" id="p-birth" inputmode="numeric" value="${p.birthYear ?? ''}"></label>
-        <label class="f">Doelgewicht (kg)<input class="in num" id="p-goal" inputmode="decimal" value="${p.goalWeight ?? ''}"></label>
-        <label class="f">Trainingen per week<input class="in num" id="p-weekly" inputmode="numeric" value="${p.weekly ?? 3}"></label>
-        <label class="f">Lichaam<select class="in" id="p-sex"><option value="m" ${p.sex !== 'v' ? 'selected' : ''}>Man</option><option value="v" ${p.sex === 'v' ? 'selected' : ''}>Vrouw</option></select></label>
-      </div>
-      <button class="btn cta wide plain" data-act="save-p">Opslaan</button></section>
-    ${healthSettings()}
-    <section class="card"><h2>Foto’s</h2>
-      ${canPhoto() ? `<p class="muted small" style="margin:0">Zet jullie eigen gymfoto’s in de app. Liggende of staande foto’s werken allebei.</p>
-      <div class="photos">${PHOTO_SLOTS().map(([slot, label]) => { const u = photoUrl(slot);
-        return `<div class="pslot"><button class="pthumb" data-act="photo" data-slot="${slot}" aria-label="Foto kiezen voor ${esc(label)}">${u ? `<img src="${u}" alt="">` : IC.camera}</button><small>${esc(label)}</small>${S.data.photos.some((x) => x.id === slot) ? `<button class="link" data-act="photo-del" data-slot="${slot}" data-confirm>${DEFAULT_PHOTOS[slot] ? 'Standaard' : 'Verwijder'}</button>` : ''}</div>`; }).join('')}</div>`
-      : '<p class="muted small" style="margin:0">Foto’s toevoegen kan alleen de eigenaar van de app. Vraag Antonie om een foto te uploaden.</p>'}</section>
-    <button class="btn ghost" data-act="logout">Ander profiel kiezen</button>
-    ${S.mode === 'supa' ? `<p class="muted small" style="margin:0;text-align:center">Ingelogd als ${esc(S.authEmail || '')}</p><button class="btn danger" data-act="sb-logout">Uitloggen</button>` : ''}
-  </div>`;
-}
-function viewBody() {
-  const u = userOf(S.me); const p = profile(); const bp = bodyParams(S.me); const ms = bodyOf();
-  const firstM = ms.find((m) => m.weight != null); const lastW = latestBody(S.me, 'weight');
-  const delta = firstM && lastW != null ? lastW - firstM.weight : null;
-  const series = (S.bodyBoth ? USERS : [u]).map((x) => ({ name: x.name, color: x.color, points: bodyOf(x.id).filter((m) => m.weight != null).map((m) => ({ x: parseDate(m.date), y: m.weight })) }));
-  const fields = [['weight', 'Gewicht', 'kg'], ['fat', 'Vet', '%'], ['waist', 'Taille', 'cm'], ['chest', 'Borst', 'cm'], ['arm', 'Arm', 'cm'], ['thigh', 'Bovenbeen', 'cm']];
-  return `<div class="wrap screen full">
-    <div class="bar-top"><button class="circle" data-act="back" aria-label="Terug">${IC.back}</button><h1>Lichaam & metingen</h1><span></span></div>
-    <section class="card"><div class="grid3">
-      <div class="bigstat"><b>${p.height ? nf(p.height, 0) : '–'}</b><span>cm lang</span></div>
-      <div class="bigstat"><b>${lastW != null ? nf(lastW) : '–'}</b><span>kg${delta != null && Math.abs(delta) > 0.05 ? ` (${delta > 0 ? '+' : ''}${nf(delta)})` : ''}</span></div>
-      <div class="bigstat"><b>${p.height && lastW ? nf(bp.bmi) : '–'}</b><span>BMI</span></div></div>
-      <p class="muted small" style="margin:0">Vet% ${latestBody(S.me, 'fat') != null ? 'komt uit je laatste meting' : `geschat op ${nf(bp.fat, 0)}% via BMI en leeftijd`}. Je poppetje op je profiel gebruikt deze waarden.</p></section>
-    <section class="card"><div class="sec" style="margin:0"><h2>Gewicht</h2><div class="seg"><button data-act="both" aria-pressed="${!S.bodyBoth}">Ik</button><button data-act="both" aria-pressed="${S.bodyBoth}">Samen</button></div></div>
-      ${lineChart(series, { unit: ' kg', emptyMsg: 'Nog geen weging. Voeg hieronder je eerste meting toe.' })}
-      ${S.bodyBoth ? `<div class="legend">${USERS.map((x) => `<span style="--c:${x.color}"><i></i>${x.name}</span>`).join('')}</div>` : p.goalWeight ? `<p class="muted small" style="margin:0">Doel: ${nf(p.goalWeight)} kg</p>` : ''}</section>
-    <section class="card"><h2>Meting toevoegen</h2>
-      <label class="f" style="max-width:200px">Datum<input class="in" type="date" id="m-date" value="${todayStr()}"></label>
-      <div class="grid3">${fields.map(([k, l, un]) => `<label class="f">${l} (${un})<input class="in num" id="m-${k}" inputmode="decimal" placeholder="${latestBody(S.me, k) ?? ''}"></label>`).join('')}</div>
-      <button class="btn blue" data-act="add-m">Meting opslaan</button>
-      ${ms.length ? `<details class="hist"><summary><b>Alle metingen (${ms.length})</b><span class="muted small">tonen</span></summary><div class="table-wrap"><table><thead><tr><th>Datum</th>${fields.map(([, l]) => `<th class="r">${l}</th>`).join('')}<th></th></tr></thead><tbody>
-      ${[...ms].reverse().map((m) => `<tr><td>${fmtDate(m.date, { day: 'numeric', month: 'short', year: '2-digit' })}</td>${fields.map(([k]) => `<td class="r">${m[k] != null ? nf(m[k]) : ''}</td>`).join('')}<td><button class="btn sm danger" data-act="del-m" data-id="${m.id}" data-confirm>Wis</button></td></tr>`).join('')}</tbody></table></div></details>` : ''}</section>
-  </div>`;
-}
+
 function prRows(u) {
   const used = new Set(workoutsOf(u).flatMap((w) => (w.ex || []).map((e) => e.id))); const rows = [];
   for (const id of used) {
@@ -2804,42 +2880,76 @@ function prRows(u) {
   }
   return rows.sort((a, b) => b.n - a.n);
 }
-function viewRecords() {
-  const rows = prRows(S.me);
-  return `<div class="wrap screen full">
-    <div class="bar-top"><button class="circle" data-act="back" aria-label="Terug">${IC.back}</button><h1>Records</h1><span></span></div>
-    <section class="card">${rows.length ? `<div class="table-wrap"><table><thead><tr><th>Oefening</th><th class="r">Beste set</th><th class="r">1RM</th><th class="r">Groei</th></tr></thead><tbody>
-      ${rows.map((r) => `<tr><td>${esc(r.e.name)}</td><td class="r">${fmtSet(r.best.s, r.best.kind)}</td><td class="r">${r.best.kind === 'kg' ? nf(r.best.sc) : '–'}</td><td class="r" style="color:${r.gain > 0 ? 'var(--blue-hi)' : 'var(--muted)'}">${r.gain > 0 ? '+' : ''}${nf(r.gain, 0)}%</td></tr>`).join('')}</tbody></table></div>
-      <p class="muted small" style="margin:0">1RM = geschat maximaal gewicht voor 1 herhaling: gewicht × (1 + reps/30).</p>` : '<div class="empty">Nog geen records. Die komen vanzelf na je eerste trainingen.</div>'}</section>
+
+// ---------- Profiel & instellingen ----------
+function viewProfile() {
+  const u = userOf(S.me); const p = profile(); const ws = activityOf();
+  const first = ws.length ? parseDate(ws[ws.length - 1].date) : null;
+  const weeks = first ? Math.max(1, Math.ceil((Date.now() - first) / (7 * DAY))) : 0;
+  const uph = photoUrl('user_' + S.me);
+  return `<div class="wrap screen full home6">
+    <div class="bar-top"><button class="circle" data-act="back" aria-label="Terug">${IC.back}</button><h1>Profiel</h1><span></span></div>
+    <section class="pcard ${uph ? 'has-ph' : ''}">${uph ? phDiv(uph) : ''}<div class="pcard__fade"></div>
+      ${uph ? '' : `<div class="pcard__face">${faceHtml(u, 96)}</div>`}
+      <div class="pcard__t"><h1>${esc(u.name)}</h1>${p.bio ? `<p>${esc(p.bio)}</p>` : ''}</div></section>
+    <div class="trio card" style="padding:14px 6px"><div><small>Ervaring</small><b>${weeks} ${weeks === 1 ? 'week' : 'weken'}</b></div><div><small>Trainingen</small><b>${ws.length}</b></div><div><small>Records</small><b>${prCount(S.me)}</b></div></div>
+    <section class="card"><h2>Over jou</h2>
+      <label class="f">Bio<textarea class="in" id="p-bio" placeholder="Bijv. doel: 100 kg bankdrukken voor de zomer">${esc(p.bio || '')}</textarea></label>
+      <div class="grid2">
+        <label class="f">Lengte (cm)<input class="in num" id="p-height" inputmode="numeric" value="${p.height ?? ''}"></label>
+        <label class="f">Geboortejaar<input class="in num" id="p-birth" inputmode="numeric" value="${p.birthYear ?? ''}"></label>
+        <label class="f">Doelgewicht (kg)<input class="in num" id="p-goal" inputmode="decimal" value="${p.goalWeight ?? ''}"></label>
+        <label class="f">Lichaam<select class="in" id="p-sex"><option value="m" ${p.sex !== 'v' ? 'selected' : ''}>Man</option><option value="v" ${p.sex === 'v' ? 'selected' : ''}>Vrouw</option></select></label>
+      </div></section>
+    <section class="card"><h2>Doelen</h2>
+      <div class="grid3">
+        <label class="f">Trainingen/week<input class="in num" id="p-weekly" inputmode="numeric" value="${p.weekly ?? 3}"></label>
+        <label class="f">Slaap (uur)<input class="in num" id="p-sleep" inputmode="decimal" value="${p.sleepGoal ?? 8}"></label>
+        <label class="f">Stappen/dag<input class="in num" id="p-steps" inputmode="numeric" value="${p.stepGoal ?? 10000}"></label>
+      </div>
+      <button class="btn cta wide plain" data-act="save-p">Opslaan</button></section>
+    ${healthSettings()}
+    <section class="card"><h2>Foto’s</h2>
+      ${canPhoto() ? `<p class="muted small" style="margin:0">Je profielfoto en de foto’s in de app.</p>
+      <div class="photos">${PHOTO_SLOTS().map(([slot, label]) => { const pu = photoUrl(slot);
+        return `<div class="pslot"><button class="pthumb" data-act="photo" data-slot="${slot}" aria-label="Foto kiezen voor ${esc(label)}">${pu ? `<img src="${pu}" alt="">` : IC.camera}</button><small>${esc(label)}</small>${S.data.photos.some((x) => x.id === slot) ? `<button class="link" data-act="photo-del" data-slot="${slot}" data-confirm>${DEFAULT_PHOTOS[slot] ? 'Standaard' : 'Verwijder'}</button>` : ''}</div>`; }).join('')}</div>`
+      : '<p class="muted small" style="margin:0">Foto’s toevoegen kan alleen de eigenaar van de app.</p>'}</section>
+    <section class="card menu-list">
+      <button data-act="go" data-r="body"><span>Lichaam &amp; metingen</span>${IC.chev}</button>
+      <button data-act="switch-user"><span>Wissel naar ${esc(other().name)}</span>${IC.swap}</button>
+      <button data-act="logout"><span>Ander profiel kiezen</span>${IC.chev}</button>
+    </section>
+    ${S.mode === 'supa' ? `<p class="muted small" style="margin:0;text-align:center">Ingelogd als ${esc(S.authEmail || '')}</p><button class="btn danger" data-act="sb-logout">Uitloggen</button>` : ''}
   </div>`;
 }
+const viewSettings = viewProfile;
 
-// ---------- Voortgang ----------
-function viewProgress() {
-  const exUsers = whoIds(S.exWho || 'both').map(userOf); const wkUsers = whoIds(S.wkWho || 'both').map(userOf);
-  const used = new Map();
-  for (const u of USERS) for (const w of workoutsOf(u.id)) for (const e of w.ex || []) if (e.sets?.length) used.set(e.id, (used.get(e.id) || 0) + 1);
-  const exList = [...used.entries()].sort((a, b) => b[1] - a[1]).map(([id]) => exById(id) || { id, name: S.data.workouts.flatMap((w) => w.ex || []).find((e) => e.id === id)?.name || id, kind: 'kg' });
-  if (!S.progEx || !used.has(S.progEx)) S.progEx = exList[0]?.id || null;
-  const cur = exList.find((e) => e.id === S.progEx);
-  const metricLabel = { e1rm: 'Geschat 1RM', top: 'Beste set', vol: 'Volume' };
-  const series = cur ? exUsers.map((u) => ({ name: u.name, color: u.color, points: exHistory(u.id, cur.id).map((h) => ({ x: h.t, y: S.progMetric === 'e1rm' ? Math.round(h.e1 * 10) / 10 : S.progMetric === 'top' ? h.top : h.vol })) })) : [];
-  const unit = cur?.kind === 'time' && S.progMetric !== 'vol' ? 's' : cur?.kind === 'bw' && S.progMetric === 'top' ? '' : ' kg';
-  const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getTime();
-  const duelStat = (id) => { const l = activityOf(id).filter((w) => parseDate(w.date) >= monthStart); return { n: l.length, ton: l.reduce((a, w) => a + (w.user === id ? wStats(w).vol : 0), 0) / 1000, kcal: l.reduce((a, w) => a + kcalOf(w), 0), pr: prCount(id, monthStart) }; };
-  const [a, b] = USERS.map((x) => duelStat(x.id));
-  const drow = (label, k, d = 0) => `<b class="l num ${a[k] > b[k] ? 'win' : ''}" style="--c:${USERS[0].color}">${nf(a[k], d)}</b><span class="mid">${label}</span><b class="num ${b[k] > a[k] ? 'win' : ''}" style="--c:${USERS[1].color}">${nf(b[k], d)}</b>`;
-  const legend = (us) => (us.length > 1 ? `<div class="legend">${us.map((u) => `<span style="--c:${u.color}"><i></i>${u.name}</span>`).join('')}</div>` : '');
-  return `<div class="wrap screen">
-    <div class="bar-top"><span></span><h1>Voortgang</h1><span></span></div>
-    ${calendarCard()}
-    ${duelCard()}
-    <section class="card"><div class="sec" style="margin:0"><h2>Per oefening</h2></div>${whoSegL('exWho')}
-      ${exList.length ? `<label class="f">Oefening<select class="in" id="prog-ex">${exList.map((e) => `<option value="${e.id}" ${e.id === S.progEx ? 'selected' : ''}>${esc(e.name)}</option>`).join('')}</select></label>
-      <div class="chips">${Object.entries(metricLabel).map(([k, l]) => `<button class="chip" data-act="metric" data-m="${k}" aria-pressed="${S.progMetric === k}">${l}</button>`).join('')}</div>
-      ${lineChart(series, { unit, emptyMsg: 'Deze oefening is nog niet gedaan.' })}${legend(exUsers)}` : '<div class="empty">Log een training en je ziet hier per oefening je lijn omhoog gaan.</div>'}</section>
-    ${recordsCard()}
-    <section class="card"><div class="sec" style="margin:0"><h2>Sets per week</h2></div>${whoSegL('wkWho')}${weekBars(wkUsers.map((u) => ({ color: u.color, workouts: workoutsOf(u.id) })))}${legend(wkUsers)}</section>
+// ---------- Lichaam & metingen ----------
+function viewBody() {
+  const u = userOf(S.me); const p = profile(); const bp = bodyParams(S.me); const ms = bodyOf();
+  const fields = [['weight', 'Gewicht', 'kg'], ['fat', 'Vet', '%'], ['waist', 'Taille', 'cm'], ['chest', 'Borst', 'cm'], ['arm', 'Arm', 'cm'], ['thigh', 'Bovenbeen', 'cm']];
+  const series = (k) => ms.filter((m) => m[k] != null);
+  const tile = ([k, l, un]) => { const s = series(k); if (!s.length) return ''; const last = s[s.length - 1][k], first = s[0][k], d = Math.round((last - first) * 10) / 10;
+    return `<div class="ach"><span class="k">${l}</span><div class="ach__v">${dotNum(nf(last))}</div><small>${un}${s.length > 1 ? ` · <b class="${d > 0 ? 'up' : d < 0 ? 'down' : ''}">${d > 0 ? '+' : ''}${nf(d)}</b>` : ''}</small></div>`; };
+  const lastW = latestBody(S.me, 'weight'); const tiles = fields.map(tile).join('');
+  const goalFrac = p.goalWeight && lastW && series('weight').length ? (() => { const start = series('weight')[0].weight; const tot = Math.abs(start - p.goalWeight) || 1; return Math.max(0, Math.min(1, 1 - Math.abs(lastW - p.goalWeight) / tot)); })() : null;
+  const wSeries = (S.bodyBoth ? USERS : [u]).map((x) => ({ name: x.name, color: x.color, points: bodyOf(x.id).filter((m) => m.weight != null).map((m) => ({ x: parseDate(m.date), y: m.weight })) }));
+  return `<div class="wrap screen full home6">
+    <div class="bar-top"><button class="circle" data-act="back" aria-label="Terug">${IC.back}</button><h1>Lichaam &amp; metingen</h1><span></span></div>
+    <section class="stat-hero">
+      <div class="stat-hero__l"><span class="whero__eye">Gewicht nu</span>${dotNum(lastW != null ? nf(lastW) : '–', 'xxl')}<b>${p.height && lastW ? `BMI ${nf(bp.bmi)}` : 'kg'}</b></div>
+      <div class="stat-hero__r">${goalFrac != null ? `<div class="sp"><div class="sp__t"><span>Naar je doel (${nf(p.goalWeight)} kg)</span><b>${Math.round(goalFrac * 100)}%</b></div>${fadeBar(goalFrac)}</div>` : '<p class="muted small" style="margin:0">Stel een doelgewicht in bij Profiel om je voortgang te zien.</p>'}
+        <div class="sp"><div class="sp__t"><span>Vet% ${latestBody(S.me, 'fat') != null ? '(gemeten)' : '(geschat)'}</span><b>${nf(bp.fat, 0)}%</b></div>${fadeBar(Math.min(1, bp.fat / 35))}</div></div>
+    </section>
+    ${tiles ? `<div class="achs" data-hscroll="btiles">${tiles}</div>` : ''}
+    <section class="card mini"><div class="mini__h"><span><b>Gewicht</b><br><small class="muted">${S.bodyBoth ? 'jullie allebei' : 'jouw verloop'}</small></span><div class="seg"><button data-act="both" aria-pressed="${!S.bodyBoth}">Ik</button><button data-act="both" aria-pressed="${S.bodyBoth}">Samen</button></div></div>
+      ${lineChart(wSeries, { unit: ' kg', emptyMsg: 'Nog geen weging. Voeg hieronder je eerste meting toe.' })}
+      ${S.bodyBoth ? `<div class="legend">${USERS.map((x) => `<span style="--c:${x.color}"><i></i>${x.name}</span>`).join('')}</div>` : ''}</section>
+    <section class="card"><h2>Meting toevoegen</h2>
+      <label class="f" style="max-width:220px">Datum<input class="in" type="date" id="m-date" value="${todayStr()}"></label>
+      <div class="grid3">${fields.map(([k, l, un]) => `<label class="f">${l} (${un})<input class="in num" id="m-${k}" inputmode="decimal" placeholder="${latestBody(S.me, k) ?? ''}"></label>`).join('')}</div>
+      <button class="btn cta wide plain" data-act="add-m">Meting opslaan</button></section>
+    ${ms.length ? `<section class="card"><h2>Alle metingen</h2><div class="list">${[...ms].reverse().map((m) => `<div class="mrow"><div><b>${fmtDate(m.date, { day: 'numeric', month: 'short', year: 'numeric' })}</b><small>${fields.filter(([k]) => m[k] != null).map(([k, l, un]) => `${l} ${nf(m[k])}${un === '%' ? '%' : ' ' + un}`).join(' · ')}</small></div><button class="btn sm danger" data-act="del-m" data-id="${m.id}" data-confirm>Wis</button></div>`).join('')}</div></section>` : ''}
   </div>`;
 }
 
@@ -2873,10 +2983,8 @@ function renderSheet() {
       <button class="btn danger" data-act="discard" data-confirm>${draft?.editing ? 'Stop met bewerken' : 'Training weggooien'}</button>`;
   } else if (S.sheet.type === 'menu') {
     title = 'Menu';
-    body = `<button class="pick" data-act="go" data-r="profile"><span class="row">${faceHtml(userOf(S.me), 36)}<span><b>${esc(userOf(S.me).name)}</b><br><small>Profiel en 3D-lichaam</small></span></span>${IC.chev.replace('<svg', '<svg width="18" height="18" style="stroke:var(--muted);fill:none;stroke-width:2"')}</button>
+    body = `<button class="pick" data-act="go" data-r="profile"><span class="row">${faceHtml(userOf(S.me), 36)}<span><b>${esc(userOf(S.me).name)}</b><br><small>Profiel, doelen en instellingen</small></span></span>${IC.chev.replace('<svg', '<svg width="18" height="18" style="stroke:var(--muted);fill:none;stroke-width:2"')}</button>
       <button class="pick" data-act="go" data-r="body"><b>Lichaam &amp; metingen</b></button>
-      <button class="pick" data-act="go" data-r="records"><b>Records</b></button>
-      <button class="pick" data-act="go" data-r="settings"><span class="row">${IC.gear.replace('<svg', '<svg width="20" height="20" style="stroke:currentColor;fill:none;stroke-width:2"')}<b>Instellingen</b></span></button>
       <button class="pick" data-act="switch-user"><span class="row">${dotu(other())}<b>Wissel naar ${esc(other().name)}</b></span></button>`;
   } else if (S.sheet.type === 'day') {
     title = 'Kies een dag';
@@ -3128,10 +3236,9 @@ document.addEventListener('click', async (ev) => {
     case 'rest': if (rest) { rest.end += +t.dataset.d * 1000; rest.total = Math.max(rest.total, (rest.end - Date.now()) / 1000); } break;
     case 'rest-stop': stopRest(); break;
     // Klaar
-    case 'rate': S.done.rating = +t.dataset.n; S.done.note = $('#done-note')?.value ?? S.done.note; render(); break;
     case 'done-close': {
       const note = ($('#done-note')?.value || '').trim();
-      if (S.done.rating !== S.done.w.rating || note !== S.done.w.note) await Store.put('workouts', S.done.id, { ...S.done.w, rating: S.done.rating, note });
+      if (note !== S.done.w.note) await Store.put('workouts', S.done.id, { ...S.done.w, note });
       S.done = null; go('home'); break;
     }
     // Voortgang & profiel
@@ -3162,8 +3269,9 @@ document.addEventListener('click', async (ev) => {
     case 'save-p': {
       const p = { ...profile(), height: num($('#p-height').value), birthYear: num($('#p-birth').value), goalWeight: num($('#p-goal').value), weekly: Math.max(1, Math.min(7, num($('#p-weekly').value) || 3)), sex: $('#p-sex').value, bio: $('#p-bio').value.trim() };
       if ($('#p-sleep')) p.sleepGoal = Math.max(4, Math.min(12, num($('#p-sleep').value) || 8));
+      if ($('#p-steps')) p.stepGoal = Math.max(1000, Math.min(40000, num($('#p-steps').value) || 10000));
       delete p.id;
-      if (await Store.put('profiles', S.me, p)) { S.data.profiles = [...S.data.profiles.filter((x) => x.id !== S.me), { ...p, id: S.me }]; toast('Profiel opgeslagen.'); back(); }
+      if (await Store.put('profiles', S.me, p)) { S.data.profiles = [...S.data.profiles.filter((x) => x.id !== S.me), { ...p, id: S.me }]; toast('Opgeslagen.'); render(); }
       break;
     }
   }
