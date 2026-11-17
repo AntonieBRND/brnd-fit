@@ -872,7 +872,7 @@ nav.tabs .plus2:active { transform: scale(.94); }
 .bch__goal em { position: absolute; right: 0; top: -16px; font-style: normal; font-size: 10px; color: var(--muted); background: var(--surface); padding: 0 4px; border-radius: 4px; }
 .bch__lab { display: flex; gap: 5px; }
 .bch__lab span { flex: 1; text-align: center; font-size: 10px; color: var(--muted); }
-.status-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px 6px 6px; }
+.status-pill { display: inline-flex; align-items: center; gap: 10px; padding: 6px 6px 6px 18px; }
 .status-pill__n { width: 32px; height: 32px; border-radius: 50%; background: #0a0d14; color: #fff; display: grid; place-items: center; font-family: 'Doto', 'DotGothic16', monospace; font-weight: 900; font-size: 15px; }
 .pcard { position: relative; overflow: hidden; border-radius: 30px; min-height: 260px; padding: 22px; display: flex; flex-direction: column; justify-content: flex-end; gap: 10px; background: radial-gradient(70% 60% at 80% 20%, rgba(79,142,236,.35), transparent 70%), linear-gradient(160deg, #13264c, #070b14); isolation: isolate; }
 .pcard .ph { z-index: -2; } .pcard .ph::after { display: none; }
@@ -2071,7 +2071,7 @@ function viewHome() {
   const hm = (m) => (m >= 60 ? Math.floor(m / 60) + 'u ' + (m % 60) + 'm' : m + 'm');
   const heroPh = photoUrl('welcome') || tplPhoto(nt);
   const title = pct >= 100 ? 'Week<br>gehaald.' : pct >= 50 ? 'Je bent<br>goed bezig' : days ? 'Lekker<br>bezig' : 'Let\'s go<br>champ';
-  const ST = statusOf(); const heroBtn = draft ? `<button class="wbtn" data-act="resume">Hervat training</button>` : `<button class="wbtn status-pill" data-act="go" data-r="progress"><span class="status-pill__n">${ST.score}</span>Bekijk voortgang</button>`;
+  const ST = statusOf(); const heroBtn = draft ? `<button class="wbtn" data-act="resume">Hervat training</button>` : `<button class="wbtn status-pill" data-act="go" data-r="progress">Bekijk voortgang<span class="status-pill__n"><svg viewBox="0 0 7 7" width="15" height="15" fill="currentColor" aria-hidden="true"><rect x="3" y="0" width=".82" height=".82" rx=".2"/><rect x="4" y="1" width=".82" height=".82" rx=".2"/><rect x="5" y="2" width=".82" height=".82" rx=".2"/><rect x="0" y="3" width=".82" height=".82" rx=".2"/><rect x="1" y="3" width=".82" height=".82" rx=".2"/><rect x="2" y="3" width=".82" height=".82" rx=".2"/><rect x="3" y="3" width=".82" height=".82" rx=".2"/><rect x="4" y="3" width=".82" height=".82" rx=".2"/><rect x="5" y="3" width=".82" height=".82" rx=".2"/><rect x="6" y="3" width=".82" height=".82" rx=".2"/><rect x="5" y="4" width=".82" height=".82" rx=".2"/><rect x="4" y="5" width=".82" height=".82" rx=".2"/><rect x="3" y="6" width=".82" height=".82" rx=".2"/></svg></span></button>`;
   const nextBlock = myNext.length
     ? `<div class="tcar" id="tcar" data-hscroll="tcar">${myNext.map(nextCard).join('')}</div>${myNext.length > 1 ? `<div class="tdots">${myNext.map((_, i) => `<button data-act="tdot" data-i="${i}" class="${i ? '' : 'on'}" aria-label="Training ${i + 1}"></button>`).join('')}</div>` : ''}`
     : `<button class="card nextempty" data-act="add-open" data-mode="plan"><span class="pend__ic" style="--c:var(--blue)">${IC.clock}</span><div><b>Nog niks ingepland</b><small>Volgende in jullie schema: ${esc(nt.short)} · ${meta.min} min</small></div>${IC.chev.replace('<svg', '<svg class="chev"')}</button>`;
