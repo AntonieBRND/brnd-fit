@@ -1896,6 +1896,12 @@ const SB = {
     const { error } = await this.client.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin + location.pathname } });
     return error ? error.message : null;
   },
+  async password(email, pw, isNew) {
+    const r = isNew ? await this.client.auth.signUp({ email, password: pw }) : await this.client.auth.signInWithPassword({ email, password: pw });
+    if (r.error) return r.error.message;
+    if (isNew && !r.data.session) return 'confirm';
+    return null;
+  },
   async verify(email, token) {
     const { error } = await this.client.auth.verifyOtp({ email, token, type: 'email' });
     return error ? error.message : null;
@@ -1913,9 +1919,13 @@ function viewLogin() {
     <div class="cnt"><h1>Log in bij<br><em>BRND FIT</em></h1>
       ${S.loginSent ? `<p>We hebben een mail gestuurd naar <b>${esc(S.loginSent)}</b>. Typ de code uit die mail hieronder in.</p>
       <form data-form="otp" class="stack" style="gap:10px"><input class="in otp-in" id="login-code" inputmode="numeric" autocomplete="one-time-code" maxlength="12" placeholder="123456" required><button class="btn cta wide">Inloggen</button></form>
-      <button class="btn ghost" data-act="login-again">Ander e-mailadres of nieuwe code</button>`
-      : `<p>Vul je e-mailadres in. Je krijgt een mail met een code om in te loggen; daarna blijf je ingelogd.</p>
-      <form data-form="login" class="stack" style="gap:10px"><input class="in" id="login-email" type="email" autocomplete="email" placeholder="jij@voorbeeld.nl" required value="${esc(ls.get('brndfit:email', ''))}"><button class="btn cta wide">Stuur code</button></form>`}
+      <button class="btn ghost" data-act="login-again">Terug</button>`
+      : `<p>${S.loginNew ? 'Maak je account aan. Kies een wachtwoord van minstens 6 tekens.' : 'Log in met je e-mailadres en wachtwoord. Daarna blijf je ingelogd.'}</p>
+      <form data-form="pw" class="stack" style="gap:10px">
+        <input class="in" id="login-email" type="email" autocomplete="email" placeholder="jij@voorbeeld.nl" required value="${esc(ls.get('brndfit:email', ''))}">
+        <input class="in" id="login-pw" type="password" autocomplete="${S.loginNew ? 'new-password' : 'current-password'}" minlength="6" placeholder="Wachtwoord" required>
+        <button class="btn cta wide">${S.loginNew ? 'Account maken' : 'Inloggen'}</button></form>
+      <button class="btn ghost" data-act="login-mode">${S.loginNew ? 'Ik heb al een account' : 'Nog geen account? Maak er een'}</button>`}
     </div></section>`;
 }
 
@@ -3060,6 +3070,7 @@ document.addEventListener('click', async (ev) => {
     case 'hk-new': { const tok = await SB.makeToken(S.me); if (tok) { S.healthToken = tok; const p = { ...profile(), hkToken: tok }; delete p.id; await Store.put('profiles', S.me, p); render(); toast('Koppelcode gemaakt.'); } break; }
     case 'copy': try { await navigator.clipboard.writeText(t.dataset.v); toast('Gekopieerd.'); } catch { toast('Kopiëren lukt hier niet, houd de tekst ingedrukt om te kopiëren.'); } break;
     case 'login-again': S.loginSent = null; render(); break;
+    case 'login-mode': S.loginNew = !S.loginNew; render(); break;
     case 'sb-logout': await SB.client.auth.signOut(); break;
     case 'steps-save': {
       const d = S.day || todayStr(); const v = Math.max(0, Math.round(num($('#steps-in').value) || 0));
@@ -3159,6 +3170,14 @@ document.addEventListener('click', async (ev) => {
 });
 document.addEventListener('submit', async (ev) => {
   if (ev.target.dataset.form === 'login') { ev.preventDefault(); const em = $('#login-email').value.trim(); ls.set('brndfit:email', em); const err = await SB.login(em); if (err) toast(err.includes('rate') ? 'Even wachten: je kunt maar een paar mails per uur aanvragen.' : err); else { S.loginSent = em; render(); setTimeout(() => $('#login-code')?.focus(), 50); } return; }
+  if (ev.target.dataset.form === 'pw') {
+    ev.preventDefault(); const em = $('#login-email').value.trim(); ls.set('brndfit:email', em);
+    const err = await SB.password(em, $('#login-pw').value, !!S.loginNew);
+    if (!err) { location.reload(); return; }
+    if (err === 'confirm') { toast('Account gemaakt, maar Supabase wil eerst een bevestiging per mail. Zet "Confirm email" uit (zie uitleg) en log daarna in.'); S.loginNew = false; render(); return; }
+    toast(/invalid/i.test(err) ? 'E-mail of wachtwoord klopt niet.' : /registered|exists/i.test(err) ? 'Dit e-mailadres heeft al een account. Log in.' : /rate/i.test(err) ? 'Even wachten en opnieuw proberen.' : err);
+    return;
+  }
   if (ev.target.dataset.form === 'otp') { ev.preventDefault(); const code = $('#login-code').value.replace(/\D/g, ''); const err = await SB.verify(S.loginSent, code); if (err) toast('Die code klopt niet of is verlopen. Vraag een nieuwe aan.'); else location.reload(); return; }
   if (ev.target.dataset.form === 'search') { ev.preventDefault(); S.browse.q = $('#home-q').value.trim(); S.browse.tab = 'all'; go('browse'); }
 });
