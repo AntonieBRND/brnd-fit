@@ -843,6 +843,9 @@ nav.tabs .plus2:active { transform: scale(.94); }
 .hk__row small { color: var(--muted); font-size: 12px; }
 .hk__row code, .hk__steps code { font-size: 12px; overflow-wrap: anywhere; color: var(--blue-hi); }
 .hk__steps { margin: 0; padding-left: 20px; display: grid; gap: 8px; font-size: 13px; color: #c9d3e6; }
+.hk__ok { margin: 0; display: flex; gap: 6px; align-items: center; color: var(--green, #4ade80); font-size: 13px; font-weight: 600; }
+.hk__ok svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.5; }
+.hk__more summary { cursor: pointer; font-weight: 600; font-size: 14px; margin-bottom: 8px; }
 
 /* v8: status, grafieken, profiel */
 .dotnum.xxl { font-size: 76px; line-height: .9; }
@@ -2002,25 +2005,33 @@ function sleepCard(d) {
 }
 function healthSettings() {
   if (S.mode !== 'supa') return `<section class="card"><h2>Apple Gezondheid</h2><p class="muted small" style="margin:0">Automatisch koppelen werkt in de losse BRND FIT-app (via de website). Hier vul je stappen en slaap zelf in via de kaarten op Home.</p></section>`;
-  const c = SB.cfg(); const url = `${c.supabaseUrl}/rest/v1/rpc/ingest_health`;
+  const c = SB.cfg(); const url = `${c.supabaseUrl}/rest/v1/rpc/brnd_sync?apikey=${c.supabaseKey}`;
   const code = S.healthToken || profile().hkToken || '';
+  const last = S.data.health.filter((x) => x.user === S.me && x.source === 'apple' && x.syncedAt).sort((a, b) => (a.syncedAt < b.syncedAt ? 1 : -1))[0];
+  const lastTxt = last ? `<p class="hk__ok">${IC.check} Gekoppeld · laatst ontvangen ${esc(relDay(last.date).toLowerCase())} om ${new Date(last.syncedAt).toTimeString().slice(0, 5)}</p>` : '';
+  const auto = `<li>Ga in Opdrachten naar <b>Automatisering</b> → <b>+</b> → <b>Tijdstip</b> → elke dag om <b>22:00</b>. Kies <b>Voer direct uit</b> en als actie de opdracht <b>BRND FIT</b>.</li>
+        <li>Tik één keer op de opdracht om te testen. Je stappen en slaap verschijnen dan hier en op Home.</li>`;
   return `<section class="card"><h2>Apple Gezondheid</h2>
-    
-    <p class="muted small" style="margin:0">Je iPhone stuurt elke dag automatisch je stappen, actieve kcal en slaap naar BRND FIT via een automatisering in de app Opdrachten.</p>
-    ${code ? `<div class="hk"><div class="hk__row"><small>Koppelcode</small><code id="hk-code">${esc(code)}</code><button class="btn sm" data-act="copy" data-v="${esc(code)}">Kopieer</button></div>
-      <div class="hk__row"><small>URL</small><code>${esc(url)}</code><button class="btn sm" data-act="copy" data-v="${esc(url)}">Kopieer</button></div>
-      <div class="hk__row"><small>apikey</small><code>${esc(c.supabaseKey.slice(0, 18))}…</code><button class="btn sm" data-act="copy" data-v="${esc(c.supabaseKey)}">Kopieer</button></div></div>
-      <ol class="hk__steps">
-        <li>Open <b>Opdrachten</b> → <b>Automatisering</b> → <b>+</b> → <b>Tijdstip</b>: elke dag om 09:00, kies <b>Voer direct uit</b>. (Maak er nog een om 22:00 voor je stappen van de hele dag.)</li>
-        <li>Voeg <b>Zoek gezondheidsmonsters</b> toe: type <b>Stappen</b>, startdatum <b>is vandaag</b>. Daarna <b>Bereken statistieken</b> → <b>Som</b>.</li>
-        <li>Herhaal voor <b>Actieve energie</b> (ook Som).</li>
-        <li>Voeg <b>Zoek gezondheidsmonsters</b> toe: type <b>Slaap</b>, startdatum <b>in de laatste 1 dagen</b>, waarde <b>is niet In bed</b>. Kies <b>Haal details op: Duur</b> en <b>Bereken statistieken</b> → <b>Som</b>.</li>
-        <li>Voeg <b>Formatteer datum</b> toe met Huidige datum, eigen notatie <code>yyyy-MM-dd</code>.</li>
-        <li>Voeg <b>Haal inhoud van URL op</b> toe met de URL hierboven, methode <b>POST</b>, headers <code>apikey</code> (de key hierboven) en <code>Content-Type: application/json</code>, en als JSON-hoofdtekst: <code>p_token</code> (koppelcode), <code>p_date</code> (datum), <code>p_steps</code>, <code>p_active_kcal</code> en <code>p_sleep</code> (de drie sommen).</li>
-        <li>Tik op ▶︎ om te testen: hier op Home verschijnen je stappen en slaap.</li>
-      </ol>
-      <button class="btn ghost" data-act="hk-new" data-confirm>Nieuwe koppelcode maken</button>`
-    : `<button class="btn blue wide" data-act="hk-new">Koppelcode maken</button>`}
+    <p class="muted small" style="margin:0">Je iPhone stuurt elke avond vanzelf je stappen, slaap en actieve kcal naar BRND FIT, via een opdracht in de app Opdrachten.</p>
+    ${lastTxt}
+    ${!code ? `<button class="btn blue wide" data-act="hk-new">Koppelcode maken</button>`
+    : `<div class="hk"><div class="hk__row"><small>Jouw code</small><code id="hk-code">${esc(code)}</code><button class="btn sm" data-act="copy" data-v="${esc(code)}">Kopieer</button></div></div>
+    ${c.shortcutUrl ? `<ol class="hk__steps">
+        <li><a class="btn cta wide" href="${esc(c.shortcutUrl)}" target="_blank" rel="noopener">Opdracht installeren</a></li>
+        <li>Tik op <b>Kopieer</b> hierboven. Open de opdracht <b>BRND FIT</b>, tik op het bovenste tekstvak en plak je code.</li>
+        ${auto}
+      </ol>`
+    : `<details class="hk__more" open><summary>Opdracht maken (eenmalig, 5 min)</summary><ol class="hk__steps">
+        <li>Open <b>Opdrachten</b> → <b>+</b> en noem hem <b>BRND FIT</b>.</li>
+        <li>Voeg <b>Tekst</b> toe en plak daarin je code.</li>
+        <li>Voeg <b>Zoek gezondheidsmonsters</b> toe: <b>Stappen</b>, startdatum <b>is vandaag</b>. Dan <b>Bereken statistieken</b> → <b>Som</b>.</li>
+        <li>Voeg <b>Zoek gezondheidsmonsters</b> toe: <b>Slaapanalyse</b>, startdatum <b>in de laatste 1 dagen</b>, waarde <b>is niet In bed</b>. Dan <b>Bereken statistieken</b> → <b>Som</b>.</li>
+        <li>Optioneel: hetzelfde voor <b>Actieve energie</b> (Som).</li>
+        <li>Voeg <b>Haal inhoud van URL op</b> toe en plak deze link: <button class="btn sm" data-act="copy" data-v="${esc(url)}">Kopieer link</button><br>Methode <b>POST</b>, hoofdtekst <b>JSON</b> met: <code>code</code> = Tekst, <code>stappen</code> = som stappen, <code>slaap</code> = som slaap, <code>kcal</code> = som energie.</li>
+        ${auto}
+      </ol></details>`}
+    <p class="muted small" style="margin:0">Mels? Deel de opdracht via ⋯ → <b>Deel</b> → <b>Kopieer iCloud-link</b>. Hij hoeft dan alleen zijn eigen code te plakken.</p>
+    <button class="btn ghost" data-act="hk-new" data-confirm>Nieuwe code maken</button>`}
   </section>`;
 }
 
