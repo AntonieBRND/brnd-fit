@@ -198,7 +198,7 @@ textarea.in { min-height: 80px; resize: vertical; }
 .dhero .tt h1 { font-size: 30px; }
 .dhero .tt small { color: #c8d7f4; font-size: 13px; }
 .dhero .tt .lv { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #c8d7f4; font-weight: 600; }
-.statbar { margin-top: -40px; position: relative; z-index: 1; background: var(--surface); border-radius: 22px; padding: 14px 6px; display: grid; grid-template-columns: repeat(4, 1fr); }
+.statbar { margin-top: -40px; position: relative; z-index: 1; background: var(--surface); border-radius: 22px; padding: 14px 6px; display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); }
 .statbar div { display: grid; justify-items: center; gap: 2px; text-align: center; border-right: 1px solid var(--line); }
 .statbar div:last-child { border-right: 0; }
 .statbar svg { width: 20px; height: 20px; stroke: var(--blue-hi); fill: none; stroke-width: 2; margin-bottom: 4px; }
@@ -228,7 +228,6 @@ textarea.in { min-height: 80px; resize: vertical; }
 .review { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
 .review .hd { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
 .review p { margin: 4px 0 0; font-size: 13px; color: #c9d3e6; }
-.stars { color: var(--orange); letter-spacing: 1px; font-size: 13px; }
 .dock { position: fixed; left: 0; right: 0; bottom: 0; z-index: 7; padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)); padding-top: 24px; background: linear-gradient(transparent, var(--bg) 40%); }
 .dock .note { text-align: center; font-size: 12px; color: var(--muted); margin-top: 8px; display: flex; justify-content: center; gap: 6px; align-items: center; }
 
@@ -328,9 +327,6 @@ textarea.in { min-height: 80px; resize: vertical; }
 .done-panel .st b.w { font-size: 15px; line-height: 1.6; font-stretch: 100%; }
 .done-panel .st small { font-size: 12px; font-weight: 600; opacity: .75; }
 .done-panel .pr { background: var(--bg); color: var(--orange); }
-.starpick { display: flex; gap: 6px; justify-content: center; }
-.starpick button { border: 0; background: none; font-size: 34px; color: var(--surface-3); padding: 0 2px; line-height: 1; }
-.starpick button.on { color: var(--orange); }
 .pr { display: inline-block; background: var(--orange); color: var(--on-orange); font-weight: 800; font-size: 11px; padding: 2px 8px; border-radius: 999px; letter-spacing: .03em; }
 
 /* Profiel */
@@ -443,7 +439,7 @@ textarea.in { min-height: 80px; resize: vertical; }
 .today h2, .dhero .tt h1, .welcome h1 { text-transform: uppercase; letter-spacing: -.005em; font-stretch: 115%; font-weight: 900; }
 .today h2 { font-size: 34px; }
 .sec h2 { font-size: 19px; }
-.done-panel .st { grid-template-columns: repeat(4, 1fr); }
+.done-panel .st { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); }
 
 .credit { margin: -6px 0 0; font-size: 10.5px; color: var(--muted); text-align: center; opacity: .7; }
 
@@ -471,7 +467,7 @@ textarea.in { min-height: 80px; resize: vertical; }
 .lb__hero-t h2 { font-size: 22px; }
 .lb__hero-t small { color: #c8d7f4; }
 .lb__who { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 14px; }
-.lb__stats { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--surface-2); border-radius: 16px; padding: 12px 4px; text-align: center; }
+.lb__stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); background: var(--surface-2); border-radius: 16px; padding: 12px 4px; text-align: center; }
 .lb__stats div { display: grid; border-right: 1px solid var(--line); }
 .lb__stats div:last-child { border-right: 0; }
 .lb__stats b { font-size: 19px; font-weight: 800; font-variant-numeric: tabular-nums; }
@@ -1792,7 +1788,7 @@ function viewSportWorkout(w, mine) {
     <div class="dhero has-ph" style="height:260px">${phDiv(ph)}${ph ? '' : `<span class="padel-hero__ic big">${PADEL_ICON}</span>`}<div class="tb"><button class="circle" data-act="back" aria-label="Terug">${IC.back}</button><span>Padel</span><span></span></div>
       <div class="tt"><span class="plate t-padel">Padel</span><h1>${w.result ? resTxt(w) : 'Padel'}</h1><small>${fmtDate(w.date, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</small></div></div>
     <div class="statbar"><div>${IC.clock}<b>${durMin(w)}</b><small>Minuten</small></div><div>${IC.flame}<b>${nf(kcalOf(w), 0)}</b><small>kcal</small></div><div>${IC.bolt}<b style="font-size:14px">${intTxt(w)}</b><small>Intensiteit</small></div><div>${IC.trophy}<b style="font-size:14px">${resTxt(w) || '–'}</b><small>Uitslag</small></div></div>
-    <section class="card"><div class="sec" style="margin:0"><h2>Wie</h2>${w.rating ? `<span class="stars">${'★'.repeat(w.rating)}${'☆'.repeat(5 - w.rating)}</span>` : ''}</div>
+    <section class="card"><div class="sec" style="margin:0"><h2>Wie</h2></div>
       <div class="who-mini" style="font-size:15px">${dotu(us)} <b>${esc(us.name)}</b> <span class="muted">${partnerOf(w) ? `speelde samen met ${esc(partnerOf(w).name)}` : 'speelde zonder ' + esc(other().name)}</span></div>
       ${w.start ? `<p class="muted small" style="margin:0">Begonnen om ${new Date(w.start).toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })}</p>` : ''}</section>
     ${w.score ? `<section class="card"><h2>Score</h2><p class="padel-score">${esc(w.score)}</p></section>` : ''}
@@ -2331,11 +2327,11 @@ function workoutModal(w) {
   return `<div class="lb__hero">${phDiv(ph)}<div class="lb__hero-t"><span class="plate ${tp?.cls || 't-custom'}">${esc(tp?.short || 'Eigen')}</span><h2>${esc(tp?.name || w.name || 'Training')}</h2>
       <small>${fmtDate(w.date, { weekday: 'long', day: 'numeric', month: 'long' })}</small></div></div>
     <div class="lb__who">${dotu(us)} <b>${esc(us.name)}</b> <span class="muted">· ${withTxt(w)}</span>${w.manual ? ' <span class="muted">· achteraf toegevoegd</span>' : ''}</div>
-    <div class="lb__stats"><div><b>${min || '–'}</b><small>min</small></div><div><b>${st.sets}</b><small>sets</small></div><div><b>${nf(kcal, 0)}</b><small>kcal</small></div><div><b>${nf(st.vol / 1000, 1)}</b><small>ton</small></div></div>
+    <div class="lb__stats"><div><b>${min || '–'}</b><small>min</small></div><div><b>${(w.ex || []).length}</b><small>oefeningen</small></div><div><b>${nf(kcal, 0)}</b><small>kcal</small></div></div>
     <div class="lb__ex">${top.map((e) => { const best = e.sets.reduce((a, s) => (setScore(s, e.kind) > setScore(a, e.kind) ? s : a), e.sets[0]);
       return `<div class="exl"><span>${esc(e.name)}</span><span class="muted num">${best ? `${e.sets.length}× · beste ${fmtSet(best, e.kind)}` : 'invullen'}</span>${twinLine(twinOf(w), e.id)}</div>`; }).join('')}
       ${(w.ex || []).length > 3 ? `<div class="muted small">+ ${(w.ex || []).length - 3} oefeningen meer</div>` : ''}</div>
-    ${w.prs?.length || w.rating ? `<div class="row">${w.prs?.length ? `<span class="pr">${w.prs.length} PR</span>` : ''}${w.rating ? `<span class="stars">${'★'.repeat(w.rating)}${'☆'.repeat(5 - w.rating)}</span>` : ''}</div>` : ''}
+    ${w.prs?.length ? `<div class="row"><span class="pr">${w.prs.length} PR</span></div>` : ''}
     ${w.pending && w.user === S.me ? `<button class="btn cta wide" data-act="edit-w" data-id="${w.id}">Vul je gewichten in</button><button class="btn ghost" data-act="w-more" data-id="${w.id}">Lees meer</button>` : w.pending ? `<p class="muted small" style="margin:0">${esc(userOf(w.user).name)} moet de gewichten nog invullen.</p><button class="btn cta wide" data-act="w-more" data-id="${w.id}">Lees meer</button>` : `<button class="btn cta wide" data-act="w-more" data-id="${w.id}">Lees meer</button>`}`;
 }
 function dayModal(d) {
@@ -2348,7 +2344,7 @@ function dayModal(d) {
 function wItem(w) {
   const { st, tp, us, ph, kcal } = wSummary(w);
   return `<button class="li" data-act="w-open" data-id="${w.id}"><span class="th ${ph ? '' : 'ic'}">${ph ? `<img src="${ph}" alt="">` : IC.dumbbell}</span>
-    <div style="min-width:0"><b>${esc(tp?.short || 'Eigen')} · ${fmtDate(w.date, { weekday: 'short', day: 'numeric', month: 'short' })}${w.pending && w.user === S.me ? ' <span class="pr">invullen</span>' : ''}</b><small class="who-mini">${wAvs(w)} ${isSport(w) ? durMin(w) + ' min' + (w.result ? ' · ' + resTxt(w).toLowerCase() : '') : st.sets + ' sets'} · ${nf(kcal, 0)} kcal</small></div>${IC.chev.replace('<svg', '<svg class="chev"')}</button>`;
+    <div style="min-width:0"><b>${esc(tp?.short || 'Eigen')} · ${fmtDate(w.date, { weekday: 'short', day: 'numeric', month: 'short' })}${w.pending && w.user === S.me ? ' <span class="pr">invullen</span>' : ''}</b><small class="who-mini">${wAvs(w)} ${isSport(w) ? durMin(w) + ' min' + (w.result ? ' · ' + resTxt(w).toLowerCase() : '') : (w.ex || []).length + ' oefeningen'} · ${nf(kcal, 0)} kcal</small></div>${IC.chev.replace('<svg', '<svg class="chev"')}</button>`;
 }
 
 // ---------- Kalender & lijst (Voortgang) ----------
@@ -2387,8 +2383,8 @@ function viewWorkout() {
   return `<div class="wrap screen full">
     <div class="dhero has-ph" style="height:280px">${phDiv(ph)}<div class="tb"><button class="circle" data-act="back" aria-label="Terug">${IC.back}</button><span>Training</span><span></span></div>
       <div class="tt"><span class="plate ${tp?.cls || 't-custom'}">${esc(tp?.short || 'Eigen')}</span><h1>${esc(tp?.short || 'Training')}</h1><small>${fmtDate(w.date, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</small></div></div>
-    <div class="statbar"><div>${IC.clock}<b>${min || '–'}</b><small>Minuten</small></div><div>${IC.flame}<b>${nf(kcal, 0)}</b><small>kcal</small></div><div>${IC.grid}<b>${st.sets}</b><small>Sets</small></div><div>${IC.bolt}<b>${nf(st.vol / 1000, 1)}</b><small>Ton</small></div></div>
-    <section class="card"><div class="sec" style="margin:0"><h2>Wie</h2>${w.rating ? `<span class="stars">${'★'.repeat(w.rating)}${'☆'.repeat(5 - w.rating)}</span>` : ''}</div>
+    <div class="statbar"><div>${IC.clock}<b>${min || '–'}</b><small>Minuten</small></div><div>${IC.flame}<b>${nf(kcal, 0)}</b><small>kcal</small></div><div>${IC.grid}<b>${(w.ex || []).length}</b><small>Oefeningen</small></div></div>
+    <section class="card"><div class="sec" style="margin:0"><h2>Wie</h2></div>
       <div class="who-mini" style="font-size:15px">${dotu(us)} <b>${esc(us.name)}</b> <span class="muted">${partnerOf(w) ? `trainde samen met ${esc(partnerOf(w).name)}` : 'trainde alleen'}</span></div>
       ${w.start ? `<p class="muted small" style="margin:0">Begonnen om ${new Date(w.start).toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })}${w.manual ? ' · achteraf toegevoegd' : ''}</p>` : ''}</section>
     ${w.prs?.length ? `<section class="card"><h2>Nieuwe records</h2><div class="chips">${w.prs.map((p) => `<span class="pr">${esc(p.name)} · ${nf(p.value)}</span>`).join('')}</div></section>` : ''}
@@ -2749,10 +2745,9 @@ function viewDone() {
   return `<div class="wrap screen full">
     <div class="done-panel"><div class="ok"><span>${IC.check}</span></div><h1>${isSport(D.w) ? (D.w.result === 'won' ? 'Gewonnen!' : 'Lekker gespeeld!') : 'Gefeliciteerd!'}</h1>
       <p>${isSport(D.w) ? `Je padelpotje is opgeslagen${D.w.partner ? ` en ${esc(other().name)} ziet het ook` : ''}.` : `${D.w.manual ? 'Je training is achteraf toegevoegd.' : 'Je training is opgeslagen.'} ${D.w.partner ? `Samen met ${esc(other().name)} getraind. ${esc(other().name)} vult zijn eigen gewichten in.` : `${esc(other().name)} ziet hem ook terug in de app.`}`}</p>
-      <div class="st"><div><b>${D.w.dur || '<1'}</b><small>minuten</small></div>${isSport(D.w) ? `<div><b class="w">${intTxt(D.w)}</b><small>intensiteit</small></div>` : `<div><b>${st.sets}</b><small>sets</small></div>`}<div><b>${nf(kcalOf(D.w), 0)}</b><small>kcal</small></div>${isSport(D.w) ? `<div><b class="w">${resTxt(D.w) || '–'}</b><small>uitslag</small></div>` : `<div><b>${nf(st.vol / 1000, 1)}</b><small>ton</small></div>`}</div>
+      <div class="st"><div><b>${D.w.dur || '<1'}</b><small>minuten</small></div>${isSport(D.w) ? `<div><b class="w">${intTxt(D.w)}</b><small>intensiteit</small></div>` : `<div><b>${(D.w.ex || []).length}</b><small>oefeningen</small></div>`}<div><b>${nf(kcalOf(D.w), 0)}</b><small>kcal</small></div>${isSport(D.w) ? `<div><b class="w">${resTxt(D.w) || '–'}</b><small>uitslag</small></div>` : ''}</div>
       ${D.prs.length ? `<div class="chips" style="justify-content:center">${D.prs.map((p) => `<span class="pr">PR ${esc(p.name)}</span>`).join('')}</div>` : ''}</div>
-    <section class="card"><h2 style="text-align:center">Hoe was je training?</h2>
-      <div class="starpick">${[1, 2, 3, 4, 5].map((n) => `<button data-act="rate" data-n="${n}" class="${n <= D.rating ? 'on' : ''}" aria-label="${n} sterren">★</button>`).join('')}</div>
+    <section class="card"><h2>Notitie</h2>
       <textarea class="in" id="done-note" placeholder="Hoe voelde het? Energie, pijntjes, muziek…">${esc(D.note)}</textarea></section>
     <button class="btn cta wide plain" data-act="done-close">Sluiten</button>
   </div>`;
@@ -3241,10 +3236,9 @@ document.addEventListener('click', async (ev) => {
     case 'rest': if (rest) { rest.end += +t.dataset.d * 1000; rest.total = Math.max(rest.total, (rest.end - Date.now()) / 1000); } break;
     case 'rest-stop': stopRest(); break;
     // Klaar
-    case 'rate': S.done.rating = +t.dataset.n; S.done.note = $('#done-note')?.value ?? S.done.note; render(); break;
     case 'done-close': {
       const note = ($('#done-note')?.value || '').trim();
-      if (S.done.rating !== S.done.w.rating || note !== S.done.w.note) await Store.put('workouts', S.done.id, { ...S.done.w, rating: S.done.rating, note });
+      if (note !== S.done.w.note) await Store.put('workouts', S.done.id, { ...S.done.w, note });
       S.done = null; go('home'); break;
     }
     // Voortgang & profiel
