@@ -841,6 +841,7 @@ nav.tabs .plus2:active { transform: scale(.94); }
 .sleepc__adv { margin: 0; font-size: 13px; color: #c9d3e6; background: var(--surface-2); border-radius: 12px; padding: 10px 12px; }
 .apple-tag { font-size: 10px; font-weight: 700; color: var(--muted); border: 1px solid var(--surface-3); border-radius: 999px; padding: 3px 8px; }
 .kcal-split { font-size: 11px; }
+.otp-in { font-size: 26px; letter-spacing: .35em; text-align: center; font-weight: 800; font-variant-numeric: tabular-nums; }
 .hk { display: grid; gap: 8px; }
 .hk__row { display: grid; grid-template-columns: 70px minmax(0, 1fr) auto; gap: 8px; align-items: center; background: var(--surface-2); border-radius: 12px; padding: 8px 10px; }
 .hk__row small { color: var(--muted); font-size: 12px; }
@@ -1895,6 +1896,10 @@ const SB = {
     const { error } = await this.client.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin + location.pathname } });
     return error ? error.message : null;
   },
+  async verify(email, token) {
+    const { error } = await this.client.auth.verifyOtp({ email, token, type: 'email' });
+    return error ? error.message : null;
+  },
   async makeToken(person) {
     const tok = Array.from(crypto.getRandomValues(new Uint8Array(18)), (b) => b.toString(36).padStart(2, '0')).join('').slice(0, 28);
     const { error } = await this.client.from('health_tokens').insert({ token: tok, person });
@@ -1906,9 +1911,11 @@ function viewLogin() {
   return `<section class="welcome wrap"><div class="bg"></div>${phDiv(photoUrl('welcome'), 'tall')}
     <div class="logo"><img src="icons/logo-white.png" alt="BRND FIT"></div>
     <div class="cnt"><h1>Log in bij<br><em>BRND FIT</em></h1>
-      ${S.loginSent ? `<p>We hebben een inloglink gestuurd naar <b>${esc(S.loginSent)}</b>. Open die op deze telefoon.</p><button class="btn ghost" data-act="login-again">Ander e-mailadres</button>`
-      : `<p>Vul je e-mailadres in, je krijgt een link om in te loggen. Daarna blijf je ingelogd.</p>
-      <form data-form="login" class="stack" style="gap:10px"><input class="in" id="login-email" type="email" autocomplete="email" placeholder="jij@voorbeeld.nl" required><button class="btn cta wide">Stuur inloglink</button></form>`}
+      ${S.loginSent ? `<p>We hebben een mail gestuurd naar <b>${esc(S.loginSent)}</b>. Typ de code uit die mail hieronder in.</p>
+      <form data-form="otp" class="stack" style="gap:10px"><input class="in otp-in" id="login-code" inputmode="numeric" autocomplete="one-time-code" maxlength="12" placeholder="123456" required><button class="btn cta wide">Inloggen</button></form>
+      <button class="btn ghost" data-act="login-again">Ander e-mailadres of nieuwe code</button>`
+      : `<p>Vul je e-mailadres in. Je krijgt een mail met een code om in te loggen; daarna blijf je ingelogd.</p>
+      <form data-form="login" class="stack" style="gap:10px"><input class="in" id="login-email" type="email" autocomplete="email" placeholder="jij@voorbeeld.nl" required value="${esc(ls.get('brndfit:email', ''))}"><button class="btn cta wide">Stuur code</button></form>`}
     </div></section>`;
 }
 
@@ -3151,7 +3158,8 @@ document.addEventListener('click', async (ev) => {
   }
 });
 document.addEventListener('submit', async (ev) => {
-  if (ev.target.dataset.form === 'login') { ev.preventDefault(); const em = $('#login-email').value.trim(); const err = await SB.login(em); if (err) toast(err); else { S.loginSent = em; render(); } return; }
+  if (ev.target.dataset.form === 'login') { ev.preventDefault(); const em = $('#login-email').value.trim(); ls.set('brndfit:email', em); const err = await SB.login(em); if (err) toast(err.includes('rate') ? 'Even wachten: je kunt maar een paar mails per uur aanvragen.' : err); else { S.loginSent = em; render(); setTimeout(() => $('#login-code')?.focus(), 50); } return; }
+  if (ev.target.dataset.form === 'otp') { ev.preventDefault(); const code = $('#login-code').value.replace(/\D/g, ''); const err = await SB.verify(S.loginSent, code); if (err) toast('Die code klopt niet of is verlopen. Vraag een nieuwe aan.'); else location.reload(); return; }
   if (ev.target.dataset.form === 'search') { ev.preventDefault(); S.browse.q = $('#home-q').value.trim(); S.browse.tab = 'all'; go('browse'); }
 });
 document.addEventListener('input', (ev) => {
