@@ -1335,6 +1335,18 @@ html.nav-up .bar-top, html.nav-up .topnav { transform: none !important; }
 
 /* nav-iconen iets groter */
 nav.tabs .pill3 .pxi { width: 22px; height: 22px; }
+
+nav.tabs .pxi, nav.tabs svg.pxi { stroke: none !important; stroke-width: 0 !important; fill: currentColor !important; }
+nav.tabs .pill3 button { color: #9fb0cc; }
+nav.tabs .plus2 { color: #fff; }
+nav.tabs .plus2 .pxi { width: 20px; height: 20px; }
+nav.tabs .pill3 button[aria-current="page"] { color: #fff; }
+nav.tabs .pill3 .pxi { width: 22px; height: 22px; }
+nav.tabs .pill3 button[aria-current="page"] .pxi rect { animation: none; }
+nav.tabs .pill3 button[aria-current="page"] .pxi { animation: pop .45s cubic-bezier(.3,1.6,.5,1); filter: drop-shadow(0 0 6px rgba(255,255,255,.35)); }
+.bf-logo { animation: none !important; position: relative; z-index: 2; }
+.pblur-top { z-index: 2 !important; }
+.topnav { z-index: 12 !important; }
 </style>
 
 <div class="logo-loader" id="loader" data-logo-loader-init aria-hidden="true">
@@ -2546,7 +2558,7 @@ function viewHome() {
   const days = new Set(thisWeek.map((w) => w.date)).size;
   const goal = p.weekly || 3; const frac = Math.min(1, days / goal); const pct = Math.round(frac * 100);
   const D = S.day || todayStr(); const dayWs = ws.filter((w) => w.date === D);
-  const liveW = draft && !draft.editing && draft.date === D ? { user: draft.user || S.me, date: draft.date, ex: draft.ex.map((e) => ({ ...e, sets: e.sets.filter((x) => x.done) })) } : null;
+  const liveW = false && draft && !draft.editing && draft.date === D ? { user: draft.user || S.me, date: draft.date, ex: draft.ex.map((e) => ({ ...e, sets: e.sets.filter((x) => x.done) })) } : null;
   const dSteps = stepKcal(S.me, D); const dKcal = dayWs.reduce((a, w) => a + kcalOf(w), 0) + (liveW ? kcalOf(liveW) : 0) + dSteps, dMin = dayWs.reduce((a, w) => a + durMin(w), 0), dSets = dayWs.reduce((a, w) => a + (w.user === S.me ? wStats(w).sets : 0), 0);
   const steps = stepsOf(S.me, D); const stepGoal = p.stepGoal || 10000;
   const wMin = thisWeek.reduce((a, w) => a + durMin(w), 0), wSets = thisWeek.reduce((a, w) => a + (w.user === S.me ? wStats(w).sets : 0), 0), wKcal = thisWeek.reduce((a, w) => a + kcalOf(w), 0) + Array.from({ length: 7 }, (_, i) => dateKey(wsStart + i * DAY)).reduce((a, d) => a + stepKcal(S.me, d), 0);
@@ -2559,7 +2571,7 @@ function viewHome() {
   const hm = (m) => (m >= 60 ? Math.floor(m / 60) + 'u ' + (m % 60) + 'm' : m + 'm');
   const heroPh = photoUrl('welcome') || tplPhoto(nt);
   const title = 'Let\'s go<br>champ';
-  const ST = statusOf(); const heroBtn = draft ? `<button class="wbtn" data-act="resume">Hervat training</button>` : `<button class="wbtn status-pill" data-act="go" data-r="progress">Bekijk voortgang<span class="status-pill__n"><svg viewBox="0 0 7 7" width="15" height="15" fill="currentColor" aria-hidden="true"><rect x="3" y="0" width=".82" height=".82" rx=".2"/><rect x="4" y="1" width=".82" height=".82" rx=".2"/><rect x="5" y="2" width=".82" height=".82" rx=".2"/><rect x="0" y="3" width=".82" height=".82" rx=".2"/><rect x="1" y="3" width=".82" height=".82" rx=".2"/><rect x="2" y="3" width=".82" height=".82" rx=".2"/><rect x="3" y="3" width=".82" height=".82" rx=".2"/><rect x="4" y="3" width=".82" height=".82" rx=".2"/><rect x="5" y="3" width=".82" height=".82" rx=".2"/><rect x="6" y="3" width=".82" height=".82" rx=".2"/><rect x="5" y="4" width=".82" height=".82" rx=".2"/><rect x="4" y="5" width=".82" height=".82" rx=".2"/><rect x="3" y="6" width=".82" height=".82" rx=".2"/></svg></span></button>`;
+  const ST = statusOf(); const heroBtn = false ? '' : `<button class="wbtn status-pill" data-act="go" data-r="progress">Bekijk voortgang<span class="status-pill__n"><svg viewBox="0 0 7 7" width="15" height="15" fill="currentColor" aria-hidden="true"><rect x="3" y="0" width=".82" height=".82" rx=".2"/><rect x="4" y="1" width=".82" height=".82" rx=".2"/><rect x="5" y="2" width=".82" height=".82" rx=".2"/><rect x="0" y="3" width=".82" height=".82" rx=".2"/><rect x="1" y="3" width=".82" height=".82" rx=".2"/><rect x="2" y="3" width=".82" height=".82" rx=".2"/><rect x="3" y="3" width=".82" height=".82" rx=".2"/><rect x="4" y="3" width=".82" height=".82" rx=".2"/><rect x="5" y="3" width=".82" height=".82" rx=".2"/><rect x="6" y="3" width=".82" height=".82" rx=".2"/><rect x="5" y="4" width=".82" height=".82" rx=".2"/><rect x="4" y="5" width=".82" height=".82" rx=".2"/><rect x="3" y="6" width=".82" height=".82" rx=".2"/></svg></span></button>`;
   const nextBlock = myNext.length
     ? `<div class="tcar" id="tcar" data-hscroll="tcar">${myNext.map(nextCard).join('')}</div>${myNext.length > 1 ? `<div class="tdots">${myNext.map((_, i) => `<button data-act="tdot" data-i="${i}" class="${i ? '' : 'on'}" aria-label="Training ${i + 1}"></button>`).join('')}</div>` : ''}`
     : `<button class="card nextempty" data-act="add-open" data-mode="plan"><span class="pend__ic" style="--c:var(--blue)">${IC.clock}</span><div><b>Nog niks ingepland</b><small>Tik om je volgende training vast te zetten</small></div>${IC.chev.replace('<svg', '<svg class="chev"')}</button>`;
@@ -2579,7 +2591,7 @@ function viewHome() {
     ${sleepAsk()}
     ${pending.length ? `<section class="card pend"><div class="pend__h"><span class="pend__ic">${IC.dumbbell}</span><div><b>Vul je gewichten in</b><small>${esc(other().name)} heeft ${pending.length === 1 ? 'een training' : pending.length + ' trainingen'} met jou gelogd</small></div></div>
       ${pending.slice(0, 3).map((w) => { const tp = tplById(w.tpl); return `<button class="li" data-act="edit-w" data-id="${w.id}"><span class="th ${tplPhoto(tp) ? '' : 'ic'}">${tplPhoto(tp) ? `<img src="${tplPhoto(tp)}" alt="">` : IC.dumbbell}</span><div style="min-width:0"><b>${esc(tp?.short || w.name || 'Training')}</b><small class="who-mini">${relDay(w.date)} ${wAvs(w)}</small></div><span class="join">Invullen</span></button>`; }).join('')}</section>` : ''}
-    ${draft ? `<div class="sec"><h2>Nu bezig</h2></div>
+    ${false ? `<div class="sec"><h2>Nu bezig</h2></div>
       <button class="card nextempty" data-act="resume"><span class="pend__ic">${IC.dumbbell}</span><div><b>${esc(tplById(draft.tpl)?.short || 'Eigen training')}</b><small>${draft.ex.length} ${draft.ex.length === 1 ? 'oefening' : 'oefeningen'} · ${draft.ex.length} oefeningen</small></div>${IC.chev.replace('<svg', '<svg class="chev"')}</button>` : ''}
     <div class="sec"><h2>Volgende training</h2><button class="link" data-act="add-open" data-mode="plan">Plannen</button></div>
     ${nextBlock}
@@ -2898,8 +2910,8 @@ function viewWorkout() {
 const UNDER = ["M5 20.9999C26.7762 16.2245 49.5532 11.5572 71.7979 14.6666C84.9553 16.5057 97.0392 21.8432 109.987 24.3888C116.413 25.6523 123.012 25.5143 129.042 22.6388C135.981 19.3303 142.586 15.1422 150.092 13.3333C156.799 11.7168 161.702 14.6225 167.887 16.8333C181.562 21.7212 194.975 22.6234 209.252 21.3888C224.678 20.0548 239.912 17.991 255.42 18.3055C272.027 18.6422 288.409 18.867 305 17.9999", "M4.99805 20.9998C65.6267 17.4649 126.268 13.845 187.208 12.8887C226.483 12.2723 265.751 13.2796 304.998 13.9998", "M5 29.8857C52.3147 26.9322 99.4329 21.6611 146.503 17.1765C151.753 16.6763 157.115 15.9505 162.415 15.6551C163.28 15.6069 165.074 15.4123 164.383 16.4275C161.704 20.3627 157.134 23.7551 153.95 27.4983C153.209 28.3702 148.194 33.4751 150.669 34.6605C153.638 36.0819 163.621 32.6063 165.039 32.2029C178.55 28.3608 191.49 23.5968 204.869 19.5404C231.903 11.3436 259.347 5.83254 288.793 5.12258C294.094 4.99476 299.722 4.82265 305 5.45025", "M17.0039 32.6826C32.2307 32.8412 47.4552 32.8277 62.676 32.8118C67.3044 32.807 96.546 33.0555 104.728 32.0775C113.615 31.0152 104.516 28.3028 102.022 27.2826C89.9573 22.3465 77.3751 19.0254 65.0451 15.0552C57.8987 12.7542 37.2813 8.49399 44.2314 6.10216C50.9667 3.78422 64.2873 5.81914 70.4249 5.96641C105.866 6.81677 141.306 7.58809 176.75 8.59886C217.874 9.77162 258.906 11.0553 300 14.4892"];
 // ---------- Pixel-iconen (zelfde stijl als de pixelcijfers) ----------
 const PXI = {
-  home: ['....#....', '...#.#...', '..#...#..', '.#.....#.', '#.......#', '.#.....#.', '.#.###.#.', '.#.#.#.#.', '.###.###.'],
-  dumbbell: ['.........', '.#.....#.', '##.....##', '##.....##', '#########', '##.....##', '##.....##', '.#.....#.', '.........'],
+  home: ['....#....', '...#.#...', '..#...#..', '.#.....#.', '###...###', '.#.....#.', '.#.###.#.', '.#.#.#.#.', '.#######.'],
+  dumbbell: ['.........', '.........', '.#.....#.', '##.....##', '#########', '##.....##', '.#.....#.', '.........', '.........'],
   chart: ['.......##', '.......##', '....##.##', '....##.##', '.##.##.##', '.##.##.##', '.##.##.##', '.........', '#########'],
   plus: ['....#....', '....#....', '....#....', '....#....', '#########', '....#....', '....#....', '....#....', '....#....'],
   user: ['...###...', '..#####..', '..#####..', '...###...', '.........', '..#####..', '.#######.', '#########', '#########'],
@@ -3119,7 +3131,7 @@ function countdown(ts) {
   const days = Math.round((parseDate(dateKey(ts)) - parseDate(todayStr())) / DAY); return `Over ${days} ${days === 1 ? 'dag' : 'dagen'}`;
 }
 // Loopt er al een training voor dit schema? Dan hervatten in plaats van opnieuw starten.
-const isRunning = (tplId) => !!(draft && !draft.editing && (draft.tpl === tplId || !tplId));
+const isRunning = (tplId) => !!(draft && !draft.editing && (draft.tpl === tplId || !tplId)) && S.route.name !== 'home';
 function startBtnHtml(t, pl, cls = 'pillbtn') {
   if (t.sport) return `<button class="${cls}" data-act="start" data-tpl="${t.id}" data-time="${pl?.time || ''}">Padel loggen <span class="play">${IC.play}</span></button>`;
   if (isRunning(t.id)) return `<button class="${cls}" data-act="resume">Hervat training <span class="play">${IC.play}</span></button>`;
