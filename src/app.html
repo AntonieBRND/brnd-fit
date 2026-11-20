@@ -1181,12 +1181,12 @@ html, body { overflow-x: clip; touch-action: manipulation; -webkit-text-size-adj
 @supports (-webkit-touch-callout: none) { input, select, textarea { font-size: 16px !important; } }
 
 /* ===== Laadscherm: logo-stapel ===== */
-.logo-loader { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; color: #e7e4d3; perspective: 40em; }
-.logo-loader__bg { position: absolute; inset: 0; z-index: 0; background: radial-gradient(90% 60% at 50% 40%, #0d1a33, #05070c 70%); transform-origin: 50% 0%; }
-.logo-loader__stack { position: relative; z-index: 1; display: grid; width: min(16em, 64vw); transform-style: preserve-3d; opacity: 0; visibility: hidden; }
+.logo-loader { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; color: #e7e4d3; perspective: 640px; }
+.logo-loader__bg { position: absolute; inset: 0; z-index: 0; background: radial-gradient(90% 60% at 50% 50%, #0d1a33, #05070c 70%); transform-origin: 50% 0%; }
+.logo-loader__stack { position: relative; z-index: 1; display: grid; width: min(256px, 64vw); transform-style: preserve-3d; opacity: 0; visibility: hidden; }
 .logo-loader__logo { grid-column: 1; grid-row: 1; }
 .logo-loader__logo img { display: block; width: 100%; height: auto; }
-.logo-loader__track { position: absolute; bottom: calc(3.5em + env(safe-area-inset-bottom, 0px)); left: 0; right: 0; z-index: 1; width: 8em; height: .25em; margin: 0 auto; overflow: hidden; border-radius: 100em; background: rgba(255,255,255,.15); }
+.logo-loader__track { position: absolute; bottom: calc(3.5em + env(safe-area-inset-bottom, 0px)); left: 0; right: 0; z-index: 1; width: 128px; height: 4px; margin: 0 auto; overflow: hidden; border-radius: 100em; background: rgba(255,255,255,.15); }
 .logo-loader__bar { position: absolute; inset: 0; background: #e7e4d3; transform-origin: 0% 50%; transform: scaleX(0); }
 
 /* ===== Pixel-iconen ===== */
@@ -1370,7 +1370,7 @@ html.intro-out #app { animation: lb-fade .55s ease both; }
 
 <div class="logo-loader" id="loader" data-logo-loader-init aria-hidden="true">
   <div data-logo-loader-bg class="logo-loader__bg"></div>
-  <div data-logo-loader-stack class="logo-loader__stack"><div data-logo-loader-logo class="logo-loader__logo"><img src="icons/brnd-fit-logo.png" alt=""></div></div>
+  <div data-logo-loader-stack class="logo-loader__stack"><div data-logo-loader-logo class="logo-loader__logo"><img src="icons/brnd-fit-logo.png" alt="" width="836" height="206"></div></div>
   <div data-logo-loader-track class="logo-loader__track"><div data-logo-loader-bar class="logo-loader__bar"></div></div>
 </div>
 <div id="app"><div class="wrap screen"><div class="card empty">Laden…</div></div></div>
