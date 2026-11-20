@@ -1175,6 +1175,10 @@ button.card:active, .li:active, .pick:active, .ach:active, .chip:active { transf
 .whov__in { overscroll-behavior: contain; touch-action: pan-y; }
 .wh__i { width: 100%; overflow: hidden; cursor: pointer; user-select: none; -webkit-user-select: none; }
 .sheet-body { scroll-behavior: auto; }
+
+/* niet inzoomen: geen dubbeltik-zoom, en invoervelden zo groot dat iOS niet inzoomt */
+html, body { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+@supports (-webkit-touch-callout: none) { input, select, textarea { font-size: 16px !important; } }
 </style>
 
 <div class="loader" id="loader" aria-hidden="true"><div class="loader__bg"></div>
@@ -2755,6 +2759,9 @@ addEventListener('scroll', () => {
 
 // ---------- Overgangen ----------
 S.noTimer = true; // timer staat uit: je vult gewoon je oefeningen en gewichten in
+// Knijp-zoom tegenhouden (iOS negeert user-scalable in de meta-tag)
+['gesturestart', 'gesturechange', 'gestureend'].forEach((ev) => document.addEventListener(ev, (e) => e.preventDefault(), { passive: false }));
+document.addEventListener('touchmove', (e) => { if (e.touches.length > 1 || (e.scale && e.scale !== 1)) e.preventDefault(); }, { passive: false });
 const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
 function animateEnter(dir) {
   if (REDUCE || !Element.prototype.animate) return;
