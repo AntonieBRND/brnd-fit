@@ -1350,6 +1350,14 @@ nav.tabs .pill3 button[aria-current="page"] .pxi { animation: pop .45s cubic-bez
 
 .logo-loader__stack, .logo-loader__logo { will-change: transform, opacity; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 .logo-loader__logo img { -webkit-user-drag: none; user-select: none; }
+
+html.intro nav.tabs, html.intro .pblur, html.intro .pblur-top { visibility: hidden !important; }
+html.intro body { overflow: hidden; }
+html.intro-out nav.tabs .wrap { animation: nav-in .6s cubic-bezier(.2,.8,.2,1) both; }
+html.intro-out .pblur, html.intro-out .pblur-top { animation: lb-fade .6s ease both; }
+@keyframes nav-in { from { opacity: 0; transform: translateY(24px); } }
+.logo-loader { height: 100vh; height: 100lvh; bottom: auto; }
+.logo-loader__track { bottom: 12%; }
 </style>
 
 <div class="logo-loader" id="loader" data-logo-loader-init aria-hidden="true">
@@ -2939,20 +2947,26 @@ function moveNavInd() {
 function runIntro() {
   const root = document.querySelector('[data-logo-loader-init]'); if (!root) return;
   let seen = false; try { seen = sessionStorage.getItem('brndfit-intro') === '1'; sessionStorage.setItem('brndfit-intro', '1'); } catch { /* geen opslag */ }
-  if (seen || !window.gsap) { root.remove(); return; }
+  if (seen || !window.gsap) { root.remove(); endIntro(); return; }
   // Pas starten als het logo echt geladen en gedecodeerd is, en na 2 frames (anders hapert de eerste beweging)
   const img = root.querySelector('[data-logo-loader-logo] img');
   const ready = img ? (img.decode ? img.decode() : Promise.resolve()).catch(() => {}) : Promise.resolve();
   const wait = new Promise((r) => setTimeout(r, 900));
   Promise.race([ready, wait]).then(() => requestAnimationFrame(() => requestAnimationFrame(() => playIntro(root))));
 }
+// Tijdens de intro zijn menu en glas-blur verborgen (iOS tekent glas soms heel even over de intro heen)
+function endIntro() {
+  const h = document.documentElement; if (!h.classList.contains('intro')) return;
+  h.classList.remove('intro'); h.classList.add('intro-out'); setTimeout(() => h.classList.remove('intro-out'), 900);
+}
+setTimeout(endIntro, 6000);
 function playIntro(root) {
   const g = window.gsap; const bg = root.querySelector('[data-logo-loader-bg]'), stack = root.querySelector('[data-logo-loader-stack]'), logo = root.querySelector('[data-logo-loader-logo]');
   const bar = root.querySelector('[data-logo-loader-bar]'), track = root.querySelector('[data-logo-loader-track]');
   const dups = []; for (let i = 0; i < 5; i++) { const d = logo.cloneNode(true); d.style.opacity = '0'; stack.appendChild(d); dups.push(d); }
   const em = parseFloat(getComputedStyle(stack).fontSize);
   g.ticker.lagSmoothing(500, 33);
-  const tl = g.timeline({ defaults: { duration: 0.4, ease: 'power2.out' }, onComplete: () => root.remove() });
+  const tl = g.timeline({ defaults: { duration: 0.4, ease: 'power2.out' }, onComplete: () => { root.remove(); endIntro(); } });
   g.set(dups, { opacity: 0, z: 0, force3D: true }); g.set(stack, { force3D: true });
   tl.to(stack, { autoAlpha: 1, duration: 0.5 });
   if (REDUCE) { tl.addLabel('impact', '+=0.6').to(root, { autoAlpha: 0, duration: 0.5, ease: 'power2.inOut' }, 'impact+=0.5'); }
@@ -2968,7 +2982,7 @@ function playIntro(root) {
       .to(stack, { scale: 1.05, duration: 0.1 }, 'impact')
       .to(stack, { scale: 1, duration: 0.6, ease: 'elastic.out(1, 0.5)' })
       .to(stack, { autoAlpha: 0 }, 'impact+=0.5')
-      .to(bg, { scaleY: 0, duration: 0.5, ease: 'expo.inOut' }, 'impact+=0.6');
+      .to(bg, { autoAlpha: 0, duration: 0.55, ease: 'power2.inOut' }, 'impact+=0.6');
   }
   if (bar) tl.to(bar, { scaleX: 1, duration: tl.labels.impact, ease: 'power2.inOut' }, 0).to(track, { autoAlpha: 0 }, 'impact+=0.5');
 }
