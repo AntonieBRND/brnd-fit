@@ -1192,7 +1192,7 @@ button.card:active, .li:active, .pick:active, .ach:active, .chip:active { transf
 .sheet-body { scroll-behavior: auto; }
 
 /* niet inzoomen: geen dubbeltik-zoom, en invoervelden zo groot dat iOS niet inzoomt */
-html, body { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+html, body { overflow-x: clip; touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 @supports (-webkit-touch-callout: none) { input, select, textarea { font-size: 16px !important; } }
 
 /* ===== Laadscherm: logo-stapel ===== */
@@ -1297,6 +1297,59 @@ nav.tabs .plus2:active .pxi { transform: rotate(90deg) scale(.9); }
 .login .who-pick { margin-top: 0; }
 .login .who-pick + .who-pick { background: rgba(255,255,255,.1); color: #f1ede2; box-shadow: inset 0 0 0 1px rgba(255,255,255,.16); }
 .login .who-pick + .who-pick .pill-cta__a { background: #f1ede2; color: #0a0d14; }
+
+/* ===== Glas overal: kop, pop-ups, lightboxen ===== */
+:root { --glass-bg: rgba(16,22,34,.5); --glass-line: rgba(255,255,255,.12);
+  --glass-shadow: inset .28em .28em .09em -.33em rgba(255,255,255,.55), inset -.28em -.28em .09em -.33em rgba(255,255,255,.3), inset 0 0 1.75em rgba(242,242,242,.05), 0 18px 50px rgba(0,0,0,.45); }
+.glasscard { background: var(--glass-bg); border: 1px solid var(--glass-line); box-shadow: var(--glass-shadow); -webkit-backdrop-filter: saturate(130%) blur(18px); backdrop-filter: saturate(130%) blur(18px); border-radius: 28px; }
+/* blauwe fade vanaf de onderkant achter alle pop-ups */
+.sheet, .lb, .menu2, #wheel-root .whov { background: radial-gradient(130% 55% at 50% 115%, rgba(47,111,224,.55), rgba(47,111,224,.12) 55%, transparent 75%), rgba(2,4,10,.55) !important; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.sheet-in, .lb__in, .whov__in { background: linear-gradient(180deg, rgba(22,30,46,.72), rgba(10,16,28,.78)) !important; border: 1px solid var(--glass-line); box-shadow: var(--glass-shadow); -webkit-backdrop-filter: saturate(140%) blur(24px); backdrop-filter: saturate(140%) blur(24px); }
+.sheet-in { border-bottom: 0; }
+.sheet-in .pick, .lb__in .li, .lb__in .srow, .lb__in .exm__stats, .sheet-in .card { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.07); }
+.sheet-in .pick:active, .sheet-in .pick:hover { background: rgba(255,255,255,.1); }
+.sheet-in .pick[aria-pressed="true"] { background: rgba(122,174,255,.16); border-color: rgba(122,174,255,.4); }
+.sheet-in input.in, .sheet-in select.in, .sheet-in textarea.in, .lb__in input.in { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.1); }
+.lb__x, .sheet-head .iconbtn { background: rgba(255,255,255,.08) !important; box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
+.menu2__card { background: linear-gradient(180deg, rgba(18,28,48,.78), rgba(10,18,36,.8) 60%, rgba(16,40,90,.75)); -webkit-backdrop-filter: saturate(140%) blur(24px); backdrop-filter: saturate(140%) blur(24px); box-shadow: var(--glass-shadow); }
+
+/* bovenin: progressive blur + zwevende glazen knoppen */
+.pblur-top { position: fixed; left: 0; top: 0; width: 100%; height: calc(7em + env(safe-area-inset-top, 0px)); z-index: 8; pointer-events: none; isolation: isolate; overflow: hidden; }
+.pblur-top > i { position: absolute; inset: 0; }
+.pblur-top .is--1 { backdrop-filter: blur(.1875em); -webkit-backdrop-filter: blur(.1875em); -webkit-mask: linear-gradient(0deg, #0000 40%, #000 60% 75%, #0000 90%); mask: linear-gradient(0deg, #0000 40%, #000 60% 75%, #0000 90%); }
+.pblur-top .is--2 { backdrop-filter: blur(.5em); -webkit-backdrop-filter: blur(.5em); -webkit-mask: linear-gradient(0deg, #0000 55%, #000 75% 100%); mask: linear-gradient(0deg, #0000 55%, #000 75% 100%); }
+.pblur-top .is--3 { backdrop-filter: blur(1.2em); -webkit-backdrop-filter: blur(1.2em); -webkit-mask: linear-gradient(0deg, #0000 72%, #000 92% 100%); mask: linear-gradient(0deg, #0000 72%, #000 92% 100%); }
+.pblur-top::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5,7,12,.7), transparent 85%); }
+.bar-top, .topnav { background: transparent !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; box-shadow: none !important; }
+html.nav-up .bar-top, html.nav-up .topnav { transform: none !important; }
+.topnav, .screen > .bar-top { z-index: 9; }
+.topnav .circle, .bar-top .circle, .streakchip, .daybtn { background: rgba(22,30,46,.45) !important; border: 1px solid var(--glass-line) !important; box-shadow: var(--glass-shadow); -webkit-backdrop-filter: saturate(130%) blur(14px); backdrop-filter: saturate(130%) blur(14px); }
+.streakchip { background: rgba(255,107,26,.16) !important; border-color: rgba(255,150,90,.35) !important; }
+.topnav__l { display: flex; align-items: center; gap: 12px; }
+.bf-logo { height: 26px; width: auto; display: block; filter: drop-shadow(0 2px 8px rgba(0,0,0,.4)); animation: title-in .7s cubic-bezier(.2,.8,.2,1) both; }
+
+/* vaste glazen kop met snel-navigatie (alle pagina's behalve Home) */
+.screen { grid-template-columns: minmax(0, 1fr); }
+.shd { min-width: 0; position: sticky; top: calc(8px + env(safe-area-inset-top, 0px)); z-index: 9; margin: 0 -6px; padding: 4px 6px 8px; border-radius: 26px; background: rgba(14,20,32,.55); border: 1px solid var(--glass-line); box-shadow: var(--glass-shadow); -webkit-backdrop-filter: saturate(140%) blur(20px); backdrop-filter: saturate(140%) blur(20px); }
+.shd .bar-top { position: static; margin: 0; padding: 4px 2px; }
+.shd .bar-top .circle { width: 38px; height: 38px; }
+.jnav { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 2px 2px 0; margin: 0 !important; }
+.jnav::-webkit-scrollbar { display: none; }
+.jnav .chip { flex: none; height: 34px; padding: 0 14px; font-size: 13px; background: transparent; border: 1px solid transparent; color: rgba(214,224,240,.7); transition: background .3s, color .3s, border-color .3s; }
+.jnav .chip[aria-pressed="true"] { background: rgba(255,255,255,.14); color: #fff; border-color: rgba(255,255,255,.18); box-shadow: inset 0 1px 0 rgba(255,255,255,.2); }
+.screen > .bar-top { position: sticky; top: env(safe-area-inset-top, 0px); }
+
+/* spieren kiezen */
+.mt-fig.glasscard { padding: 14px 10px; background: radial-gradient(90% 70% at 50% 30%, rgba(47,111,224,.22), transparent 70%), var(--glass-bg); }
+.msvg-dots .mon { filter: drop-shadow(0 0 3px rgba(122,174,255,.9)); }
+.msvg-dots path { stroke: rgba(5,7,12,.6); }
+.optc { background: var(--glass-bg) !important; border: 1px solid var(--glass-line) !important; box-shadow: var(--glass-shadow); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); border-radius: 22px !important; transition: border-color .3s, background .3s, transform .2s; }
+.optc.on { background: linear-gradient(160deg, rgba(47,111,224,.28), rgba(16,22,34,.55)) !important; border-color: rgba(122,174,255,.5) !important; }
+.mchips .chip { background: rgba(255,255,255,.06); border: 1px solid var(--glass-line); }
+.mchips .chip.hit { background: rgba(122,174,255,.2); border-color: rgba(122,174,255,.55); color: #fff; }
+
+/* nav-iconen iets groter */
+nav.tabs .pill3 .pxi { width: 22px; height: 22px; }
 </style>
 
 <div class="logo-loader" id="loader" data-logo-loader-init aria-hidden="true">
@@ -1305,13 +1358,14 @@ nav.tabs .plus2:active .pxi { transform: rotate(90deg) scale(.9); }
   <div data-logo-loader-track class="logo-loader__track"><div data-logo-loader-bar class="logo-loader__bar"></div></div>
 </div>
 <div id="app"><div class="wrap screen"><div class="card empty">Laden…</div></div></div>
+<div class="pblur-top" aria-hidden="true"><i class="is--1"></i><i class="is--2"></i><i class="is--3"></i></div>
 <div class="pblur" aria-hidden="true"><i class="is--1"></i><i class="is--2"></i><i class="is--3"></i><i class="is--4"></i><i class="is--5"></i></div>
 <nav class="tabs" aria-label="Hoofdmenu" hidden>
   <div class="wrap"><div class="bar2">
     <div class="pill3"><span class="glass" aria-hidden="true"><i class="glass__fill"></i><i class="glass__burn"></i><i class="glass__hs"></i><i class="glass__hh"></i><i class="glass__el"></i><i class="glass__ed"></i><i class="glass__ig"></i></span><span class="pill3__ind" aria-hidden="true"></span>
       <button data-tab="home" aria-label="Home"><svg class="pxi" viewBox="0 0 9 9" data-px="home"></svg></button>
       <button data-tab="browse" aria-label="Trainingen"><svg class="pxi" viewBox="0 0 9 9" data-px="dumbbell"></svg></button>
-      <button data-tab="progress" aria-label="Voortgang"><svg class="pxi" viewBox="0 0 9 9" data-px="chart"></svg></button>
+      <button data-tab="progress" aria-label="Voortgang"><svg class="pxi" viewBox="0 0 9 9" data-px="chartup"></svg></button>
     </div>
     <button data-tab="train" class="plus2" aria-label="Nieuw toevoegen"><span class="glass" aria-hidden="true"><i class="glass__fill"></i><i class="glass__burn"></i><i class="glass__hs"></i><i class="glass__hh"></i><i class="glass__el"></i><i class="glass__ed"></i><i class="glass__ig"></i></span><svg class="pxi pxplus" viewBox="0 0 9 9" data-px="plus"></svg></button>
   </div></div>
@@ -1704,8 +1758,9 @@ function heatmap(u, weeks = 16) {
 // ----- Spierkaart (voor- en achterkant) -----
 const TPL_GROUPS = (t) => t?.groups || [...new Set((t?.ex || []).map((id) => exById(id)?.group).filter(Boolean))];
 // Anatomische spierkaart: vlak, losse spierdelen met fijne lijnen. Linkerhelft getekend, rechterhelft gespiegeld.
-function muscleSvg(fill, { back = true, side = 'front' } = {}) {
-  const base = fill(null);
+function muscleSvg(fill, { back = true, side = 'front', dots = false } = {}) {
+  const base0 = fill(null); const base = dots ? 'url(#mdOff)' : base0;
+  const uid0 = dots ? 'd' + Math.random().toString(36).slice(2, 7) : '';
   // [pad, groep] (groep null = lichaam/pees, altijd basiskleur)
   const FRONT = [
     ['M53 25 Q60 30 67 25 L68.5 38 Q60 40 51.5 38 Z', null],
@@ -1759,10 +1814,12 @@ function muscleSvg(fill, { back = true, side = 'front' } = {}) {
     'M27.6 92 Q25.6 104 22.4 118', 'M46.4 135 Q46 150 46.4 164', 'M48.6 178 Q48.4 188 48.4 196', 'M18.4 136 L17.8 144 M21 137 L20.8 146 M23.4 136 L23.6 144'];
   const st = 'stroke="var(--bg)" stroke-width=".75" stroke-linejoin="round"';
   const mir = 'transform="translate(120 0) scale(-1 1)"';
-  const half = (parts, lines, flip) => parts.map(([d, g]) => `<path d="${d}" fill="${g ? fill(g) : base}" ${st} ${flip ? mir : ''}/>`).join('') +
+  const fl = (g) => { if (!g) return base; const v = fill(g); return dots ? (v === base0 ? 'url(#mdOff)' : 'url(#mdOn)') : v; };
+  const half = (parts, lines, flip) => parts.map(([d, g]) => `<path d="${d}" fill="${fl(g)}" ${st} ${flip ? mir : ''} ${dots && g && fill(g) !== base0 ? 'class="mon"' : ''}/>`).join('') +
     `<path d="${lines.join(' ')}" fill="none" stroke="var(--bg)" stroke-opacity=".55" stroke-width=".55" stroke-linecap="round" ${flip ? mir : ''}/>`;
   const fig = (parts, lines, dx = 0) => `<g transform="translate(${dx} 0)"><ellipse cx="60" cy="15" rx="10" ry="12.5" fill="${base}" ${st}/>${half(parts, lines, false)}${half(parts, lines, true)}</g>`;
-  if (back) return `<svg viewBox="0 0 250 224" role="img" aria-label="Spierkaart voor- en achterkant">${fig(FRONT, FRONT_LINES)}${fig(BACK, BACK_LINES, 130)}</svg>`;
+  const defs = dots ? `<defs><pattern id="mdOff" width="2.2" height="2.2" patternUnits="userSpaceOnUse"><circle cx="1.1" cy="1.1" r=".62" fill="rgba(220,230,250,.42)"/></pattern><pattern id="mdOn" width="2.2" height="2.2" patternUnits="userSpaceOnUse"><rect width="2.2" height="2.2" fill="rgba(79,142,236,.18)"/><circle cx="1.1" cy="1.1" r=".8" fill="#9cc4ff"/></pattern></defs>` : '';
+  if (back) return `<svg viewBox="0 0 250 224" role="img" aria-label="Spierkaart voor- en achterkant" class="${dots ? 'msvg-dots' : ''}">${defs}${fig(FRONT, FRONT_LINES)}${fig(BACK, BACK_LINES, 130)}</svg>`;
   return `<svg viewBox="0 0 120 224" role="img" aria-label="Spierkaart ${side === 'back' ? 'achterkant' : 'voorkant'}">${side === 'back' ? fig(BACK, BACK_LINES) : fig(FRONT, FRONT_LINES)}</svg>`;
 }
 const MOFF = '#323c53';
@@ -2439,14 +2496,14 @@ function sleepCard(d) {
     ${R ? `<p class="sleepc__adv">${R.advice}</p>` : ''}</button>`;
 }
 function healthSettings() {
-  if (S.mode !== 'supa') return `<section class="card"><h2>Apple Gezondheid</h2><p class="muted small" style="margin:0">Automatisch koppelen werkt in de losse BRND FIT-app (via de website). Hier vul je stappen en slaap zelf in via de kaarten op Home.</p></section>`;
+  if (S.mode !== 'supa') return `<section class="card" id="j-health"><h2>Apple Gezondheid</h2><p class="muted small" style="margin:0">Automatisch koppelen werkt in de losse BRND FIT-app (via de website). Hier vul je stappen en slaap zelf in via de kaarten op Home.</p></section>`;
   const c = SB.cfg(); const url = `${c.supabaseUrl}/rest/v1/rpc/brnd_sync?apikey=${c.supabaseKey}`;
   const code = S.healthToken || profile().hkToken || '';
   const last = S.data.health.filter((x) => x.user === S.me && x.source === 'apple' && x.syncedAt).sort((a, b) => (a.syncedAt < b.syncedAt ? 1 : -1))[0];
   const lastTxt = last ? `<p class="hk__ok">${IC.check} Gekoppeld · laatst ontvangen ${esc(relDay(last.date).toLowerCase())} om ${new Date(last.syncedAt).toTimeString().slice(0, 5)}</p>` : '';
   const auto = `<li>Ga in Opdrachten naar <b>Automatisering</b> → <b>+</b> → <b>Tijdstip</b> → elke dag om <b>22:00</b>. Kies <b>Voer direct uit</b> en als actie de opdracht <b>BRND FIT</b>.</li>
         <li>Tik één keer op de opdracht om te testen. Je stappen verschijnen dan hier en op Home.</li>`;
-  return `<section class="card"><h2>Apple Gezondheid</h2>
+  return `<section class="card" id="j-health"><h2>Apple Gezondheid</h2>
     <p class="muted small" style="margin:0">Je iPhone stuurt elke avond vanzelf je stappen (en actieve kcal) naar BRND FIT, via een opdracht in de app Opdrachten. Slaap bevestig je 's ochtends met één tik op Home.</p>
     ${lastTxt}
     ${!code ? `<button class="btn blue wide" data-act="hk-new">Koppelcode maken</button>`
@@ -2528,7 +2585,7 @@ function viewHome() {
     ['Op schema', dotNum(streakWeeks(S.me)), 'weken', streakWeeks(S.me) / 8],
   ];
   return `<div class="wrap screen home6">
-    <header class="topnav"><button class="circle" data-act="menu" aria-label="Menu">${IC.menu}</button><div class="topnav__r">${streakChip()}<button class="daybtn" data-act="day-pick">${D === todayStr() ? 'Vandaag' : relDay(D)} ${IC.down}</button></div></header>
+    <header class="topnav"><div class="topnav__l"><button class="circle" data-act="menu" aria-label="Menu">${IC.menu}</button><img class="bf-logo" src="icons/bf.png" alt="BRND FIT"></div><div class="topnav__r">${streakChip()}<button class="daybtn" data-act="day-pick">${D === todayStr() ? 'Vandaag' : relDay(D)} ${IC.down}</button></div></header>
     <section class="whero ${heroPh ? 'has-ph' : ''}">${phDiv(heroPh)}<div class="whero__fade"></div>
       <div class="whero__l"><span class="whero__eye">${greeting()}, ${esc(u.name)}</span><h1>${title}</h1>${heroBtn}</div>
       <div class="whero__r">${heroArc(frac)}<div class="whero__pct">${dotNum(pct + '%')}<small>weekschema</small></div></div>
@@ -2856,8 +2913,8 @@ function viewWorkout() {
 const UNDER = ["M5 20.9999C26.7762 16.2245 49.5532 11.5572 71.7979 14.6666C84.9553 16.5057 97.0392 21.8432 109.987 24.3888C116.413 25.6523 123.012 25.5143 129.042 22.6388C135.981 19.3303 142.586 15.1422 150.092 13.3333C156.799 11.7168 161.702 14.6225 167.887 16.8333C181.562 21.7212 194.975 22.6234 209.252 21.3888C224.678 20.0548 239.912 17.991 255.42 18.3055C272.027 18.6422 288.409 18.867 305 17.9999", "M4.99805 20.9998C65.6267 17.4649 126.268 13.845 187.208 12.8887C226.483 12.2723 265.751 13.2796 304.998 13.9998", "M5 29.8857C52.3147 26.9322 99.4329 21.6611 146.503 17.1765C151.753 16.6763 157.115 15.9505 162.415 15.6551C163.28 15.6069 165.074 15.4123 164.383 16.4275C161.704 20.3627 157.134 23.7551 153.95 27.4983C153.209 28.3702 148.194 33.4751 150.669 34.6605C153.638 36.0819 163.621 32.6063 165.039 32.2029C178.55 28.3608 191.49 23.5968 204.869 19.5404C231.903 11.3436 259.347 5.83254 288.793 5.12258C294.094 4.99476 299.722 4.82265 305 5.45025", "M17.0039 32.6826C32.2307 32.8412 47.4552 32.8277 62.676 32.8118C67.3044 32.807 96.546 33.0555 104.728 32.0775C113.615 31.0152 104.516 28.3028 102.022 27.2826C89.9573 22.3465 77.3751 19.0254 65.0451 15.0552C57.8987 12.7542 37.2813 8.49399 44.2314 6.10216C50.9667 3.78422 64.2873 5.81914 70.4249 5.96641C105.866 6.81677 141.306 7.58809 176.75 8.59886C217.874 9.77162 258.906 11.0553 300 14.4892"];
 // ---------- Pixel-iconen (zelfde stijl als de pixelcijfers) ----------
 const PXI = {
-  home: ['....#....', '...###...', '..#####..', '.#######.', '#########', '.##...##.', '.##.#.##.', '.##.#.##.', '.#######.'],
-  dumbbell: ['.........', '.........', '##.....##', '##.....##', '#########', '##.....##', '##.....##', '.........', '.........'],
+  home: ['....#....', '...#.#...', '..#...#..', '.#.....#.', '#.......#', '.#.....#.', '.#.###.#.', '.#.#.#.#.', '.###.###.'],
+  dumbbell: ['.........', '.#.....#.', '##.....##', '##.....##', '#########', '##.....##', '##.....##', '.#.....#.', '.........'],
   chart: ['.......##', '.......##', '....##.##', '....##.##', '.##.##.##', '.##.##.##', '.##.##.##', '.........', '#########'],
   plus: ['....#....', '....#....', '....#....', '....#....', '#########', '....#....', '....#....', '....#....', '....#....'],
   user: ['...###...', '..#####..', '..#####..', '...###...', '.........', '..#####..', '.#######.', '#########', '#########'],
@@ -3025,6 +3082,7 @@ document.addEventListener('focusout', () => setTimeout(() => {
 
 function doRender() {
   const app = $('#app');
+  const pbt = document.querySelector('.pblur-top'); if (pbt) pbt.hidden = S.mode === 'login' || !S.me;
   document.documentElement.style.setProperty('--u', userOf(S.me || 'antonie').color);
   const nav = $('nav.tabs');
   if (S.mode === 'login') { app.innerHTML = viewLogin(); nav.hidden = true; return; }
@@ -3040,7 +3098,7 @@ function doRender() {
   nav.hidden = !ROOT.includes(S.route.name);
   nav.querySelectorAll('button[data-tab]').forEach((b) => b.setAttribute('aria-current', b.dataset.tab === S.route.name ? 'page' : 'false'));
   document.querySelector('.pblur')?.toggleAttribute('hidden', nav.hidden);
-  paintPxIcons(nav); requestAnimationFrame(moveNavInd);
+  paintPxIcons(nav); requestAnimationFrame(moveNavInd); requestAnimationFrame(spyJump);
   const slot = $('#stage-slot'); if (slot) Avatar.mount(slot, S.bodyBoth ? USERS : [userOf(S.me)]);
   window.scrollTo(0, S.scrollTop ? 0 : y); S.scrollTop = false;
   // horizontale scrollpositie behouden (of het gekozen item in beeld houden)
@@ -3137,8 +3195,8 @@ function viewBrowse() {
       ${list.length ? `<div class="wgrid">${list.map((t) => wcard(t, metas.get(t.id))).join('')}</div>` : `<div class="card empty">${B.tab === 'fav' ? 'Nog niks bewaard. Tik op het bladwijzertje van een training.' : 'Geen trainingen gevonden.'}</div>`}`;
   }
   return `<div class="wrap screen">
-    <div class="bar-top"><span></span><h1>Ontdek</h1><span></span></div>
-    <div class="tabsrow" data-hscroll="btabs">${tabs.map(([k, l]) => `<button class="chip" data-act="b-tab" data-k="${k}" aria-pressed="${B.tab === k}">${l}</button>`).join('')}</div>
+    <div class="shd"><div class="bar-top"><span></span><h1>Ontdek</h1><span></span></div>
+    <div class="tabsrow jnav" data-hscroll="btabs">${tabs.map(([k, l]) => `<button class="chip" data-act="b-tab" data-k="${k}" aria-pressed="${B.tab === k}">${l}</button>`).join('')}</div></div>
     <div class="tools"><button data-act="b-filter" aria-pressed="${B.level != null || !!B.group}">${IC.filter}Filters</button><button data-act="b-sort">${IC.sort}${sorts[B.sort]}</button>
       <label class="q">${IC.search}<input id="b-q" value="${esc(B.q)}" placeholder="Zoeken" autocomplete="off"></label></div>
     ${false ? `<div class="stack" style="gap:10px">${B.tab !== 'ex' ? `<div class="chips">${['Alle', ...LEVELS].map((l, i) => `<button class="chip" data-act="b-level" data-l="${i - 1}" aria-pressed="${(B.level ?? -1) === i - 1}">${l}</button>`).join('')}</div>` : ''}
@@ -3163,7 +3221,7 @@ function viewMuscles() {
   return `<div class="wrap screen full" style="padding-bottom:140px">
     <div class="bar-top"><button class="circle" data-act="back" aria-label="Terug">${IC.back}</button><span class="stepbar"><i style="width:${M.sel.length ? 66 : 33}%"></i></span><span></span></div>
     <div><h1 class="mt-title">Spieren om te trainen</h1><p class="muted" style="margin:8px 0 0;font-size:17px">Kies de spieren die je wilt trainen.</p></div>
-    <div class="mt-fig">${muscleSvg(pickFill(M.sel, 'var(--blue)'))}</div>
+    <div class="mt-fig glasscard">${muscleSvg(pickFill(M.sel, 'var(--blue)'), { dots: true })}</div>
     <div class="optc ${all ? 'on' : ''}" role="button" tabindex="0" data-act="m-all"><span class="lbl">Aanbevolen</span><b>Alles trainen</b><small>Alle spiergroepen, in balans.</small></div>
     <div class="optc ${!all ? 'on' : ''}" role="button" tabindex="0" data-act="m-focus"><b>Focus</b><small>Kies 1 tot 2 spiergroepen om voorrang te geven.</small></div>
     <div class="chips mchips">${GROUP_ORDER.map((g) => `<button class="chip ${M.sel.includes(g) ? 'hit' : ''}" data-act="m-toggle" data-g="${g}" aria-pressed="${M.sel.includes(g)}"><span class="ck">${IC.check}</span>${GROUPS[g]}</button>`).join('')}</div>
@@ -3563,6 +3621,16 @@ function statusOf(u = S.me) {
 }
 
 // ---------- Voortgang & status ----------
+function jumpNav(items) { return `<div class="jnav" data-hscroll="jnav">${items.map(([id, l], i) => `<button class="chip" data-act="jump" data-to="${id}" aria-pressed="${i === 0}">${l}</button>`).join('')}</div>`; }
+function shdH() { const h = document.querySelector('.shd'); return h ? h.getBoundingClientRect().bottom : 0; }
+function spyJump() {
+  const chips = [...document.querySelectorAll('.shd .jnav [data-act="jump"]')]; if (!chips.length) return;
+  const top = shdH() + 24; let cur = chips[0];
+  for (const c of chips) { const el = document.getElementById(c.dataset.to); if (el && el.getBoundingClientRect().top <= top) cur = c; }
+  if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) cur = chips[chips.length - 1];
+  chips.forEach((c) => { const on = c === cur; if ((c.getAttribute('aria-pressed') === 'true') !== on) { c.setAttribute('aria-pressed', on); if (on) { const n = c.parentElement; n.scrollTo({ left: c.offsetLeft - n.clientWidth / 2 + c.offsetWidth / 2, behavior: 'smooth' }); } } });
+}
+let spyRaf = 0; addEventListener('scroll', () => { if (!spyRaf) spyRaf = requestAnimationFrame(() => { spyRaf = 0; spyJump(); }); }, { passive: true });
 function viewProgress() {
   const u = userOf(S.me); const st = statusOf(); const sl = sleepStats(); const sp = stepStats(); const p = profile();
   // trainingen per maand (6 maanden)
@@ -3588,36 +3656,36 @@ function viewProgress() {
   const legend = (us) => (us.length > 1 ? `<div class="legend">${us.map((x) => `<span style="--c:${x.color}"><i></i>${x.name}</span>`).join('')}</div>` : '');
   const vtag = (v) => `<span class="vtag ${v[1]}">${v[0]}</span>`;
   return `<div class="wrap screen home6">
-    <div class="bar-top"><span></span><h1>Voortgang</h1><span></span></div>
-    <section class="stat-hero">
+    <div class="shd"><div class="bar-top"><span></span><h1>Voortgang</h1><span></span></div>${jumpNav([['j-status', 'Status'], ['j-slaap', 'Slaap'], ['j-stappen', 'Stappen'], ['j-sport', 'Sport'], ['j-oefening', 'Oefeningen'], ['j-gewicht', 'Gewicht']])}</div>
+    <section class="stat-hero" id="j-status">
       <div class="stat-hero__l"><span class="whero__eye">Jouw status vandaag</span>${dotNum(st.score, 'xxl')}<b>${st.label}</b></div>
       <div class="stat-hero__r">${st.parts.map((x) => `<div class="sp"><div class="sp__t"><span>${x.k} <em>${x.d}</em></span><b>${Math.round(x.v * 100)}%</b></div>${fadeBar(x.v)}</div>`).join('')}</div>
       <p class="stat-hero__tip">${st.R ? st.R.tip + ' ' : ''}<span class="muted">Je status (0 tot 100) telt je trainingen van deze week, je herstel uit slaap en je stappen bij elkaar op.${st.parts.length < 3 ? ' Koppel Apple Gezondheid (Profiel) voor een completer beeld.' : ''}</span></p>
     </section>
 
-    <div class="sec"><h2>Slaap</h2><button class="link" data-act="sleep">Invullen</button></div>
+    <div class="sec" id="j-slaap"><h2>Slaap</h2><button class="link" data-act="sleep">Invullen</button></div>
     <section class="card mini">${sl ? `<div class="mini__h"><span><b>Gemiddeld ${hmin(sl.avg)}</b><br><small class="muted">afgelopen 7 nachten · doel ${hmin(sl.goal)}</small></span>${vtag(sl.verdict)}</div>
       ${barsChart(sl.days.map((x, i) => ({ v: x.m, l: i % 2 ? '' : dayLetter(x.d), t: `${fmtDate(x.d)}: ${x.m ? hmin(x.m) : 'geen data'}`, hi: i === 13 })), { goal: sl.goal, fmt: (v) => hmin(v) })}
       <div class="fb"><p>${sl.verdict[2]}</p>${sl.extra.map((x) => `<p>${x}</p>`).join('')}${st.R ? `<p><b>Herstel ${st.R.score}/100:</b> ${st.R.tip}</p>` : ''}</div>`
       : '<div class="empty">Nog geen slaapgegevens. Koppel Apple Gezondheid via Profiel, of tik op Invullen.</div>'}</section>
 
-    <div class="sec"><h2>Stappen</h2><button class="link" data-act="steps">Invullen</button></div>
+    <div class="sec" id="j-stappen"><h2>Stappen</h2><button class="link" data-act="steps">Invullen</button></div>
     <section class="card mini">${sp ? `<div class="mini__h"><span><b>Gemiddeld ${nf(Math.round(sp.avg), 0)} stappen</b><br><small class="muted">per dag · ± ${nf(sp.kcal, 0)} kcal extra deze week</small></span>${vtag(sp.verdict)}</div>
       ${barsChart(sp.days.map((x, i) => ({ v: x.v, l: i % 2 ? '' : dayLetter(x.d), t: `${fmtDate(x.d)}: ${nf(x.v, 0)} stappen`, hi: i === 13 })), { goal: sp.goal, fmt: (v) => nf(v / 1000, 0) + 'k' })}
       <div class="fb"><p>${sp.verdict[2]}</p></div>`
       : '<div class="empty">Nog geen stappen. Koppel Apple Gezondheid via Profiel, of tik op Invullen.</div>'}</section>
 
-    <div class="sec"><h2>Sport</h2><button class="link" data-act="go" data-r="trainings">Alle trainingen</button></div>
+    <div class="sec" id="j-sport"><h2>Sport</h2><button class="link" data-act="go" data-r="trainings">Alle trainingen</button></div>
     <button class="card mini mcard" data-act="go" data-r="trainings"><div class="mini__h"><span><b>Trainingen per maand</b><br><small class="muted">${thisM} deze maand · ${thisM >= lastM ? (thisM - lastM ? `${thisM - lastM} meer` : 'evenveel') : `${lastM - thisM} minder`} dan vorige maand</small></span>${IC.chev.replace('<svg', '<svg class="chev"')}</div>
       ${monthStrip(months, mineM, otherM)}
       <div class="legend"><span style="--c:${u.color}"><i></i>${esc(u.name)}</span><span style="--c:rgba(255,255,255,.35)"><i></i>${esc(other().name)}</span></div></button>
-    <section class="card"><div class="sec" style="margin:0"><h2>Per oefening</h2></div>${whoSegL('exWho')}
+    <section class="card" id="j-oefening"><div class="sec" style="margin:0"><h2>Per oefening</h2></div>${whoSegL('exWho')}
       ${exList.length ? `<label class="f">Oefening<select class="in" id="prog-ex">${exList.map((e) => `<option value="${e.id}" ${e.id === S.progEx ? 'selected' : ''}>${esc(e.name)}</option>`).join('')}</select></label>
       <div class="chips">${Object.entries(metricLabel).map(([k, l]) => `<button class="chip" data-act="metric" data-m="${k}" aria-pressed="${S.progMetric === k}">${l}</button>`).join('')}</div>
       ${lineChart(series, { unit, emptyMsg: 'Deze oefening is nog niet gedaan.' })}${legend(exUsers)}` : '<div class="empty">Log een training en je ziet hier per oefening je lijn omhoog gaan.</div>'}</section>
     ${recordsCard()}
 
-    <div class="sec"><h2>Gewicht</h2><button class="link" data-act="go" data-r="body">Metingen</button></div>
+    <div class="sec" id="j-gewicht"><h2>Gewicht</h2><button class="link" data-act="go" data-r="body">Metingen</button></div>
     <section class="card mini">${lastW != null ? `<div class="mini__h"><span>${dotNum(nf(lastW) + ' kg')}<br><small class="muted">laatste meting · ${fmtDate(wts[wts.length - 1].date)}</small></span>${dW != null && wts.length > 1 ? `<span class="vtag ${Math.abs(dW) < 0.4 ? 'good' : 'warn'}">${dW > 0 ? '+' : ''}${nf(dW)} kg</span>` : ''}</div>
       ${lineChart([{ name: u.name, color: u.color, points: wts.map((m) => ({ x: parseDate(m.date), y: m.weight })) }], { unit: ' kg', h: 160 })}
       <div class="fb"><p>${wTrend} ${wGoal}</p></div>` : '<div class="empty">Nog geen weging. Voeg er een toe via Metingen.</div>'}</section>
@@ -3661,12 +3729,12 @@ function viewProfile() {
   const weeks = first ? Math.max(1, Math.ceil((Date.now() - first) / (7 * DAY))) : 0;
   const uph = photoUrl('user_' + S.me);
   return `<div class="wrap screen full home6">
-    <div class="bar-top"><button class="circle" data-act="back" aria-label="Terug">${IC.back}</button><h1>Profiel</h1><span></span></div>
+    <div class="shd"><div class="bar-top"><button class="circle" data-act="back" aria-label="Terug">${IC.back}</button><h1>Profiel</h1><span></span></div>${jumpNav([['j-over', 'Over jou'], ['j-doelen', 'Doelen'], ['j-health', 'Gezondheid'], ['j-fotos', 'Foto’s']])}</div>
     <section class="pcard ${uph ? 'has-ph' : ''}">${uph ? phDiv(uph) : ''}<div class="pcard__fade"></div>
       ${uph ? '' : `<div class="pcard__face">${faceHtml(u, 96)}</div>`}
       <div class="pcard__t"><h1>${esc(u.name)}</h1>${p.bio ? `<p>${esc(p.bio)}</p>` : ''}</div></section>
     <div class="trio card" style="padding:14px 6px"><div><small>Ervaring</small><b>${weeks} ${weeks === 1 ? 'week' : 'weken'}</b></div><div><small>Trainingen</small><b>${ws.length}</b></div><div><small>Records</small><b>${prCount(S.me)}</b></div></div>
-    <section class="card"><h2>Over jou</h2>
+    <section class="card" id="j-over"><h2>Over jou</h2>
       <label class="f">Bio<textarea class="in" id="p-bio" placeholder="Bijv. doel: 100 kg bankdrukken voor de zomer">${esc(p.bio || '')}</textarea></label>
       <div class="grid2">
         <label class="f">Lengte (cm)<input class="in num" id="p-height" inputmode="numeric" value="${p.height ?? ''}"></label>
@@ -3674,7 +3742,7 @@ function viewProfile() {
         <label class="f">Doelgewicht (kg)<input class="in num" id="p-goal" inputmode="decimal" value="${p.goalWeight ?? ''}"></label>
         <label class="f">Lichaam<select class="in" id="p-sex"><option value="m" ${p.sex !== 'v' ? 'selected' : ''}>Man</option><option value="v" ${p.sex === 'v' ? 'selected' : ''}>Vrouw</option></select></label>
       </div></section>
-    <section class="card"><h2>Doelen</h2>
+    <section class="card" id="j-doelen"><h2>Doelen</h2>
       <div class="grid3">
         <label class="f">Trainingen/week<input class="in num" id="p-weekly" inputmode="numeric" value="${p.weekly ?? 3}"></label>
         <label class="f">Slaap (uur)<input class="in num" id="p-sleep" inputmode="decimal" value="${p.sleepGoal ?? 8}"></label>
@@ -3684,7 +3752,7 @@ function viewProfile() {
       <p class="muted small" style="margin:0">Met deze tijden vraagt de app 's ochtends of je zo geslapen hebt.</p>
       <button class="btn cta wide plain" data-act="save-p">Opslaan</button></section>
     ${healthSettings()}
-    <section class="card"><h2>Foto’s</h2>
+    <section class="card" id="j-fotos"><h2>Foto’s</h2>
       ${canPhoto() ? `<p class="muted small" style="margin:0">Je profielfoto en de foto’s in de app.</p>
       <div class="photos">${PHOTO_SLOTS().map(([slot, label]) => { const pu = photoUrl(slot);
         return `<div class="pslot"><button class="pthumb" data-act="photo" data-slot="${slot}" aria-label="Foto kiezen voor ${esc(label)}">${pu ? `<img src="${pu}" alt="">` : IC.camera}</button><small>${esc(label)}</small>${S.data.photos.some((x) => x.id === slot) ? `<button class="link" data-act="photo-del" data-slot="${slot}" data-confirm>${DEFAULT_PHOTOS[slot] ? 'Standaard' : 'Verwijder'}</button>` : ''}</div>`; }).join('')}</div>`
@@ -3784,7 +3852,7 @@ function renderSheet() {
     const me = userOf(S.me), ot = other(); const A = achievements(); const lastW = latestBody(S.me, 'weight');
     const row = (act, r, ic, label, val, chev = true) => `<button class="menu2__i" data-act="${act}" ${r ? `data-r="${r}"` : ''}>${pxSvg(ic, 'pxi menu2__ic')}<span>${label}</span>${val != null ? `<em>${val}</em>` : ''}${chev ? pxSvg('chev', 'pxi menu2__ch') : ''}</button>`;
     const still = root.querySelector('.menu2') ? 'still' : '';
-    root.innerHTML = `<div class="menu2 ${still}" data-act="sheet-close"><div class="menu2__arc" aria-hidden="true"></div>
+    root.innerHTML = `<div class="menu2 ${still}" data-act="sheet-close">
       <div class="menu2__card" role="dialog" aria-label="Menu" data-stop>
         <div class="menu2__h"><span class="menu2__avs">${faceHtml(me, 44)}${faceHtml(ot, 44)}</span><div><b>${esc(me.name)}</b><small>${S.authEmail ? esc(S.authEmail) : 'samen met ' + esc(ot.name)}</small></div><span class="menu2__tag">TEAM</span></div>
         ${row('go', 'profile', 'user', 'Profiel &amp; doelen')}
@@ -4030,6 +4098,7 @@ document.addEventListener('click', async (ev) => {
     case 'ex-prev': draft.cur = Math.max(0, draft.cur - 1); saveDraft(); S.scrollTop = true; render(); break;
     case 'ex-next': draft.cur = Math.min(draft.ex.length - 1, draft.cur + 1); saveDraft(); S.scrollTop = true; render(); break;
     case 'ex-g': S.sheet.g = t.dataset.g; renderExSheet(); break;
+    case 'jump': { const el = document.getElementById(t.dataset.to); if (!el) break; const y = el.getBoundingClientRect().top + scrollY - shdH() - 12; scrollTo({ top: Math.max(0, y), behavior: REDUCE ? 'auto' : 'smooth' }); break; }
     case 'sc-toggle': { const i = +t.dataset.i; S.scOpen = S.scOpen === i ? null : i; render(); break; }
     case 'sc-open': draft.cur = +t.dataset.i; openModal({ type: 'exset', i: +t.dataset.i }); break;
     case 'ss-tick': { const e = draft.ex[S.modal.i]; const si = +t.dataset.si; const s = e.sets[si];
