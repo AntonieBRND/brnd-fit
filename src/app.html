@@ -1255,6 +1255,33 @@ nav.tabs .plus2:active .pxi { transform: rotate(90deg) scale(.9); }
 #ptrans { position: fixed; inset: 0; z-index: 90; pointer-events: none; overflow: hidden; display: flex; flex-direction: column; }
 .ptrans__row { display: flex; flex: none; }
 .ptrans__row i { flex: none; opacity: 0; }
+
+/* ===== Inloggen & welkom ===== */
+.login { position: relative; min-height: 100vh; min-height: 100dvh; display: grid; align-content: end; padding: 0 16px calc(20px + env(safe-area-inset-bottom, 0px)); overflow: hidden; background: #0b0806; }
+.login__bgblur { position: absolute; inset: -40px; background: url(img/login-bg.jpg) center 60% / cover; filter: blur(40px) saturate(1.2) brightness(.45); transform: scale(1.1); }
+.login__photo { position: absolute; left: 0; right: 0; top: 0; aspect-ratio: 1123 / 1400; max-height: 78vh; background: url(img/login-bg.jpg) center top / cover; -webkit-mask-image: linear-gradient(180deg, #000 62%, transparent 98%); mask-image: linear-gradient(180deg, #000 62%, transparent 98%); animation: login-ph 1.4s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes login-ph { from { opacity: 0; transform: scale(1.06); } }
+.login__card { position: relative; z-index: 1; width: 100%; max-width: 440px; margin: 0 auto; border-radius: 32px; overflow: hidden; border: 1px solid rgba(255,255,255,.14); box-shadow: 0 30px 70px rgba(0,0,0,.5); animation: login-card .9s cubic-bezier(.2,1,.3,1) .25s both; }
+@keyframes login-card { from { opacity: 0; transform: translateY(30px); } }
+.login__card .glass { -webkit-backdrop-filter: saturate(130%) blur(22px); backdrop-filter: saturate(130%) blur(22px); }
+.login__card .glass__fill { background: rgba(20,16,14,.42); }
+.login__in { position: relative; z-index: 1; display: grid; gap: 14px; padding: 24px 18px 16px; }
+.login__t { font-size: 40px; line-height: 1; letter-spacing: -.03em; color: #f1ede2; }
+.login__sub { margin: -6px 0 2px; color: rgba(241,237,226,.65); font-size: 15px; font-weight: 600; }
+.login__sub b { color: #f1ede2; }
+.login__f { display: grid; gap: 10px; }
+.lin__w { display: grid; gap: 6px; }
+.lin__w span { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: rgba(241,237,226,.55); padding-left: 4px; }
+.lin { width: 100%; height: 52px; border-radius: 16px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); color: #fff; padding: 0 16px; font-size: 16px; outline: none; transition: border-color .25s, background .25s, box-shadow .25s; }
+.lin::placeholder { color: rgba(241,237,226,.35); }
+.lin:focus { border-color: rgba(255,255,255,.45); background: rgba(255,255,255,.1); box-shadow: 0 0 0 4px rgba(255,255,255,.06); }
+.login .pill-cta { margin-top: 6px; background: #f1ede2; }
+.login__link { border: 0; background: none; color: rgba(241,237,226,.6); font-size: 14px; padding: 6px; justify-self: center; }
+.login__link b { color: #f1ede2; }
+.who-pick { padding-left: 8px; } .who-pick .face::after { display: none; }
+.login .who-pick { margin-top: 0; }
+.login .who-pick + .who-pick { background: rgba(255,255,255,.1); color: #f1ede2; box-shadow: inset 0 0 0 1px rgba(255,255,255,.16); }
+.login .who-pick + .who-pick .pill-cta__a { background: #f1ede2; color: #0a0d14; }
 </style>
 
 <div class="logo-loader" id="loader" data-logo-loader-init aria-hidden="true">
@@ -2332,19 +2359,19 @@ const SB = {
   },
 };
 function viewLogin() {
-  return `<section class="welcome wrap"><div class="bg"></div>${phDiv(photoUrl('welcome'), 'tall')}
-    <div class="logo"><img src="icons/logo-white.png" alt="BRND FIT"></div>
-    <div class="cnt"><h1>Log in bij<br><em>BRND FIT</em></h1>
-      ${S.loginSent ? `<p>We hebben een mail gestuurd naar <b>${esc(S.loginSent)}</b>. Typ de code uit die mail hieronder in.</p>
-      <form data-form="otp" class="stack" style="gap:10px"><input class="in otp-in" id="login-code" inputmode="numeric" autocomplete="one-time-code" maxlength="12" placeholder="123456" required><button class="btn cta wide">Inloggen</button></form>
-      <button class="btn ghost" data-act="login-again">Terug</button>`
-      : `<p>${S.loginNew ? 'Maak je account aan. Kies een wachtwoord van minstens 6 tekens.' : 'Log in met je e-mailadres en wachtwoord. Daarna blijf je ingelogd.'}</p>
-      <form data-form="pw" class="stack" style="gap:10px">
-        <input class="in" id="login-email" type="email" autocomplete="email" placeholder="jij@voorbeeld.nl" required value="${esc(ls.get('brndfit:email', ''))}">
-        <input class="in" id="login-pw" type="password" autocomplete="${S.loginNew ? 'new-password' : 'current-password'}" minlength="6" placeholder="Wachtwoord" required>
-        <button class="btn cta wide">${S.loginNew ? 'Account maken' : 'Inloggen'}</button></form>
-      <button class="btn ghost" data-act="login-mode">${S.loginNew ? 'Ik heb al een account' : 'Nog geen account? Maak er een'}</button>`}
-    </div></section>`;
+  const card = S.loginSent
+    ? `<p class="login__sub">Code uit de mail naar <b>${esc(S.loginSent)}</b></p>
+      <form data-form="otp" class="login__f"><input class="lin otp-in" id="login-code" inputmode="numeric" autocomplete="one-time-code" maxlength="12" placeholder="123456" required>
+        <button class="pill-cta">Inloggen <span class="pill-cta__a">${PX_ARROW}</span></button></form>
+      <button class="login__link" data-act="login-again">Terug</button>`
+    : `<p class="login__sub">${S.loginNew ? 'Account maken' : 'Log in'}</p>
+      <form data-form="pw" class="login__f">
+        <label class="lin__w"><span>E-mail</span><input class="lin" id="login-email" type="email" autocomplete="email" placeholder="jij@voorbeeld.nl" required value="${esc(ls.get('brndfit:email', ''))}"></label>
+        <label class="lin__w"><span>Wachtwoord</span><input class="lin" id="login-pw" type="password" autocomplete="${S.loginNew ? 'new-password' : 'current-password'}" minlength="6" placeholder="${S.loginNew ? 'Minstens 6 tekens' : '••••••••'}" required></label>
+        <button class="pill-cta">${S.loginNew ? 'Account maken' : 'Inloggen'} <span class="pill-cta__a">${PX_ARROW}</span></button></form>
+      <button class="login__link" data-act="login-mode">${S.loginNew ? 'Ik heb al een account' : 'Nog geen account? <b>Maak er een</b>'}</button>`;
+  return `<section class="login"><div class="login__bgblur" aria-hidden="true"></div><div class="login__photo" role="img" aria-label="BRND FIT"></div>
+    <div class="login__card"><span class="glass" aria-hidden="true"><i class="glass__fill"></i><i class="glass__burn"></i><i class="glass__hs"></i><i class="glass__hh"></i><i class="glass__el"></i><i class="glass__ed"></i><i class="glass__ig"></i></span><div class="login__in"><h1 class="login__t">Welkom</h1>${card}</div></div></section>`;
 }
 
 // ---------- Gezondheid: stappen, slaap, herstel ----------
@@ -3020,19 +3047,9 @@ function doRender() {
 
 // ---------- Welkom ----------
 function viewWelcome() {
-  const wp = photoUrl('welcome');
-  return `<section class="hero-w">
-    <div class="hero-w__card">
-      ${phDiv(wp)}<div class="hero-w__shade"></div>
-      <nav class="hero-w__nav"><img class="hero-w__logo" src="icons/logo-white.png" alt="BRND FIT"></nav>
-      <div class="badge-w" aria-hidden="true"><svg class="badge-w__ring" viewBox="0 0 200 200"><defs><path id="ring-w" d="M100,20 a80,80 0 1,1 -0.01,0"/></defs>
-        <text textLength="503" lengthAdjust="spacing"><textPath href="#ring-w">TRAIN SAMEN • WORD STERKER • TRAIN SAMEN • </textPath></text></svg>
-        <span class="badge-w__c"><svg viewBox="0 0 31 29" fill="none"><path d="M22 18L22 8L12 8M22 8L9 21" stroke="white" stroke-width="1.6"/></svg></span></div>
-      <div class="hero-w__bottom">
-        <h1 class="hero-w__title"><span>Sterker elke dag,</span><span><span class="draw draw--auto"><em>beter</em><svg class="draw__svg" viewBox="0 0 310 40" preserveAspectRatio="none"><path d="${UNDER[1]}" stroke="currentColor" stroke-width="10" stroke-linecap="round" fill="none"/></svg></span> jij</span></h1>
-        <div class="hero-w__pick">${USERS.map((u) => `<button class="btn-w" data-act="welcome-start" data-u="${u.id}"><span class="btn-w__t">Ik ben ${esc(u.name)}</span><span class="btn-w__a"><svg viewBox="0 0 31 29" fill="none"><path d="M22 18L22 8L12 8M22 8L9 21" stroke="currentColor" stroke-width="2.2"/></svg></span></button>`).join('')}</div>
-      </div>
-    </div></section>`;
+  return `<section class="login"><div class="login__bgblur" aria-hidden="true"></div><div class="login__photo" role="img" aria-label="BRND FIT"></div>
+    <div class="login__card"><span class="glass" aria-hidden="true"><i class="glass__fill"></i><i class="glass__burn"></i><i class="glass__hs"></i><i class="glass__hh"></i><i class="glass__el"></i><i class="glass__ed"></i><i class="glass__ig"></i></span><div class="login__in"><h1 class="login__t">Welkom</h1><p class="login__sub">Wie ben jij?</p>
+      <div class="login__f">${USERS.map((u) => `<button class="pill-cta who-pick" data-act="welcome-start" data-u="${u.id}"><span class="row" style="gap:12px">${faceHtml(u, 34)}${esc(u.name)}</span><span class="pill-cta__a">${PX_ARROW}</span></button>`).join('')}</div></div></div></section>`;
 }
 
 // ---------- Home ----------
