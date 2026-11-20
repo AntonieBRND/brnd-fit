@@ -1353,11 +1353,15 @@ nav.tabs .pill3 button[aria-current="page"] .pxi { animation: pop .45s cubic-bez
 
 html.intro nav.tabs, html.intro .pblur, html.intro .pblur-top { visibility: hidden !important; }
 html.intro body { overflow: hidden; }
+.topnav { transition: none !important; }
 html.intro-out nav.tabs .wrap { animation: nav-in .6s cubic-bezier(.2,.8,.2,1) both; }
 html.intro-out .pblur, html.intro-out .pblur-top { animation: lb-fade .6s ease both; }
 @keyframes nav-in { from { opacity: 0; transform: translateY(24px); } }
-.logo-loader { height: 100vh; height: 100lvh; bottom: auto; }
-.logo-loader__track { bottom: 12%; }
+.logo-loader { inset: -120px 0 !important; height: auto; }
+.logo-loader__track { bottom: calc(120px + 12vh) !important; }
+html.intro #app { visibility: hidden; }
+html.intro-out #app { animation: lb-fade .55s ease both; }
+
 </style>
 
 <div class="logo-loader" id="loader" data-logo-loader-init aria-hidden="true">
@@ -2982,6 +2986,7 @@ function playIntro(root) {
       .to(stack, { scale: 1.05, duration: 0.1 }, 'impact')
       .to(stack, { scale: 1, duration: 0.6, ease: 'elastic.out(1, 0.5)' })
       .to(stack, { autoAlpha: 0 }, 'impact+=0.5')
+      .call(endIntro, null, 'impact+=0.55')
       .to(bg, { autoAlpha: 0, duration: 0.55, ease: 'power2.inOut' }, 'impact+=0.6');
   }
   if (bar) tl.to(bar, { scaleX: 1, duration: tl.labels.impact, ease: 'power2.inOut' }, 0).to(track, { autoAlpha: 0 }, 'impact+=0.5');
@@ -3021,10 +3026,12 @@ S.noTimer = true; // timer staat uit: je vult gewoon je oefeningen en gewichten 
 document.addEventListener('touchmove', (e) => { if (e.touches.length > 1 || (e.scale && e.scale !== 1)) e.preventDefault(); }, { passive: false });
 const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
 function animateEnter(dir) {
-  if (REDUCE || !Element.prototype.animate) return;
+  if (REDUCE || !Element.prototype.animate || document.documentElement.classList.contains('intro')) return;
   const root = $('#app'); const page = [...root.children].find((c) => !c.matches('.dock, .pager, .banner')); if (!page) return;
   const from = { fwd: 'translateX(28px)', back: 'translateX(-28px)', tab: 'translateY(12px)', fade: 'scale(.985)' }[dir] || 'none';
-  page.animate([{ opacity: 0, transform: from }, { opacity: 1, transform: 'none' }], { duration: dir === 'tab' ? 340 : 380, easing: 'cubic-bezier(.2, .8, .2, 1)' });
+  // Pagina's met een vaste kop niet verschuiven (anders 'springt' de kop), alleen infaden
+  const fixedHead = page.querySelector(':scope > .topnav, :scope > .shd, :scope > .bar-top, :scope > .sess__top');
+  page.animate(fixedHead ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 0, transform: from }, { opacity: 1, transform: 'none' }], { duration: dir === 'tab' ? 340 : 380, easing: 'cubic-bezier(.2, .8, .2, 1)' });
   // kaarten kort na elkaar laten opkomen
   const kids = [...page.querySelectorAll(':scope > .card, :scope > section, :scope > .list, :scope > .tiles4, :scope > .wgrid, :scope > .tpls, :scope > .days, :scope > .today, :scope > .sets, :scope > .stack')].slice(0, 10);
   kids.forEach((k, i) => k.animate([{ opacity: 0, transform: 'translateY(14px)' }, { opacity: 1, transform: 'none' }], { duration: 460, delay: 60 + i * 45, easing: 'cubic-bezier(.2, .8, .2, 1)', fill: 'backwards' }));
