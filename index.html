@@ -1172,6 +1172,23 @@ button.card:active, .li:active, .pick:active, .ach:active, .chip:active { transf
 .ach2__p { height: 3px; border-radius: 3px; background: rgba(255,255,255,.08); overflow: hidden; margin-top: 4px; }
 .ach2__p i { display: block; height: 100%; background: #ff8a3d; animation: bar-in .8s cubic-bezier(.2,.8,.2,1) both; transform-origin: left; }
 @media (prefers-reduced-motion: reduce) { .scard, .srow, .sc__d, .ach2__i, .torso__g, .flame { animation: none !important; } }
+
+/* vloeiend sluiten */
+.sheet.still, .sheet.still .sheet-in { animation: none; }
+.sheet.out { animation: fade-out .23s ease forwards; pointer-events: none; }
+.sheet.out .sheet-in { animation: sheet-down .23s cubic-bezier(.4,0,.8,.4) forwards; }
+.lb.out { animation: fade-out .23s ease forwards; pointer-events: none; }
+.lb.out .lb__in { animation: lb-out .23s cubic-bezier(.4,0,.8,.4) forwards; }
+.whov.out { animation: fade-out .23s ease forwards; pointer-events: none; }
+.whov.out .whov__in { animation: sheet-down .23s cubic-bezier(.4,0,.8,.4) forwards; }
+@keyframes fade-out { to { opacity: 0; } }
+@keyframes sheet-down { to { transform: translateY(60px); opacity: 0; } }
+@keyframes lb-out { to { transform: translateY(10px) scale(.96); opacity: 0; } }
+.wh { scroll-snap-type: none !important; overflow-x: hidden; touch-action: pan-y; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+.whov__cols, .whc { touch-action: pan-y; overflow: hidden; }
+.whov__in { overscroll-behavior: contain; touch-action: pan-y; }
+.wh__i { width: 100%; overflow: hidden; cursor: pointer; user-select: none; -webkit-user-select: none; }
+.sheet-body { scroll-behavior: auto; }
 </style>
 
 <div class="loader" id="loader" aria-hidden="true"><div class="loader__bg"></div>
@@ -1680,7 +1697,7 @@ function renderExSheet() {
   const recent = !words.length ? [...used.entries()].sort((a, b) => b[1] - a[1]).map(([id]) => exById(id)).filter((e) => e && (!g || e.group === g)).slice(0, 8) : [];
   const byG = Object.keys(GROUPS).map((k) => [k, list.filter((e) => e.group === k)]).filter(([, l]) => l.length);
   const pickBtn = (e) => `<button class="pick" data-act="add-ex" data-id="${e.id}"><span>${esc(e.name)}${e.custom ? ' <small>(eigen)</small>' : ''}</span><small>${inDraft.has(e.id) ? '<span class="pr">al in training</span>' : e.kind === 'bw' ? 'lichaamsgewicht' : e.kind === 'time' ? 'tijd' : ''}</small></button>`;
-  root.innerHTML = `<div class="sheet" data-act="sheet-close"><div class="sheet-in" role="dialog" aria-label="Oefening toevoegen" data-stop>
+  const html = `<div class="sheet" data-act="sheet-close"><div class="sheet-in" role="dialog" aria-label="Oefening toevoegen" data-stop data-kind="ex">
     <div class="sheet-head"><div class="row" style="justify-content:space-between"><h2>${S.sheet.swap ? 'Oefening vervangen' : 'Oefening toevoegen'}</h2><button class="iconbtn" data-act="sheet-close" aria-label="Sluiten">${IC.x}</button></div>
       <input class="in" id="ex-search" placeholder="Zoek, bv. pec deck, rear delt, kabel" value="${esc(S.sheet.q || '')}" autocomplete="off">
       <div class="chips exg" data-hscroll="exg"><button class="chip" data-act="ex-g" data-g="" aria-pressed="${!g}">Alles</button>${Object.entries(GROUPS).map(([k, n]) => `<button class="chip" data-act="ex-g" data-g="${k}" aria-pressed="${g === k}">${n}</button>`).join('')}</div></div>
@@ -1693,6 +1710,13 @@ function renderExSheet() {
         <label class="f">Soort<select class="in" id="new-ex-kind"><option value="kg">Gewicht × reps</option><option value="bw">Lichaamsgewicht</option><option value="time">Tijd (sec)</option></select></label></div>
         <button class="btn ink" data-act="new-ex">Toevoegen</button></div>
     </div></div></div>`;
+  clearTimeout(root._t);
+  const cur = root.querySelector('.sheet-in[data-kind="ex"]');
+  if (cur) { const tmp = document.createElement('div'); tmp.innerHTML = html;
+    cur.querySelector('.sheet-body').innerHTML = tmp.querySelector('.sheet-body').innerHTML;
+    cur.querySelector('.chips.exg').innerHTML = tmp.querySelector('.chips.exg').innerHTML;
+    cur.querySelector('h2').textContent = tmp.querySelector('h2').textContent; return; }
+  root.innerHTML = html;
 }
 
 
@@ -1960,12 +1984,26 @@ async function setPhoto(slot, file) {
 // ---------- Calorieën ----------
 function weightAt(u, date) { const l = bodyOf(u).filter((b) => b.weight != null && b.date <= date); return l.length ? l[l.length - 1].weight : latestBody(u, 'weight') || 78; }
 // ACSM: kcal/min = MET × 3,5 × kg / 200. Krachttraining 3,5 (rustig) tot 6 (veel sets per minuut).
+// Krachttraining: rustverbranding (Mifflin-St Jeor: gewicht, lengte, leeftijd, geslacht) × MET op basis van
+// hoeveel je per minuut tilt t.o.v. je eigen gewicht, plus de mechanische arbeid van het tillen zelf.
+function liftKcal(w) {
+  const p = profile(w.user); const kg = weightAt(w.user, w.date); const hcm = p.height || 180;
+  const age = p.birthYear ? new Date(parseDate(w.date)).getFullYear() - p.birthYear : 30;
+  const bmr = 10 * kg + 6.25 * hcm - 5 * age + (p.sex === 'v' ? -161 : 5); const perMin = bmr / 1440;
+  let sets = 0, vol = 0;
+  for (const e of w.ex || []) for (const s of e.sets || []) { sets++; const reps = num(s.reps) || 0;
+    if (e.kind === 'kg') vol += (num(s.kg) || 0) * reps; else if (e.kind === 'bw') vol += (kg * 0.65 + (num(s.kg) || 0)) * reps; else vol += kg * 0.3 * (reps / 3); }
+  if (!sets) return 0;
+  const min = durMin(w) || Math.round(sets * 2.5 + 5);
+  const rel = vol / min / kg; // kg getild per minuut per kg lichaamsgewicht
+  const met = Math.max(3, Math.min(6, 3 + rel * 0.9));
+  const work = (vol * 9.81 * 0.45) / 4184 / 0.22;
+  return Math.round(met * perMin * min + work * 0.5);
+}
 function kcalOf(w) {
   if (w.kcal) return w.kcal;
   if (w.sport) return Math.round((padelMet(w) * 3.5 * weightAt(w.user, w.date) / 200) * (durMin(w) || 60));
-  const st = wStats(w); const min = durMin(w) || Math.round(st.sets * 2.6); if (!min) return 0;
-  const met = Math.max(3.5, Math.min(6, 3 + (st.sets / min) * 8));
-  return Math.round((met * 3.5 * weightAt(w.user, w.date) / 200) * min);
+  return liftKcal(w);
 }
 
 // ---------- Achteraf toevoegen ----------
@@ -2561,7 +2599,8 @@ function partnerSeg(cur, act, owner = S.me) {
 // ---------- Lightbox ----------
 function renderModal() {
   const root = $('#modal-root'); const M = S.modal;
-  if (!M) { root.innerHTML = ''; return; }
+  if (!M) { animOut(root, '.lb'); return; }
+  clearTimeout(root._t);
   let label = '', body = '';
   if (M.type === 'search') { label = 'Zoeken'; body = searchModal(M); }
   if (M.type === 'workout') { const w = S.data.workouts.find((x) => x.id === M.id); if (!w) { S.modal = null; root.innerHTML = ''; return; } label = 'Training'; body = workoutModal(w); }
@@ -2584,6 +2623,12 @@ function renderModal() {
   root.dataset.type = M.type;
   root.innerHTML = `<div class="lb ${keep ? 'still' : ''}" data-act="modal-close"><div class="lb__in" role="dialog" aria-modal="true" aria-label="${label}" data-stop>
     <button class="lb__x" data-act="modal-close" aria-label="Sluiten">${IC.x}</button>${body}</div></div>`;
+}
+// Vloeiend weg-animeren voordat iets verdwijnt
+function animOut(root, sel) {
+  const el = root?.querySelector(sel); if (!el || el.classList.contains('out')) { if (!el && root) root.innerHTML = ''; return; }
+  if (REDUCE) { root.innerHTML = ''; return; }
+  el.classList.add('out'); clearTimeout(root._t); root._t = setTimeout(() => { root.innerHTML = ''; }, 230);
 }
 function openModal(m) { S.modal = m; renderModal(); if (m.type === 'search') $('#lb-q')?.focus(); }
 function closeModal() { S.modal = null; renderModal(); }
@@ -3090,7 +3135,9 @@ function exSetModal(i) {
 const WH_H = 46;
 function wheelVals(kind, part) {
   if (part === 'reps') return kind === 'time' ? Array.from({ length: 61 }, (_, i) => i * 5) : Array.from({ length: 61 }, (_, i) => i);
-  return Array.from({ length: kind === 'bw' ? 201 : 601 }, (_, i) => i / 2);
+  const fine = Array.from({ length: 61 }, (_, i) => i / 2); // 0 - 30 kg per 0,5
+  const coarse = Array.from({ length: kind === 'bw' ? 28 : 108 }, (_, i) => 32.5 + i * 2.5); // daarna per 2,5
+  return fine.concat(coarse);
 }
 function wheelCol(id, vals, cur, label) {
   const idx = Math.max(0, vals.findIndex((v) => v >= (num(cur) ?? 0)));
@@ -3100,7 +3147,7 @@ function openWheel(si) {
   const i = S.modal?.i; const e = draft?.ex[i]; if (!e) return; const s = e.sets[si];
   const last = lastSession(draft.user || S.me, e.id, draft.editing || draft.id); const ph = placeholder(e, si, last);
   S.wheel = { i, si };
-  const root = document.getElementById('wheel-root') || document.body.appendChild(Object.assign(document.createElement('div'), { id: 'wheel-root' }));
+  const root = document.getElementById('wheel-root') || document.body.appendChild(Object.assign(document.createElement('div'), { id: 'wheel-root' })); clearTimeout(root._t);
   root.innerHTML = `<div class="whov" data-act="wheel-cancel"><div class="whov__in" data-stop>
     <div class="whov__h"><b>Set ${two(si + 1)}</b><small>${esc(e.name)}</small></div>
     <div class="whov__cols">${e.kind === 'time' ? '' : wheelCol('wh-kg', wheelVals(e.kind, 'kg'), s.kg !== '' ? s.kg : ph.kg, e.kind === 'bw' ? 'extra kg' : 'kg')}
@@ -3115,9 +3162,13 @@ function initWheel(w, onChange) {
   const paint = () => { raf = 0; const c = w.scrollTop / WH_H; const k = Math.max(0, Math.min(items.length - 1, Math.round(c)));
     for (let j = Math.max(0, k - 6); j <= Math.min(items.length - 1, k + 6); j++) { const dd = Math.abs(j - c); items[j].style.transform = `scale(${Math.max(0.6, 1.2 - dd * 0.2)})`; items[j].style.opacity = Math.max(0.1, 1 - dd * 0.27); items[j].classList.toggle('on', j === k); }
     if (k !== last) { last = k; try { navigator.vibrate?.(4); } catch { /* */ } onChange?.(k); } };
-  w.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(paint); }, { passive: true }); paint();
+  let snapT = 0;
+  w.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(paint); clearTimeout(snapT);
+    snapT = setTimeout(() => { const k = Math.round(w.scrollTop / WH_H); if (Math.abs(w.scrollTop - k * WH_H) > 1) w.scrollTo({ top: k * WH_H, behavior: 'smooth' }); }, 120); }, { passive: true });
+  w.addEventListener('click', (ev) => { const it = ev.target.closest('.wh__i'); if (!it) return; const k = [...items].indexOf(it); if (k >= 0) w.scrollTo({ top: k * WH_H, behavior: 'smooth' }); });
+  paint();
 }
-function closeWheel() { S.wheel = null; const r = document.getElementById('wheel-root'); if (r) r.innerHTML = ''; }
+function closeWheel() { S.wheel = null; animOut(document.getElementById('wheel-root'), '.whov'); }
 function wheelValue(id, vals) { const w = document.getElementById(id); return w ? vals[Math.max(0, Math.min(vals.length - 1, Math.round(w.scrollTop / WH_H)))] : null; }
 
 // ---------- Lijf: figuur dat meegaat met spier en vet ----------
@@ -3237,7 +3288,7 @@ async function finishWorkout() {
   }
   const old = draft.editing ? S.data.workouts.find((w) => w.id === draft.editing) : null;
   const fixed = draft.manual || draft.editing;
-  const dur = fixed ? (num(draft.dur) ?? (old ? durMin(old) : draft.noTimer ? Math.max(30, ex.length * 10) : Math.round(ex.reduce((a, e) => a + e.sets.length, 0) * 2.6))) : Math.round(elapsed() / 60000);
+  const dur = fixed ? (num(draft.dur) ?? (old ? durMin(old) : draft.noTimer ? Math.round(ex.reduce((a, e) => a + e.sets.length, 0) * 2.5 + 5) : Math.round(ex.reduce((a, e) => a + e.sets.length, 0) * 2.6))) : Math.round(elapsed() / 60000);
   const w = { user: draft.user || S.me, tpl: draft.tpl, name: draft.name, date: draft.date, start: draft.start, end: fixed ? draft.start + dur * 60000 : Date.now(),
     dur, note: (draft.note || '').trim(), ex, prs, rating: old?.rating || 0 };
   const kc = num(draft.kcal); if (kc) w.kcal = Math.round(kc);
@@ -3507,8 +3558,9 @@ function viewBody() {
 // ---------- Sheets ----------
 function renderSheet() {
   const root = $('#sheet-root');
-  if (!S.sheet) { root.innerHTML = ''; return; }
-  if (S.sheet.type === 'ex') { renderExSheet(); return; }
+  if (!S.sheet) { animOut(root, '.sheet'); return; }
+  clearTimeout(root._t);
+  if (S.sheet.type === 'ex') { if (!root.querySelector('.sheet-in[data-kind="ex"]')) root.innerHTML = ''; renderExSheet(); return; }
   const head = (t) => `<div class="sheet-head"><div class="row" style="justify-content:space-between"><h2>${t}</h2><button class="iconbtn" data-act="sheet-close" aria-label="Sluiten">${IC.x}</button></div></div>`;
   let title = '', body = '';
   if (S.sheet.type === 'plus') {
@@ -3562,7 +3614,8 @@ function renderSheet() {
     title = 'Wie traint er?';
     body = USERS.map((u) => `<button class="pick" data-act="switch-to" data-u="${u.id}"><span class="row">${faceHtml(u, 36)}<b>${esc(u.name)}</b></span>${u.id === S.me ? '<small>actief</small>' : ''}</button>`).join('');
   }
-  root.innerHTML = `<div class="sheet" data-act="sheet-close"><div class="sheet-in" role="dialog" aria-label="${title}" data-stop>${head(title)}<div class="sheet-body">${body}</div></div></div>`;
+  const still = root.querySelector(`.sheet-in[data-kind="${S.sheet.type}"]`) ? 'still' : '';
+  root.innerHTML = `<div class="sheet ${still}" data-act="sheet-close"><div class="sheet-in" role="dialog" aria-label="${title}" data-stop data-kind="${S.sheet.type}">${head(title)}<div class="sheet-body">${body}</div></div></div>`;
 }
 
 // ---------- Events ----------
@@ -3880,7 +3933,7 @@ document.addEventListener('submit', async (ev) => {
 });
 document.addEventListener('input', (ev) => {
   const t = ev.target;
-  if (t.id === 'ex-search') { S.sheet.q = t.value; const pos = t.selectionStart; renderExSheet(); const n = $('#ex-search'); n.focus(); n.setSelectionRange(pos, pos); return; }
+  if (t.id === 'ex-search') { S.sheet.q = t.value; clearTimeout(S.exQT); S.exQT = setTimeout(renderExSheet, 90); return; }
   if (t.id === 'lb-q') { S.modal.q = t.value; const pos = t.selectionStart; renderModal(); const n = $('#lb-q'); n.focus(); n.setSelectionRange(pos, pos); return; }
   if (t.id === 'b-q') { S.browse.q = t.value; const pos = t.selectionStart; doRender(); const n = $('#b-q'); n.focus(); n.setSelectionRange(pos, pos); return; }
   if (t.dataset.eeF && S.modal?.type === 'exedit') { const st = exArr()[S.modal.i].sets[+t.dataset.si]; st[t.dataset.eeF] = t.value.replace(',', '.'); st.done = st.reps !== ''; saveEx(); return; }
