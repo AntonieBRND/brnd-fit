@@ -991,6 +991,11 @@ button.card:active, .li:active, .pick:active, .ach:active, .chip:active { transf
 .sleepask__ic svg { width: 20px; height: 20px; stroke: #cfe0ff; fill: none; stroke-width: 2; }
 .sleepask__t { display: grid; gap: 2px; }
 .sleepask__b { display: grid; gap: 6px; }
+
+.timer-seg { display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 8px; }
+.timer-seg button { text-align: center; }
+.dur-row { display: grid; grid-template-columns: 1fr 110px; align-items: center; gap: 10px; margin-top: 8px; }
+.dur-row span { color: var(--muted); font-size: 13px; }
 </style>
 
 <div class="loader" id="loader" aria-hidden="true"><div class="loader__bg"></div>
@@ -2504,6 +2509,7 @@ addEventListener('scroll', () => {
 }, { passive: true });
 
 // ---------- Overgangen ----------
+try { S.noTimer = JSON.parse(localStorage.getItem('brndfit:notimer') || 'false'); } catch { /* */ }
 const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
 function animateEnter(dir) {
   if (REDUCE || !Element.prototype.animate) return;
@@ -2761,10 +2767,11 @@ function viewActive() {
     <div class="vis ${actPhoto ? 'has-ph' : ''}">${phDiv(actPhoto)}<div class="fig">${muscleSvg(pickFill([e.group], 'var(--blue-hi)', 'rgba(255,255,255,.1)'), { back: !actPhoto })}</div>
 
       <div class="tb"><button class="circle" data-act="go" data-r="home" aria-label="Naar home, training loopt door">${IC.back}</button>
-        <span class="clock"><span id="clock">${fixed ? fmtDate(draft.date, { weekday: 'short', day: 'numeric', month: 'short' }) : mmss(elapsed() / 1000)}</span><small>${draft.manual ? 'Achteraf toevoegen' : draft.editing ? 'Bewerken' : draft.paused ? 'Gepauzeerd' : esc(tplById(draft.tpl)?.short || 'Eigen training')}</small></span>
+        <span class="clock"><span id="clock">${fixed ? fmtDate(draft.date, { weekday: 'short', day: 'numeric', month: 'short' }) : mmss(elapsed() / 1000)}</span><small>${draft.noTimer ? 'Zonder timer' : draft.manual ? 'Achteraf toevoegen' : draft.editing ? 'Bewerken' : draft.paused ? 'Gepauzeerd' : esc(tplById(draft.tpl)?.short || 'Eigen training')}</small></span>
         ${fixed ? `<button class="savebtn" data-act="finish">${IC.check}Opslaan</button>` : `<button class="circle pause" data-act="pause" aria-label="${draft.paused ? 'Doorgaan' : 'Pauze'}">${draft.paused ? IC.resume : IC.pause}</button>`}</div>
       ${restHtml()}</div>
     <div class="partner-row"><span class="muted small">Training</span>${partnerSeg(draft.partner || '', 'partner', draft.user || S.me)}</div>
+    ${draft.noTimer ? `<label class="f dur-row"><span>Duur (min)</span><input class="in num" id="d-dur-nt" inputmode="numeric" data-draft="dur" placeholder="${Math.max(30, draft.ex.length * 10)}" value="${esc(draft.dur || '')}"></label>` : ''}
     <div class="exhead"><div style="min-width:0"><h2>${esc(e.name)}</h2><div class="meta"><span>${GROUPS[e.group] || ''}</span>${last ? `<span>vorige ${relDay(last.date).toLowerCase()}</span>` : '<span>eerste keer</span>'}${tip ? `<span class="tip">${tip}</span>` : ''}</div></div>
       <button class="iconbtn" data-act="ex-menu" aria-label="Opties">${IC.dots}</button></div>
     <div class="sets">${e.sets.map((s, si) => { const ph = placeholder(e, si, last); const pv = last?.sets[si];
@@ -2777,7 +2784,8 @@ function viewActive() {
     <div class="navbtns" style="margin-top:14px"><button class="btn dark" data-act="ex-prev" ${ci === 0 ? 'disabled' : ''}>← Vorige</button>
       ${ci === draft.ex.length - 1 ? '<button class="btn next" data-act="finish">Afronden ✓</button>' : '<button class="btn next" data-act="ex-next">Volgende →</button>'}</div>
     ${fixed ? `<button class="btn blue wide" data-act="finish" style="margin-top:6px">${draft.editing ? 'Wijzigingen opslaan' : 'Training opslaan'}</button>` : ''}
-    <button class="btn danger wide" data-act="discard" data-confirm style="margin-top:6px">${draft.editing ? 'Stop met bewerken' : draft.manual ? 'Niet toevoegen' : 'Training annuleren'}</button>
+    ${fixed ? '' : '<button class="btn ghost wide" data-act="timer-off" style="margin-top:6px">Verder zonder timer</button>'}
+    <button class="btn danger wide" data-act="discard" data-confirm style="margin-top:6px">${draft.editing ? 'Stop met bewerken' : draft.manual && !draft.noTimer ? 'Niet toevoegen' : 'Training annuleren'}</button>
   </div>
   <div class="pager"><div class="wrap">${ring(done / (total || 1), `${ci + 1}/${draft.ex.length}`)}
     <div class="nm"><b>${esc(e.name)}<small>${GROUPS[e.group] || ''}</small></b>
@@ -2800,8 +2808,9 @@ function startWorkout(tplId, exIds, name, planId) {
   if (pl?.partner || (pl && planDuo(pl))) draft.partner = other().id;
   if (pl?.ex?.length) draft.ex = pl.ex.map((e) => ({ id: e.id, name: e.name, group: e.group, kind: e.kind, sets: (e.sets.length ? e.sets : [{}]).map((x) => ({ kg: '', reps: '', done: false, tkg: x.kg === '' || x.kg == null ? undefined : x.kg, treps: x.reps === '' || x.reps == null ? undefined : x.reps })) }));
   else for (const id of exIds || t?.ex || []) addExToDraft(id);
+  if (S.noTimer) { draft.manual = true; draft.noTimer = true; draft.dur = ''; }
   saveDraft(); S.readyN = 3;
-  if (!draft.ex.length) { go('active'); return; }
+  if (!draft.ex.length || draft.noTimer) { go('active'); return; }
   go('ready');
 }
 function addExToDraft(id) {
@@ -2822,7 +2831,7 @@ async function finishWorkout() {
   }
   const old = draft.editing ? S.data.workouts.find((w) => w.id === draft.editing) : null;
   const fixed = draft.manual || draft.editing;
-  const dur = fixed ? (num(draft.dur) ?? (old ? durMin(old) : Math.round(ex.reduce((a, e) => a + e.sets.length, 0) * 2.6))) : Math.round(elapsed() / 60000);
+  const dur = fixed ? (num(draft.dur) ?? (old ? durMin(old) : draft.noTimer ? Math.max(30, ex.length * 10) : Math.round(ex.reduce((a, e) => a + e.sets.length, 0) * 2.6))) : Math.round(elapsed() / 60000);
   const w = { user: draft.user || S.me, tpl: draft.tpl, name: draft.name, date: draft.date, start: draft.start, end: fixed ? draft.start + dur * 60000 : Date.now(),
     dur, note: (draft.note || '').trim(), ex, prs, rating: old?.rating || 0 };
   const kc = num(draft.kcal); if (kc) w.kcal = Math.round(kc);
@@ -3083,7 +3092,8 @@ function renderSheet() {
   if (S.sheet.type === 'plus') {
     const npl = nextPlanFor(S.me); const nt = npl ? tplById(npl.tpl) : null;
     title = 'Nieuwe training';
-    body = `<div class="eyebrow">Nu trainen</div>${draft ? `<button class="pick" data-act="resume"><span><b>Hervat je training</b><br><small>${esc(tplById(draft.tpl)?.short || 'Eigen')} · ${mmss(elapsed() / 1000)} bezig</small></span>${IC.chev.replace('<svg', '<svg width="18" height="18" style="stroke:var(--muted);fill:none;stroke-width:2"')}</button>
+    body = `<div class="eyebrow">Nu trainen</div>${draft ? '' : `<div class="seg timer-seg" role="group" aria-label="Timer"><button data-act="timer-mode" data-v="on" aria-pressed="${!S.noTimer}">Met timer</button><button data-act="timer-mode" data-v="off" aria-pressed="${!!S.noTimer}">Zonder timer</button></div>
+      <p class="muted small" style="margin:-4px 0 4px">${S.noTimer ? 'Je vult alleen je oefeningen, gewichten en reps in. Geen klok, geen rusttimer.' : 'Met klok en rusttimer tussen je sets.'}</p>`}${draft ? `<button class="pick" data-act="resume"><span><b>Hervat je training</b><br><small>${esc(tplById(draft.tpl)?.short || 'Eigen')} · ${mmss(elapsed() / 1000)} bezig</small></span>${IC.chev.replace('<svg', '<svg width="18" height="18" style="stroke:var(--muted);fill:none;stroke-width:2"')}</button>
       <button class="btn danger" data-act="discard" data-confirm>Training annuleren</button>` : `
       ${nt ? `<button class="pick" data-act="start" data-tpl="${nt.id}" data-time="${npl.time}"><span><b>${nt.sport ? 'Log' : 'Start'} ${esc(nt.short)}</b><br><small>Gepland: ${relDay(npl.date).toLowerCase()} om ${npl.time}</small></span><span class="pr">Volgende</span></button>` : ''}
       ${allTpl().filter((t) => t.id !== nt?.id && t.cat === 'split').map((t) => `<button class="pick" data-act="start" data-tpl="${t.id}"><span><b>${esc(t.short)}</b><br><small>${esc(t.name)}</small></span></button>`).join('')}
@@ -3206,6 +3216,8 @@ document.addEventListener('click', async (ev) => {
     case 'go-filter': S.browse.showFilter = true; go('browse'); break;
     case 'detail': closeModal(); if (t.dataset.id) { S.plan = { day: todayStr(), time: '07:00' }; S.pickM = null; go('detail', { id: t.dataset.id }); } break;
     case 'resume': S.sheet = null; go('active'); break;
+    case 'timer-mode': S.noTimer = t.dataset.v === 'off'; ls.set('brndfit:notimer', S.noTimer); renderSheet(); break;
+    case 'timer-off': { if (!draft) break; draft.dur = String(Math.max(1, Math.round(elapsed() / 60000))); draft.manual = true; draft.noTimer = true; stopRest(); saveDraft(); render(); toast('Timer uit. Vul gewoon je sets in.'); break; }
     case 'start': S.sheet = null; if (t.dataset.tpl === 'padel') { startPadel({ time: t.dataset.time }); break; } startWorkout(t.dataset.tpl, null, null, t.dataset.plan); break;
     case 'padel-new': S.sheet = null; startPadel(); break;
     case 'more': S.more[t.dataset.k] = !S.more[t.dataset.k]; render(); break;
