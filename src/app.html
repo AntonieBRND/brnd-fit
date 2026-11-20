@@ -1351,13 +1351,13 @@ nav.tabs .pill3 button[aria-current="page"] .pxi { animation: pop .45s cubic-bez
 .logo-loader__stack, .logo-loader__logo { will-change: transform, opacity; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 .logo-loader__logo img { -webkit-user-drag: none; user-select: none; }
 
-html.intro nav.tabs, html.intro .pblur, html.intro .pblur-top { visibility: hidden !important; }
+/* glas en menu's worden al achter het intro-scherm opgebouwd, zodat ze direct klaar zijn */
 
 .topnav { transition: none !important; }
 @keyframes nav-in { from { opacity: 0; transform: translateY(24px); } }
-.logo-loader { inset: 0 0 auto 0 !important; height: 100vh !important; height: 100lvh !important; z-index: 2147483000 !important; background: #05070c; }
+.logo-loader { isolation: isolate; transform: translateZ(0); inset: 0 0 auto 0 !important; height: 100vh !important; height: 100lvh !important; z-index: 2147483000 !important; background: #05070c; }
 .logo-loader__track { bottom: 12% !important; }
-html.intro #app { visibility: hidden; }
+
 
 
 
