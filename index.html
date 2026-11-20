@@ -1177,6 +1177,8 @@ const S = {
 };
 const draftKey = () => 'ijzer:draft:' + (S.me || 'none');
 let draft = ls.get(draftKey(), null);
+// Timer is uit: een lopende training met klok wordt een gewone training waarin je alles invult.
+if (draft && !draft.manual && !draft.editing) { draft.manual = true; draft.noTimer = true; draft.dur = draft.dur || String(Math.max(1, Math.min(240, Math.round((Date.now() - draft.start - (draft.pausedMs || 0)) / 60000)))); }
 const saveDraft = () => (draft ? ls.set(draftKey(), draft) : ls.del(draftKey()));
 
 // ---------- Opslag: gedeeld via Claude (db) of lokaal ----------
@@ -2230,7 +2232,7 @@ function viewHome() {
     ${pending.length ? `<section class="card pend"><div class="pend__h"><span class="pend__ic">${IC.dumbbell}</span><div><b>Vul je gewichten in</b><small>${esc(other().name)} heeft ${pending.length === 1 ? 'een training' : pending.length + ' trainingen'} met jou gelogd</small></div></div>
       ${pending.slice(0, 3).map((w) => { const tp = tplById(w.tpl); return `<button class="li" data-act="edit-w" data-id="${w.id}"><span class="th ${tplPhoto(tp) ? '' : 'ic'}">${tplPhoto(tp) ? `<img src="${tplPhoto(tp)}" alt="">` : IC.dumbbell}</span><div style="min-width:0"><b>${esc(tp?.short || w.name || 'Training')}</b><small class="who-mini">${relDay(w.date)} ${wAvs(w)}</small></div><span class="join">Invullen</span></button>`; }).join('')}</section>` : ''}
     ${draft ? `<div class="sec"><h2>Nu bezig</h2></div>
-      <button class="card nextempty" data-act="resume"><span class="pend__ic">${IC.dumbbell}</span><div><b>${esc(tplById(draft.tpl)?.short || 'Eigen training')}</b><small>${mmss(elapsed() / 1000)} bezig · ${draft.ex.length} oefeningen</small></div>${IC.chev.replace('<svg', '<svg class="chev"')}</button>` : ''}
+      <button class="card nextempty" data-act="resume"><span class="pend__ic">${IC.dumbbell}</span><div><b>${esc(tplById(draft.tpl)?.short || 'Eigen training')}</b><small>${draft.ex.length} ${draft.ex.length === 1 ? 'oefening' : 'oefeningen'} · ${draft.ex.length} oefeningen</small></div>${IC.chev.replace('<svg', '<svg class="chev"')}</button>` : ''}
     <div class="sec"><h2>Volgende training</h2><button class="link" data-act="add-open" data-mode="plan">Plannen</button></div>
     ${nextBlock}
     <div class="sec"><h2>Activiteit</h2><span class="muted small">${D === todayStr() ? 'vandaag' : fmtDate(D, { weekday: 'long', day: 'numeric', month: 'short' })}</span></div>
@@ -2310,7 +2312,7 @@ function viewDetail() {
       <div>${exs.map(exRow).join('')}</div></section>`}
     ${t.cls === 't-custom' ? `<button class="btn danger" data-act="del-tpl" data-id="${t.id}" data-confirm>Eigen schema verwijderen</button>` : ''}
   </div>
-  <div class="dock"><div class="wrap"><button class="btn cta wide" data-act="start" data-tpl="${t.id}" ${pl ? `data-plan="${pl.id}" data-time="${pl.time}"` : ''}>${t.sport ? 'Padel loggen' : 'Start training'}</button></div></div>`;
+  <div class="dock"><div class="wrap">${isRunning(t.id) && !t.sport ? `<button class="btn cta wide" data-act="resume">Hervat training</button>` : `<button class="btn cta wide" data-act="start" data-tpl="${t.id}" ${pl ? `data-plan="${pl.id}" data-time="${pl.time}"` : ''}>${t.sport ? 'Padel loggen' : 'Start training'}</button>`}</div></div>`;
 }
 
 // ---------- Oefeningen van een geplande training aanpassen ----------
@@ -2565,7 +2567,7 @@ addEventListener('scroll', () => {
 }, { passive: true });
 
 // ---------- Overgangen ----------
-try { S.noTimer = JSON.parse(localStorage.getItem('brndfit:notimer') || 'false'); } catch { /* */ }
+S.noTimer = true; // timer staat uit: je vult gewoon je oefeningen en gewichten in
 const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
 function animateEnter(dir) {
   if (REDUCE || !Element.prototype.animate) return;
@@ -2682,14 +2684,21 @@ function countdown(ts) {
   const h = Math.floor(min / 60); if (h < 24) return `Begint over ${h}u ${min % 60}m`;
   const days = Math.round((parseDate(dateKey(ts)) - parseDate(todayStr())) / DAY); return `Over ${days} ${days === 1 ? 'dag' : 'dagen'}`;
 }
+// Loopt er al een training voor dit schema? Dan hervatten in plaats van opnieuw starten.
+const isRunning = (tplId) => !!(draft && !draft.editing && (draft.tpl === tplId || !tplId));
+function startBtnHtml(t, pl, cls = 'pillbtn') {
+  if (t.sport) return `<button class="${cls}" data-act="start" data-tpl="${t.id}" data-time="${pl?.time || ''}">Padel loggen <span class="play">${IC.play}</span></button>`;
+  if (isRunning(t.id)) return `<button class="${cls}" data-act="resume">Hervat training <span class="play">${IC.play}</span></button>`;
+  return `<button class="${cls}" data-act="start" data-tpl="${t.id}" ${pl ? `data-plan="${pl.id}" data-time="${pl.time}"` : ''}>Start training <span class="play">${IC.play}</span></button>`;
+}
 function nextCard(pl) {
   const t = tplById(pl.tpl); if (!t) return ''; const m = tplMeta(t); const ph = tplPhoto(t);
   const duo = planDuo(pl);
   const today = pl.date === todayStr();
-  return `<div class="today ${ph ? 'has-ph' : ''}" role="button" tabindex="0" data-act="detail" data-id="${t.id}">${phDiv(ph)}<div class="fig">${t.sport ? `<span class="padel-card-ic">${PADEL_ICON}</span>` : muscleSvg(pickFill(m.groups, 'var(--white)', 'rgba(255,255,255,.12)'), { back: false })}</div>
+  return `<div class="today ${ph ? 'has-ph' : ''}" role="button" tabindex="0" data-act="plan-open" data-id="${pl.id}">${phDiv(ph)}<div class="fig">${t.sport ? `<span class="padel-card-ic">${PADEL_ICON}</span>` : muscleSvg(pickFill(m.groups, 'var(--white)', 'rgba(255,255,255,.12)'), { back: false })}</div>
     <span class="tag tag--when"><span class="live"></span>${relDay(pl.date)} · ${pl.time}</span><h2>${esc(t.short)}</h2>
     <div class="meta"><span>${IC.clock}<span class="cd" data-ts="${planTs(pl)}">${countdown(planTs(pl))}</span></span><span>${m.min} min</span>${`<span class="duo-chip">${plAvs(pl)}</span>`}</div>
-    <div class="row" style="gap:10px">${today ? `<button class="pillbtn" data-act="start" data-tpl="${t.id}" data-time="${pl.time}">${t.sport ? 'Padel loggen' : 'Start training'} <span class="play">${IC.play}</span></button>` : `<button class="pillbtn" data-act="detail" data-id="${t.id}">Bekijk training <span class="play">${IC.play}</span></button>`}<button class="cancelbtn" data-act="plan-open" data-id="${pl.id}">${canEditPl(pl) ? 'Aanpassen' : 'Details'}</button></div></div>`;
+    <div class="row" style="gap:10px">${today || isRunning(t.id) ? startBtnHtml(t, pl) : `<button class="pillbtn" data-act="plan-open" data-id="${pl.id}">${canEditPl(pl) ? 'Bekijk &amp; aanpassen' : 'Bekijk training'} <span class="play">${IC.play}</span></button>`}</div></div>`;
 }
 function setupCarousel() {
   const c = $('#tcar'); if (!c) return; const dots = [...document.querySelectorAll('.tdots button')];
@@ -2876,7 +2885,7 @@ function viewActiveSum() {
   <div class="dock"><div class="wrap stack" style="gap:8px"><button class="btn cta wide" data-act="finish">Training afronden</button><button class="btn ghost wide" data-act="sum-close">Verder trainen</button></div></div>`;
 }
 function startWorkout(tplId, exIds, name, planId) {
-  if (draft) { toast('Je hebt al een training open.'); go('active'); return; }
+  if (draft) { if (!draft.editing && tplId && draft.tpl !== tplId) toast('Je hebt nog een training open. Rond die eerst af.'); S.actSum = false; go('active'); return; }
   const t = tplId ? tplById(tplId) : null;
   const joined = t && S.data.plans.some((x) => x.date === todayStr() && x.tpl === t.id && planForMe(x) && planDuo(x));
   draft = { id: uid(), user: S.me, tpl: t?.id || 'custom', name: name || (t ? t.name : 'Eigen training'), date: todayStr(), start: Date.now(), note: '', ex: [], cur: 0, pausedMs: 0, partner: joined ? other().id : '' };
@@ -3168,8 +3177,7 @@ function renderSheet() {
   if (S.sheet.type === 'plus') {
     const npl = nextPlanFor(S.me); const nt = npl ? tplById(npl.tpl) : null;
     title = 'Nieuwe training';
-    body = `<div class="eyebrow">Nu trainen</div>${draft ? '' : `<div class="seg timer-seg" role="group" aria-label="Timer"><button data-act="timer-mode" data-v="on" aria-pressed="${!S.noTimer}">Met timer</button><button data-act="timer-mode" data-v="off" aria-pressed="${!!S.noTimer}">Zonder timer</button></div>
-      <p class="muted small" style="margin:-4px 0 4px">${S.noTimer ? 'Je vult alleen je oefeningen, gewichten en reps in. Geen klok, geen rusttimer.' : 'Met klok en rusttimer tussen je sets.'}</p>`}${draft ? `<button class="pick" data-act="resume"><span><b>Hervat je training</b><br><small>${esc(tplById(draft.tpl)?.short || 'Eigen')} · ${mmss(elapsed() / 1000)} bezig</small></span>${IC.chev.replace('<svg', '<svg width="18" height="18" style="stroke:var(--muted);fill:none;stroke-width:2"')}</button>
+    body = `<div class="eyebrow">Nu trainen</div>${draft ? `<button class="pick" data-act="resume"><span><b>Hervat je training</b><br><small>${esc(tplById(draft.tpl)?.short || 'Eigen')} · ${draft.ex.length} ${draft.ex.length === 1 ? 'oefening' : 'oefeningen'}</small></span>${IC.chev.replace('<svg', '<svg width="18" height="18" style="stroke:var(--muted);fill:none;stroke-width:2"')}</button>
       <button class="btn danger" data-act="discard" data-confirm>Training annuleren</button>` : `
       ${nt ? `<button class="pick" data-act="start" data-tpl="${nt.id}" data-time="${npl.time}"><span><b>${nt.sport ? 'Log' : 'Start'} ${esc(nt.short)}</b><br><small>Gepland: ${relDay(npl.date).toLowerCase()} om ${npl.time}</small></span><span class="pr">Volgende</span></button>` : ''}
       ${allTpl().filter((t) => t.id !== nt?.id && t.cat === 'split').map((t) => `<button class="pick" data-act="start" data-tpl="${t.id}"><span><b>${esc(t.short)}</b><br><small>${esc(t.name)}</small></span></button>`).join('')}
