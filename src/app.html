@@ -1179,19 +1179,99 @@ button.card:active, .li:active, .pick:active, .ach:active, .chip:active { transf
 /* niet inzoomen: geen dubbeltik-zoom, en invoervelden zo groot dat iOS niet inzoomt */
 html, body { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 @supports (-webkit-touch-callout: none) { input, select, textarea { font-size: 16px !important; } }
+
+/* ===== Laadscherm: logo-stapel ===== */
+.logo-loader { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; color: #e7e4d3; perspective: 40em; }
+.logo-loader__bg { position: absolute; inset: 0; z-index: 0; background: radial-gradient(90% 60% at 50% 40%, #0d1a33, #05070c 70%); transform-origin: 50% 0%; }
+.logo-loader__stack { position: relative; z-index: 1; display: grid; width: min(16em, 64vw); transform-style: preserve-3d; opacity: 0; visibility: hidden; }
+.logo-loader__logo { grid-column: 1; grid-row: 1; }
+.logo-loader__logo img { display: block; width: 100%; height: auto; }
+.logo-loader__track { position: absolute; bottom: calc(3.5em + env(safe-area-inset-bottom, 0px)); left: 0; right: 0; z-index: 1; width: 8em; height: .25em; margin: 0 auto; overflow: hidden; border-radius: 100em; background: rgba(255,255,255,.15); }
+.logo-loader__bar { position: absolute; inset: 0; background: #e7e4d3; transform-origin: 0% 50%; transform: scaleX(0); }
+
+/* ===== Pixel-iconen ===== */
+.pxi { width: 18px; height: 18px; fill: currentColor; flex: none; shape-rendering: crispEdges; }
+
+/* ===== Glas ===== */
+.glass { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; isolation: isolate; -webkit-backdrop-filter: saturate(120%) blur(.75em); backdrop-filter: saturate(120%) blur(.75em); color: #201d1d; z-index: 0; }
+.glass > i { position: absolute; inset: 0; border-radius: inherit; }
+.glass__fill { background: rgba(212,212,212,.12); }
+.glass__burn { opacity: .05; mix-blend-mode: color-burn; background: currentColor; }
+.glass__hs { mix-blend-mode: overlay; box-shadow: inset -.28125em -.28125em .09375em -.328125em rgba(255,255,255,.5); }
+.glass__hh { box-shadow: inset .28125em .28125em .09375em -.328125em rgba(255,255,255,.8); }
+.glass__el { mix-blend-mode: plus-lighter; box-shadow: inset .1875em .28125em .09375em -.1875em rgba(179,179,179,.5); }
+.glass__ed { mix-blend-mode: overlay; box-shadow: inset -.1875em -.28125em .09375em -.1875em rgba(179,179,179,.3); }
+.glass__ig { mix-blend-mode: darken; box-shadow: inset 0 0 1.75em rgba(242,242,242,.3); }
+
+/* ===== Navigatie onderin (glas, kleiner) ===== */
+.pblur { position: fixed; left: 0; bottom: 0; width: 100%; height: 9.5em; z-index: 6; pointer-events: none; isolation: isolate; contain: paint; overflow: hidden; transform: translateZ(0); }
+.pblur > i { position: absolute; inset: 0; }
+.pblur .is--1 { backdrop-filter: blur(.09375em); -webkit-backdrop-filter: blur(.09375em); -webkit-mask: linear-gradient(#0000 50%, #000 62.5% 75%, #0000 87.5%); mask: linear-gradient(#0000 50%, #000 62.5% 75%, #0000 87.5%); }
+.pblur .is--2 { backdrop-filter: blur(.1875em); -webkit-backdrop-filter: blur(.1875em); -webkit-mask: linear-gradient(#0000 62.5%, #000 75% 87.5%, #0000 100%); mask: linear-gradient(#0000 62.5%, #000 75% 87.5%, #0000 100%); }
+.pblur .is--3 { backdrop-filter: blur(.375em); -webkit-backdrop-filter: blur(.375em); -webkit-mask: linear-gradient(#0000 75%, #000 87.5% 100%); mask: linear-gradient(#0000 75%, #000 87.5% 100%); }
+.pblur .is--4 { backdrop-filter: blur(.75em); -webkit-backdrop-filter: blur(.75em); -webkit-mask: linear-gradient(#0000 82%, #000 92% 100%); mask: linear-gradient(#0000 82%, #000 92% 100%); }
+.pblur .is--5 { backdrop-filter: blur(1.5em); -webkit-backdrop-filter: blur(1.5em); -webkit-mask: linear-gradient(#0000 88%, #000 100%); mask: linear-gradient(#0000 88%, #000 100%); }
+.pblur::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgba(5,7,12,.55)); }
+nav.tabs { z-index: 8; }
+nav.tabs .bar2 { gap: 10px; }
+nav.tabs .pill3 { position: relative; gap: 2px; padding: 5px; background: rgba(20,26,38,.35); border: 1px solid rgba(255,255,255,.14); box-shadow: 0 10px 30px rgba(0,0,0,.35); backdrop-filter: none; -webkit-backdrop-filter: none; }
+nav.tabs .pill3 button { position: relative; z-index: 2; width: 62px; height: 46px; color: rgba(214,224,240,.62); background: transparent !important; }
+nav.tabs .pill3 button[aria-current="page"] { color: #fff; }
+nav.tabs .pill3 .pxi { width: 19px; height: 19px; }
+nav.tabs .pill3 button[aria-current="page"] .pxi rect { animation: px-in .45s cubic-bezier(.2,.8,.2,1) both; }
+nav.tabs .pill3 button[aria-current="page"] .pxi rect:nth-child(3n) { animation-delay: .05s; }
+nav.tabs .pill3 button[aria-current="page"] .pxi rect:nth-child(3n+1) { animation-delay: .1s; }
+.pill3__ind { position: absolute; z-index: 1; left: 0; top: 5px; height: 46px; border-radius: 999px; background: linear-gradient(180deg, rgba(255,255,255,.2), rgba(255,255,255,.08)); box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 4px 14px rgba(0,0,0,.25); transition: transform .5s cubic-bezier(.3,1.3,.5,1), width .3s, opacity .3s; }
+nav.tabs .plus2 { position: relative; width: 56px; height: 56px; background: radial-gradient(120% 120% at 30% 20%, rgba(255,176,122,.75), rgba(255,107,26,.55) 50%, rgba(194,65,12,.6)); border: 1px solid rgba(255,190,150,.45); box-shadow: 0 10px 26px rgba(255,107,26,.32); overflow: hidden; }
+nav.tabs .plus2 .glass { -webkit-backdrop-filter: saturate(140%) blur(.6em); backdrop-filter: saturate(140%) blur(.6em); }
+nav.tabs .plus2 .glass__fill { background: rgba(255,140,70,.18); }
+nav.tabs .plus2 .pxi { position: relative; z-index: 2; width: 20px; height: 20px; fill: #fff; }
+nav.tabs .plus2:active .pxi { transform: rotate(90deg) scale(.9); }
+
+/* ===== Menu (glas-kaart) ===== */
+.menu2 { position: fixed; inset: 0; z-index: 40; background: rgba(2,4,10,.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: grid; place-items: center; padding: 20px; animation: lb-fade .3s ease both; overflow: hidden; }
+.menu2__arc { position: absolute; left: 50%; top: 58%; width: 150vw; height: 150vw; max-width: 900px; max-height: 900px; transform: translateX(-50%); border-radius: 50%; box-shadow: 0 -2px 0 rgba(160,200,255,.9), 0 -20px 60px rgba(70,130,255,.55), inset 0 30px 80px rgba(60,110,255,.25); pointer-events: none; animation: arc-in .9s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes arc-in { from { opacity: 0; transform: translateX(-50%) translateY(60px); } }
+.menu2__card { position: relative; width: 100%; max-width: 360px; border-radius: 34px; padding: 18px 10px 12px; background: linear-gradient(180deg, rgba(16,26,46,.92), rgba(9,16,32,.92) 60%, rgba(14,34,80,.9)); border: 1px solid rgba(160,190,240,.16); box-shadow: 0 30px 80px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.08); animation: menu-in .5s cubic-bezier(.2,1.2,.4,1) both; transform-origin: 50% 30%; }
+@keyframes menu-in { from { opacity: 0; transform: scale(.9) translateY(14px); } }
+.menu2__h { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; padding: 4px 12px 14px; }
+.menu2__avs { display: flex; } .menu2__avs .face + .face { margin-left: -12px; box-shadow: 0 0 0 3px #0d1730, inset 0 0 0 2px rgba(255,255,255,.4); }
+.menu2__avs .face::after { display: none; }
+.menu2__h b { display: block; font-size: 18px; } .menu2__h small { color: #8f9bb2; font-size: 13px; }
+.menu2__tag { font-family: 'Doto', monospace; font-weight: 900; font-size: 13px; letter-spacing: .08em; color: #6fd6ff; background: rgba(60,180,230,.12); border: 1px solid rgba(80,190,240,.4); padding: 5px 10px; border-radius: 10px; }
+.menu2__i { width: 100%; border: 0; background: transparent; color: #e8edf6; display: grid; grid-template-columns: 26px 1fr auto auto; align-items: center; gap: 14px; padding: 13px 14px; border-radius: 18px; font-size: 16px; font-weight: 600; text-align: left; transition: background .25s, transform .2s cubic-bezier(.3,1.4,.5,1); animation: card-in .45s cubic-bezier(.2,.8,.2,1) both; }
+.menu2__i:nth-of-type(2) { animation-delay: .04s; } .menu2__i:nth-of-type(3) { animation-delay: .08s; } .menu2__i:nth-of-type(4) { animation-delay: .12s; } .menu2__i:nth-of-type(5) { animation-delay: .16s; } .menu2__i:nth-of-type(n+6) { animation-delay: .2s; }
+.menu2__i:hover, .menu2__i:focus-visible { background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+.menu2__i:active { transform: scale(.97); background: rgba(255,255,255,.08); }
+.menu2__ic { width: 22px; height: 22px; color: #9fb0cc; }
+.menu2__i em { font-style: normal; font-family: 'Doto', monospace; font-weight: 900; color: #8f9bb2; font-size: 15px; }
+.menu2__ch { width: 12px; height: 12px; color: #c9d3e6; }
+.menu2__sep { height: 1px; margin: 8px 6px; background: linear-gradient(90deg, transparent, rgba(120,160,255,.35), transparent); }
+.menu2.still, .menu2.still .menu2__card, .menu2.still .menu2__arc, .menu2.still .menu2__i { animation: none; }
+.menu2.out { animation: fade-out .23s ease forwards; pointer-events: none; }
+.menu2.out .menu2__card { animation: lb-out .23s cubic-bezier(.4,0,.8,.4) forwards; }
+
+/* ===== Pixel-overgang ===== */
+#ptrans { position: fixed; inset: 0; z-index: 90; pointer-events: none; overflow: hidden; display: flex; flex-direction: column; }
+.ptrans__row { display: flex; flex: none; }
+.ptrans__row i { flex: none; opacity: 0; }
 </style>
 
-<div class="loader" id="loader" aria-hidden="true"><div class="loader__bg"></div>
-  <div class="loader__txt"><p><span>Elke dag</span><span>een beetje <span class="draw"><em>sterker</em><svg class="draw__svg" viewBox="0 0 310 40" preserveAspectRatio="none"><path id="loader-line" d="" stroke="currentColor" stroke-width="10" stroke-linecap="round" fill="none"/></svg></span></span></p></div></div>
+<div class="logo-loader" id="loader" data-logo-loader-init aria-hidden="true">
+  <div data-logo-loader-bg class="logo-loader__bg"></div>
+  <div data-logo-loader-stack class="logo-loader__stack"><div data-logo-loader-logo class="logo-loader__logo"><img src="icons/brnd-fit-logo.png" alt=""></div></div>
+  <div data-logo-loader-track class="logo-loader__track"><div data-logo-loader-bar class="logo-loader__bar"></div></div>
+</div>
 <div id="app"><div class="wrap screen"><div class="card empty">Laden…</div></div></div>
+<div class="pblur" aria-hidden="true"><i class="is--1"></i><i class="is--2"></i><i class="is--3"></i><i class="is--4"></i><i class="is--5"></i></div>
 <nav class="tabs" aria-label="Hoofdmenu" hidden>
   <div class="wrap"><div class="bar2">
-    <div class="pill3">
-      <button data-tab="home" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-5H9v5H5a1 1 0 0 1-1-1z"/></svg></button>
-      <button data-tab="browse" aria-label="Ontdek"><svg viewBox="0 0 24 24"><path d="M2 9v6M5 6v12M19 6v12M22 9v6M5 12h14"/></svg></button>
-      <button data-tab="progress" aria-label="Voortgang"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></button>
+    <div class="pill3"><span class="glass" aria-hidden="true"><i class="glass__fill"></i><i class="glass__burn"></i><i class="glass__hs"></i><i class="glass__hh"></i><i class="glass__el"></i><i class="glass__ed"></i><i class="glass__ig"></i></span><span class="pill3__ind" aria-hidden="true"></span>
+      <button data-tab="home" aria-label="Home"><svg class="pxi" viewBox="0 0 9 9" data-px="home"></svg></button>
+      <button data-tab="browse" aria-label="Trainingen"><svg class="pxi" viewBox="0 0 9 9" data-px="dumbbell"></svg></button>
+      <button data-tab="progress" aria-label="Voortgang"><svg class="pxi" viewBox="0 0 9 9" data-px="chart"></svg></button>
     </div>
-    <button data-tab="train" class="plus2" aria-label="Nieuw toevoegen"><svg class="pxplus" viewBox="0 0 7 7"><rect x="3" y="0" width=".84" height=".84" rx=".2"/><rect x="3" y="1" width=".84" height=".84" rx=".2"/><rect x="3" y="2" width=".84" height=".84" rx=".2"/><rect x="0" y="3" width=".84" height=".84" rx=".2"/><rect x="1" y="3" width=".84" height=".84" rx=".2"/><rect x="2" y="3" width=".84" height=".84" rx=".2"/><rect x="3" y="3" width=".84" height=".84" rx=".2"/><rect x="4" y="3" width=".84" height=".84" rx=".2"/><rect x="5" y="3" width=".84" height=".84" rx=".2"/><rect x="6" y="3" width=".84" height=".84" rx=".2"/><rect x="3" y="4" width=".84" height=".84" rx=".2"/><rect x="3" y="5" width=".84" height=".84" rx=".2"/><rect x="3" y="6" width=".84" height=".84" rx=".2"/></svg></button>
+    <button data-tab="train" class="plus2" aria-label="Nieuw toevoegen"><span class="glass" aria-hidden="true"><i class="glass__fill"></i><i class="glass__burn"></i><i class="glass__hs"></i><i class="glass__hh"></i><i class="glass__el"></i><i class="glass__ed"></i><i class="glass__ig"></i></span><svg class="pxi pxplus" viewBox="0 0 9 9" data-px="plus"></svg></button>
   </div></div>
 </nav>
 <div id="sheet-root"></div>
@@ -1338,7 +1418,7 @@ const S = {
 const draftKey = () => 'ijzer:draft:' + (S.me || 'none');
 let draft = ls.get(draftKey(), null);
 // Timer is uit: een lopende training met klok wordt een gewone training waarin je alles invult.
-if (draft && !draft.manual && !draft.editing) { draft.manual = true; draft.noTimer = true; draft.dur = draft.dur || String(Math.max(1, Math.min(240, Math.round((Date.now() - draft.start - (draft.pausedMs || 0)) / 60000)))); }
+if (draft && !draft.manual && !draft.editing) { draft.manual = true; draft.noTimer = true; draft.dur = ''; }
 const saveDraft = () => (draft ? ls.set(draftKey(), draft) : ls.del(draftKey()));
 
 // ---------- Opslag: gedeeld via Claude (db) of lokaal ----------
@@ -1984,7 +2064,8 @@ function liftKcal(w) {
   for (const e of w.ex || []) for (const s of e.sets || []) { sets++; const reps = num(s.reps) || 0;
     if (e.kind === 'kg') vol += (num(s.kg) || 0) * reps; else if (e.kind === 'bw') vol += (kg * 0.65 + (num(s.kg) || 0)) * reps; else vol += kg * 0.3 * (reps / 3); }
   if (!sets) return 0;
-  const min = durMin(w) || Math.round(sets * 2.5 + 5);
+  // duur: wat je invulde, maar nooit onrealistisch kort (bv. 1 minuut door een oude timer)
+  const est = Math.round(sets * 2.5 + 5); let min = durMin(w); if (!min || min < sets * 1.2) min = est;
   const rel = vol / min / kg; // kg getild per minuut per kg lichaamsgewicht
   const met = Math.max(3, Math.min(6, 3 + rel * 0.9));
   const work = (vol * 9.81 * 0.45) / 4184 / 0.22;
@@ -2284,7 +2365,8 @@ function sleepAsk() {
     <div class="sleepask__t"><small class="muted">Zo geslapen vannacht?</small><div>${dotNum(hmin(sc.min))}</div><small class="muted">${sc.bed} – ${sc.wake}</small></div>
     <div class="sleepask__b"><button class="btn cta plain sm" data-act="sleep-ok">Klopt</button><button class="btn sm" data-act="sleep">Aanpassen</button></div></section>`;
 }
-const stepKcal = (u, d) => Math.round(stepsOf(u, d) * 0.0005 * weightAt(u, d));
+// Beweging buiten trainingen: Apple 'actieve energie' als die er is, anders een schatting uit je stappen.
+const stepKcal = (u, d) => Math.max(Math.round(stepsOf(u, d) * 0.0005 * weightAt(u, d)), Math.round(healthOf(u, d)?.activeKcal || 0));
 const dayKcal = (u, d) => activityOf(u).filter((w) => w.date === d).reduce((a, w) => a + kcalOf(w), 0) + stepKcal(u, d);
 const sleepGoal = (u = S.me) => (profile(u).sleepGoal || 8) * 60;
 const hmin = (m) => { m = Math.round(m); return m < 60 ? `${m} min` : `${Math.floor(m / 60)}u${m % 60 ? ' ' + String(m % 60).padStart(2, '0') + 'm' : ''}`; };
@@ -2380,7 +2462,8 @@ function viewHome() {
   const days = new Set(thisWeek.map((w) => w.date)).size;
   const goal = p.weekly || 3; const frac = Math.min(1, days / goal); const pct = Math.round(frac * 100);
   const D = S.day || todayStr(); const dayWs = ws.filter((w) => w.date === D);
-  const dSteps = stepKcal(S.me, D); const dKcal = dayWs.reduce((a, w) => a + kcalOf(w), 0) + dSteps, dMin = dayWs.reduce((a, w) => a + durMin(w), 0), dSets = dayWs.reduce((a, w) => a + (w.user === S.me ? wStats(w).sets : 0), 0);
+  const liveW = draft && !draft.editing && draft.date === D ? { user: draft.user || S.me, date: draft.date, ex: draft.ex.map((e) => ({ ...e, sets: e.sets.filter((x) => x.done) })) } : null;
+  const dSteps = stepKcal(S.me, D); const dKcal = dayWs.reduce((a, w) => a + kcalOf(w), 0) + (liveW ? kcalOf(liveW) : 0) + dSteps, dMin = dayWs.reduce((a, w) => a + durMin(w), 0), dSets = dayWs.reduce((a, w) => a + (w.user === S.me ? wStats(w).sets : 0), 0);
   const steps = stepsOf(S.me, D); const stepGoal = p.stepGoal || 10000;
   const wMin = thisWeek.reduce((a, w) => a + durMin(w), 0), wSets = thisWeek.reduce((a, w) => a + (w.user === S.me ? wStats(w).sets : 0), 0), wKcal = thisWeek.reduce((a, w) => a + kcalOf(w), 0) + Array.from({ length: 7 }, (_, i) => dateKey(wsStart + i * DAY)).reduce((a, d) => a + stepKcal(S.me, d), 0);
   const plans = S.data.plans.filter((x) => x.date >= todayStr()).sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
@@ -2729,7 +2812,60 @@ function viewWorkout() {
 
 // ---------- Intro (zoals brndclub.nl): tekst + rode onderstreping, dan schuift het navy vlak weg ----------
 const UNDER = ["M5 20.9999C26.7762 16.2245 49.5532 11.5572 71.7979 14.6666C84.9553 16.5057 97.0392 21.8432 109.987 24.3888C116.413 25.6523 123.012 25.5143 129.042 22.6388C135.981 19.3303 142.586 15.1422 150.092 13.3333C156.799 11.7168 161.702 14.6225 167.887 16.8333C181.562 21.7212 194.975 22.6234 209.252 21.3888C224.678 20.0548 239.912 17.991 255.42 18.3055C272.027 18.6422 288.409 18.867 305 17.9999", "M4.99805 20.9998C65.6267 17.4649 126.268 13.845 187.208 12.8887C226.483 12.2723 265.751 13.2796 304.998 13.9998", "M5 29.8857C52.3147 26.9322 99.4329 21.6611 146.503 17.1765C151.753 16.6763 157.115 15.9505 162.415 15.6551C163.28 15.6069 165.074 15.4123 164.383 16.4275C161.704 20.3627 157.134 23.7551 153.95 27.4983C153.209 28.3702 148.194 33.4751 150.669 34.6605C153.638 36.0819 163.621 32.6063 165.039 32.2029C178.55 28.3608 191.49 23.5968 204.869 19.5404C231.903 11.3436 259.347 5.83254 288.793 5.12258C294.094 4.99476 299.722 4.82265 305 5.45025", "M17.0039 32.6826C32.2307 32.8412 47.4552 32.8277 62.676 32.8118C67.3044 32.807 96.546 33.0555 104.728 32.0775C113.615 31.0152 104.516 28.3028 102.022 27.2826C89.9573 22.3465 77.3751 19.0254 65.0451 15.0552C57.8987 12.7542 37.2813 8.49399 44.2314 6.10216C50.9667 3.78422 64.2873 5.81914 70.4249 5.96641C105.866 6.81677 141.306 7.58809 176.75 8.59886C217.874 9.77162 258.906 11.0553 300 14.4892"];
+// ---------- Pixel-iconen (zelfde stijl als de pixelcijfers) ----------
+const PXI = {
+  home: ['....#....', '...###...', '..#####..', '.#######.', '#########', '.##...##.', '.##.#.##.', '.##.#.##.', '.#######.'],
+  dumbbell: ['.........', '.........', '##.....##', '##.....##', '#########', '##.....##', '##.....##', '.........', '.........'],
+  chart: ['.......##', '.......##', '....##.##', '....##.##', '.##.##.##', '.##.##.##', '.##.##.##', '.........', '#########'],
+  plus: ['....#....', '....#....', '....#....', '....#....', '#########', '....#....', '....#....', '....#....', '....#....'],
+  user: ['...###...', '..#####..', '..#####..', '...###...', '.........', '..#####..', '.#######.', '#########', '#########'],
+  body: ['...###...', '...###...', '#########', '#.#####.#', '#.#####.#', '..#####..', '..##.##..', '..##.##..', '..##.##..'],
+  flame: ['....#....', '...##....', '...###...', '..####.#.', '.#######.', '.###.###.', '.##...##.', '.###.###.', '..#####..'],
+  list: ['##.######', '.........', '.........', '##.######', '.........', '.........', '##.######', '.........', '.........'],
+  chartup: ['.....####', '.......##', '......#.#', '.....#...', '#...#....', '.#.#.....', '..#......', '.........', '#########'],
+  swap: ['......#..', '.......#.', '#########', '.......#.', '......#..', '..#......', '.#.......', '#########', '.#.......'],
+  out: ['#####....', '#........', '#.....#..', '#......#.', '#.#######', '#......#.', '#.....#..', '#........', '#####....'],
+  chev: ['..#......', '...#.....', '....#....', '.....#...', '......#..', '.....#...', '....#....', '...#.....', '..#......'],
+};
+const pxSvg = (name, cls = 'pxi') => `<svg class="${cls}" viewBox="0 0 9 9" aria-hidden="true">${(PXI[name] || []).map((r, y) => [...r].map((c, x) => (c === '#' ? `<rect x="${x}" y="${y}" width=".86" height=".86" rx=".18"/>` : '')).join('')).join('')}</svg>`;
+function paintPxIcons(root = document) { root.querySelectorAll('svg[data-px]').forEach((el) => { if (!el.childElementCount) el.innerHTML = pxSvg(el.dataset.px).replace(/^<svg[^>]*>|<\/svg>$/g, ''); }); }
+// Glazen pil achter het actieve tabje schuift mee
+function moveNavInd() {
+  const pill = document.querySelector('nav.tabs .pill3'); const ind = pill?.querySelector('.pill3__ind'); const on = pill?.querySelector('button[aria-current="page"]');
+  if (!ind) return; if (!on) { ind.style.opacity = 0; return; }
+  ind.style.opacity = 1; ind.style.width = on.offsetWidth + 'px'; ind.style.transform = `translateX(${on.offsetLeft}px)`;
+}
+
+// ---------- Laadscherm: logo-stapel (GSAP) ----------
 function runIntro() {
+  const root = document.querySelector('[data-logo-loader-init]'); if (!root) return;
+  let seen = false; try { seen = sessionStorage.getItem('brndfit-intro') === '1'; sessionStorage.setItem('brndfit-intro', '1'); } catch { /* geen opslag */ }
+  if (seen || !window.gsap) { root.remove(); return; }
+  const g = window.gsap; const bg = root.querySelector('[data-logo-loader-bg]'), stack = root.querySelector('[data-logo-loader-stack]'), logo = root.querySelector('[data-logo-loader-logo]');
+  const bar = root.querySelector('[data-logo-loader-bar]'), track = root.querySelector('[data-logo-loader-track]');
+  const dups = []; for (let i = 0; i < 5; i++) { const d = logo.cloneNode(true); stack.appendChild(d); dups.push(d); }
+  const em = parseFloat(getComputedStyle(stack).fontSize);
+  const tl = g.timeline({ defaults: { duration: 0.4, ease: 'power2.out' }, onComplete: () => root.remove() });
+  g.set(dups, { opacity: 0, z: 0 });
+  tl.to(stack, { autoAlpha: 1, duration: 0.5 });
+  if (REDUCE) { tl.addLabel('impact', '+=0.6').to(root, { autoAlpha: 0, duration: 0.5, ease: 'power2.inOut' }, 'impact+=0.5'); }
+  else {
+    tl.addLabel('tilt', '-=0.1')
+      .to(stack, { rotationY: -40, rotationX: 20, xPercent: -15, duration: 0.6, ease: 'power4.out' }, 'tilt')
+      .to(dups, { z: (i) => -(i + 1) * 2.5 * em, opacity: (i) => Math.pow(0.5, i + 1), duration: 0.55, ease: 'power4.out', stagger: { each: 0.05, ease: 'power1.out' } }, 'tilt+=0.1')
+      .addLabel('smash', '+=0.4')
+      .to(stack, { rotationY: 0, rotationX: 0, xPercent: 0, ease: 'power4.in' }, 'smash')
+      .to(dups, { z: 0, ease: 'power4.in' }, 'smash')
+      .addLabel('impact')
+      .set(dups, { opacity: 0 }, 'impact')
+      .to(stack, { scale: 1.05, duration: 0.1 }, 'impact')
+      .to(stack, { scale: 1, duration: 0.6, ease: 'elastic.out(1, 0.5)' })
+      .to(stack, { autoAlpha: 0 }, 'impact+=0.5')
+      .to(bg, { scaleY: 0, duration: 0.5, ease: 'expo.inOut' }, 'impact+=0.6');
+  }
+  if (bar) tl.to(bar, { scaleX: 1, duration: tl.labels.impact, ease: 'power2.inOut' }, 0).to(track, { autoAlpha: 0 }, 'impact+=0.5');
+}
+function runIntroOld() {
   const el = $('#loader'); if (!el) return;
   let seen = false; try { seen = sessionStorage.getItem('brndfit-intro') === '1'; sessionStorage.setItem('brndfit-intro', '1'); } catch { /* geen opslag */ }
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -2799,11 +2935,37 @@ function countUp() {
 
 // ---------- Router ----------
 const ROOT = ['home', 'browse', 'progress', 'profile'];
-function go(name, params = {}, { replace = false } = {}) {
+// ---------- Pixel-overgang tussen pagina's ----------
+const PX_ROUTES = new Set(['home', 'browse', 'progress', 'profile', 'body', 'streak', 'trainings']);
+let pxBusy = false;
+function pixelWipe(swap) {
+  const g = window.gsap;
+  if (REDUCE || !g || pxBusy) { swap(); return; }
+  pxBusy = true;
+  let wrap = document.getElementById('ptrans');
+  if (!wrap) { wrap = document.createElement('div'); wrap.id = 'ptrans'; wrap.setAttribute('aria-hidden', 'true'); document.body.appendChild(wrap); }
+  const rowsN = 18; const size = Math.ceil(innerHeight / rowsN); const colsN = Math.ceil(innerWidth / size);
+  const cols = ['#0b1a33', '#102347', '#163063', '#1d3a72', '#2a5bb0'];
+  wrap.innerHTML = Array.from({ length: rowsN }, () => `<div class="ptrans__row">${Array.from({ length: colsN }, () => { const r = Math.random(); return `<i style="width:${size}px;height:${size}px;background:${r < 0.05 ? '#ff6b1a' : cols[Math.floor(Math.random() * cols.length)]}"></i>`; }).join('')}</div>`).join('');
+  const rows = [...wrap.children]; const step = 0.024, fade = 0.16;
+  const tl = g.timeline({ onComplete: () => { wrap.innerHTML = ''; pxBusy = false; } });
+  rows.forEach((r, i) => tl.to(r.children, { opacity: 1, duration: 0.05, ease: 'none', stagger: { amount: fade, from: 'random' } }, i * step));
+  const mid = rowsN * step + fade + 0.02;
+  tl.call(swap, null, mid);
+  rows.forEach((r, i) => tl.to(r.children, { opacity: 0, duration: 0.05, ease: 'none', stagger: { amount: fade, from: 'random' } }, mid + 0.04 + i * step));
+}
+function go(name, params = {}, opts = {}) {
+  if (PX_ROUTES.has(name) && S.route.name !== name && S.me && window.gsap && !REDUCE) {
+    if (S.sheet) { S.sheet = null; renderSheet(); }
+    pixelWipe(() => goNow(name, params, opts, true)); return;
+  }
+  goNow(name, params, opts);
+}
+function goNow(name, params = {}, { replace = false } = {}, viaPixel = false) {
   S.nav = ROOT.includes(name) ? 'tab' : replace ? 'fade' : 'fwd';
   if (ROOT.includes(name)) { S.stack = []; ls.set('ijzer:tab', name); }
   else if (!replace) S.stack.push(S.route);
-  S.route = { name, ...params }; S.scrollTop = true; S.sheet = null; render();
+  S.route = { name, ...params }; S.scrollTop = true; S.sheet = null; if (viaPixel) S.nav = null; render();
 }
 function back() { S.nav = 'back'; S.route = S.stack.pop() || { name: 'home' }; S.scrollTop = true; render(); }
 
@@ -2835,6 +2997,8 @@ function doRender() {
   app.innerHTML = (S.mode === 'slow' ? '<p class="banner">Verbinding is traag, gegevens komen eraan…</p>' : '') + (views[S.route.name] || viewHome)();
   nav.hidden = !ROOT.includes(S.route.name);
   nav.querySelectorAll('button[data-tab]').forEach((b) => b.setAttribute('aria-current', b.dataset.tab === S.route.name ? 'page' : 'false'));
+  document.querySelector('.pblur')?.toggleAttribute('hidden', nav.hidden);
+  paintPxIcons(nav); requestAnimationFrame(moveNavInd);
   const slot = $('#stage-slot'); if (slot) Avatar.mount(slot, S.bodyBoth ? USERS : [userOf(S.me)]);
   window.scrollTo(0, S.scrollTop ? 0 : y); S.scrollTop = false;
   // horizontale scrollpositie behouden (of het gekozen item in beeld houden)
@@ -3551,7 +3715,7 @@ function viewBody() {
 // ---------- Sheets ----------
 function renderSheet() {
   const root = $('#sheet-root');
-  if (!S.sheet) { animOut(root, '.sheet'); return; }
+  if (!S.sheet) { animOut(root, '.sheet, .menu2'); return; }
   clearTimeout(root._t);
   if (S.sheet.type === 'ex') { if (!root.querySelector('.sheet-in[data-kind="ex"]')) root.innerHTML = ''; renderExSheet(); return; }
   const head = (t) => `<div class="sheet-head"><div class="row" style="justify-content:space-between"><h2>${t}</h2><button class="iconbtn" data-act="sheet-close" aria-label="Sluiten">${IC.x}</button></div></div>`;
@@ -3585,7 +3749,22 @@ function renderSheet() {
       <button class="pick" data-act="finish"><b>Training nu afronden</b></button>
       <button class="btn danger" data-act="discard" data-confirm>${draft?.editing ? 'Stop met bewerken' : 'Training weggooien'}</button>`;
   } else if (S.sheet.type === 'menu') {
-    title = 'Menu';
+    const me = userOf(S.me), ot = other(); const A = achievements(); const lastW = latestBody(S.me, 'weight');
+    const row = (act, r, ic, label, val, chev = true) => `<button class="menu2__i" data-act="${act}" ${r ? `data-r="${r}"` : ''}>${pxSvg(ic, 'pxi menu2__ic')}<span>${label}</span>${val != null ? `<em>${val}</em>` : ''}${chev ? pxSvg('chev', 'pxi menu2__ch') : ''}</button>`;
+    const still = root.querySelector('.menu2') ? 'still' : '';
+    root.innerHTML = `<div class="menu2 ${still}" data-act="sheet-close"><div class="menu2__arc" aria-hidden="true"></div>
+      <div class="menu2__card" role="dialog" aria-label="Menu" data-stop>
+        <div class="menu2__h"><span class="menu2__avs">${faceHtml(me, 44)}${faceHtml(ot, 44)}</span><div><b>${esc(me.name)}</b><small>${S.authEmail ? esc(S.authEmail) : 'samen met ' + esc(ot.name)}</small></div><span class="menu2__tag">TEAM</span></div>
+        ${row('go', 'profile', 'user', 'Profiel &amp; doelen')}
+        ${row('go', 'body', 'body', 'Lichaam &amp; metingen', lastW != null ? nf(lastW) + ' kg' : null)}
+        ${row('go', 'streak', 'flame', 'Streak &amp; prestaties', `${A.filter((x) => x.done).length}/${A.length}`)}
+        ${row('go', 'trainings', 'list', 'Alle trainingen', activityOf().length)}
+        ${row('go', 'progress', 'chartup', 'Voortgang')}
+        <div class="menu2__sep"></div>
+        ${row('switch-user', '', 'swap', 'Wissel naar ' + esc(ot.name), null, false)}
+        ${S.mode === 'supa' ? row('sb-logout', '', 'out', 'Uitloggen', null, false) : ''}
+      </div></div>`;
+    return;
     body = `<button class="pick" data-act="go" data-r="profile"><span class="row">${faceHtml(userOf(S.me), 36)}<span><b>${esc(userOf(S.me).name)}</b><br><small>Profiel, doelen en instellingen</small></span></span>${IC.chev.replace('<svg', '<svg width="18" height="18" style="stroke:var(--muted);fill:none;stroke-width:2"')}</button>
       <button class="pick" data-act="go" data-r="body"><b>Lichaam &amp; metingen</b></button>
       <button class="pick" data-act="switch-user"><span class="row">${dotu(other())}<b>Wissel naar ${esc(other().name)}</b></span></button>`;
