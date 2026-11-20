@@ -982,6 +982,29 @@ button.card:active, .li:active, .pick:active, .ach:active, .chip:active { transf
 .timer-seg button { text-align: center; }
 .dur-row { display: grid; grid-template-columns: 1fr 110px; align-items: center; gap: 10px; margin-top: 8px; }
 .dur-row span { color: var(--muted); font-size: 13px; }
+
+.exhead__b { display: flex; gap: 6px; flex: none; }
+.add-ex-btn { margin-top: 10px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1.5px dashed var(--surface-3); background: transparent; }
+.add-ex-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+.pager .wrap:has(.pager__act) { grid-template-columns: 48px minmax(0, 1fr) auto; }
+.pager__act { display: flex; gap: 6px; }
+.pager__act button { width: 38px; height: 38px; border-radius: 50%; border: 0; }
+.sumrow .erow__b { grid-template-columns: 28px minmax(0, 1fr); padding-right: 4px; }
+.sumrow .erow__t b { white-space: normal; line-height: 1.25; }
+.pager .nums .nums__add, .pager .nums .nums__list, .pager__act .nums__add, .pager__act .nums__list { background: var(--surface-2); color: var(--ink); display: grid; place-items: center; }
+.pager__act .nums__add { background: color-mix(in srgb, var(--orange) 22%, var(--surface-2)); color: #ffb07a; }
+.pager__act svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+.sumrow { grid-template-columns: 40px minmax(0, 1fr) auto; }
+.sumrow__a { display: flex; align-items: center; gap: 4px; padding-right: 8px; }
+.sumrow__a .iconbtn { width: 34px; height: 34px; }
+.sumrow__a svg { width: 16px; height: 16px; }
+.sumrow.is-done .erow__n { background: color-mix(in srgb, var(--blue) 35%, var(--surface-3)); color: #fff; }
+.sumrow.is-done .erow__n svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.6; }
+.sumhead { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.sumhead .fbar, .sumhead p { grid-column: 1 / -1; }
+.chips.exg { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-top: 10px; padding-bottom: 2px; }
+.chips.exg::-webkit-scrollbar { display: none; }
+.chips.exg .chip { flex: none; }
 </style>
 
 <div class="loader" id="loader" aria-hidden="true"><div class="loader__bg"></div>
@@ -1012,7 +1035,7 @@ const GROUPS = { chest: 'Borst', shoulders: 'Schouders', triceps: 'Triceps', bac
 // kind: kg = gewicht × reps, bw = lichaamsgewicht (+ extra kg), time = seconden
 const BASE_EX = [
   ['bench', 'Bankdrukken (stang)', 'chest'], ['incline-db', 'Schuin bankdrukken (dumbbells)', 'chest'], ['db-press', 'Dumbbell press (vlak)', 'chest'],
-  ['chest-press', 'Seated chest press (machine)', 'chest'], ['incline-press-m', 'Seated incline chest press (machine)', 'chest'], ['cable-fly', 'Cable fly', 'chest'], ['pec-deck', 'Seated chest fly (pec deck / butterfly)', 'chest'], ['dips', 'Dips', 'chest', 'bw'], ['pushup', 'Push-ups', 'chest', 'bw'],
+  ['chest-press', 'Seated chest press (machine)', 'chest'], ['incline-press-m', 'Seated incline chest press (machine)', 'chest'], ['cable-fly', 'Cable fly', 'chest'], ['pec-deck', 'Pec deck fly (butterfly machine)', 'chest'], ['dips', 'Dips', 'chest', 'bw'], ['pushup', 'Push-ups', 'chest', 'bw'],
   ['ohp', 'Overhead press (stang)', 'shoulders'], ['db-shoulder', 'Schouderpress (dumbbells)', 'shoulders'], ['lateral', 'Lateral raises (dumbbells)', 'shoulders'], ['shoulder-press-m', 'Seated shoulder press (machine)', 'shoulders'],
   ['cable-lateral', 'Cable lateral raise', 'shoulders'], ['rear-delt', 'Rear delt fly', 'shoulders'], ['front-raise', 'Front raises', 'shoulders'],
   ['pushdown', 'Triceps pushdown (kabel, rechte stang)', 'triceps'], ['rope-pushdown', 'Triceps pushdown (kabel, touw)', 'triceps'], ['oh-ext', 'Overhead triceps extension', 'triceps'], ['skull', 'Skullcrushers', 'triceps'], ['cgbench', 'Close-grip bankdrukken', 'triceps'],
@@ -1030,7 +1053,7 @@ const BASE_EX = [
   // Schouders
   ['arnold', 'Arnold press', 'shoulders'], ['smith-ohp', 'Shoulder press (Smith machine)', 'shoulders'], ['seated-ohp', 'Seated overhead press (stang)', 'shoulders'], ['push-press', 'Push press', 'shoulders'],
   ['lateral-m', 'Lateral raise machine', 'shoulders'], ['lean-lateral', 'Lean-away lateral raise (kabel)', 'shoulders'], ['upright-row', 'Upright row', 'shoulders'], ['cable-front', 'Front raise (kabel)', 'shoulders'],
-  ['reverse-pec', 'Reverse pec deck (rear delt)', 'shoulders'], ['cable-rear', 'Rear delt fly (kabel)', 'shoulders'], ['bent-rear', 'Bent-over rear delt raise', 'shoulders'], ['y-raise', 'Y-raise', 'shoulders'],
+  ['reverse-pec', 'Reverse pec deck (achterkant schouder / bovenrug)', 'shoulders'], ['cable-rear', 'Rear delt fly (kabel)', 'shoulders'], ['bent-rear', 'Bent-over rear delt raise', 'shoulders'], ['y-raise', 'Y-raise', 'shoulders'],
   ['battle-ropes', 'Battle ropes', 'shoulders', 'time'], ['pike-pushup', 'Pike push-ups', 'shoulders', 'bw'], ['handstand-pushup', 'Handstand push-ups', 'shoulders', 'bw'],
   // Triceps
   ['oh-cable-ext', 'Overhead triceps extension (kabel, touw)', 'triceps'], ['single-pushdown', 'Single-arm pushdown (kabel)', 'triceps'], ['reverse-pushdown', 'Reverse-grip pushdown (kabel)', 'triceps'],
@@ -1059,7 +1082,32 @@ const BASE_EX = [
   ['knee-raise', 'Hanging knee raises', 'abs', 'bw'], ['captains-chair', 'Captain’s chair leg raises', 'abs', 'bw'], ['toes-bar', 'Toes to bar', 'abs', 'bw'], ['lying-leg-raise', 'Lying leg raises', 'abs', 'bw'],
   ['side-plank', 'Side plank', 'abs', 'time'], ['hollow', 'Hollow hold', 'abs', 'time'], ['dead-bug', 'Dead bug', 'abs', 'bw'], ['mountain', 'Mountain climbers', 'abs', 'bw'], ['woodchop', 'Woodchopper (kabel)', 'abs'],
   ['pallof', 'Pallof press (kabel)', 'abs'], ['ab-crunch-m', 'Ab crunch machine', 'abs'], ['oblique-crunch', 'Oblique crunch', 'abs', 'bw'], ['v-up', 'V-ups', 'abs', 'bw'], ['burpee', 'Burpees', 'abs', 'bw'],
+  // Extra
+  ['machine-fly', 'Chest fly machine (armen gestrekt)', 'chest'], ['cable-crossover', 'Cable crossover', 'chest'], ['incline-cable-fly', 'Schuine cable fly', 'chest'], ['single-cable-fly', 'Single-arm cable fly', 'chest'],
+  ['decline-press-m', 'Decline chest press (machine)', 'chest'], ['wide-chest-m', 'Wide chest press (machine)', 'chest'], ['floor-press', 'Floor press (dumbbells)', 'chest'], ['svend', 'Svend press', 'chest'], ['decline-db', 'Decline dumbbell press', 'chest'], ['guillotine', 'Guillotine press', 'chest'],
+  ['rear-delt-row', 'Rear delt row (kabel of dumbbell)', 'shoulders'], ['lying-rear', 'Liggende reverse fly (schuine bank)', 'shoulders'], ['cable-y', 'Y-raise (kabel)', 'shoulders'], ['lu-raise', 'Lu raise', 'shoulders'], ['plate-front', 'Front raise (halterschijf)', 'shoulders'],
+  ['cable-upright', 'Upright row (kabel)', 'shoulders'], ['landmine-press', 'Landmine shoulder press (1 arm)', 'shoulders'], ['seated-lateral', 'Seated lateral raise', 'shoulders'], ['partial-lateral', 'Lateral raise partials', 'shoulders'], ['cuban', 'Cuban press', 'shoulders'],
+  ['face-pull-rope', 'Face pull (touw, hoog)', 'shoulders'], ['band-pullapart', 'Band pull-aparts', 'shoulders', 'bw'],
+  ['french-press', 'French press (EZ-bar)', 'triceps'], ['db-skull', 'Skullcrushers (dumbbells)', 'triceps'], ['tate', 'Tate press', 'triceps'], ['cross-ext', 'Cross-body triceps extension (kabel)', 'triceps'], ['single-oh-ext', 'Overhead extension 1 arm (dumbbell)', 'triceps'], ['smith-cg', 'Close-grip bench (Smith)', 'triceps'],
+  ['meadows', 'Meadows row', 'back'], ['kroc', 'Kroc row', 'back'], ['landmine-row', 'Landmine row', 'back'], ['cable-pullover', 'Cable pullover (touw)', 'back'], ['kelso', 'Kelso shrug', 'back'], ['cable-shrug', 'Shrugs (kabel)', 'back'],
+  ['smith-shrug', 'Shrugs (Smith machine)', 'back'], ['scap-pullup', 'Scapular pull-ups', 'back', 'bw'], ['neutral-pulldown', 'Lat pulldown (neutrale greep)', 'back'], ['reverse-pulldown', 'Lat pulldown (onderhandse greep)', 'back'], ['low-row-m', 'Low row machine', 'back'], ['iso-row', 'Iso-lateral row (machine)', 'back'],
+  ['oh-cable-curl', 'Overhead cable curl', 'biceps'], ['cable-preacher', 'Preacher curl (kabel)', 'biceps'], ['hammer-preacher', 'Hammer preacher curl', 'biceps'], ['cross-hammer', 'Cross-body hammer curl', 'biceps'], ['ez-preacher', 'Preacher curl (EZ-bar)', 'biceps'], ['reverse-wrist', 'Reverse wrist curls', 'biceps'],
+  ['single-leg-press', 'Leg press (1 been)', 'legs'], ['reverse-hack', 'Reverse hack squat', 'legs'], ['smith-split', 'Split squat (Smith)', 'legs'], ['pull-through', 'Cable pull-through', 'legs'], ['hip-thrust-m', 'Hip thrust machine', 'legs'], ['single-leg-ext', 'Leg extension (1 been)', 'legs'],
+  ['lying-leg-curl', 'Lying leg curl', 'legs'], ['tibialis', 'Tibialis raises', 'legs', 'bw'], ['donkey-calf', 'Donkey calf raise', 'legs'], ['smith-calf', 'Calf raise (Smith)', 'legs'], ['cossack', 'Cossack squat', 'legs', 'bw'], ['frog-pump', 'Frog pumps', 'legs', 'bw'],
+  ['treadmill', 'Loopband', 'legs', 'time'], ['bike', 'Hometrainer / fiets', 'legs', 'time'], ['stairmaster', 'Stairmaster / traploper', 'legs', 'time'], ['crosstrainer', 'Crosstrainer', 'legs', 'time'], ['incline-walk', 'Incline walk (loopband)', 'legs', 'time'], ['jump-rope', 'Touwtjespringen', 'legs', 'time'],
+  ['cable-side-bend', 'Side bend (kabel)', 'abs'], ['weighted-plank', 'Plank met gewicht', 'abs', 'time'], ['windshield', 'Windshield wipers', 'abs', 'bw'], ['reverse-crunch', 'Reverse crunch', 'abs', 'bw'], ['ab-rollout-m', 'Ab rollout (kabel/machine)', 'abs'], ['landmine-twist', 'Landmine rotation', 'abs'], ['suitcase', 'Suitcase carry', 'abs', 'time'],
 ].map(([id, name, group, kind = 'kg']) => ({ id, name, group, kind }));
+// Bijnamen, zodat je ook vindt wat in de sportschool anders heet
+const EX_ALIAS = {
+  'pec-deck': 'pec deck fly butterfly vlinder chest fly machine borst fly', 'machine-fly': 'pec fly chest fly machine', 'reverse-pec': 'reverse pec deck rear delt fly reverse fly achterste schouder bovenrug rug machine fly',
+  'cable-fly': 'cable crossover kabel fly', 'cable-crossover': 'kabel fly crossover', 'chest-press': 'borst press machine bankdrukken machine', 'incline-press-m': 'schuin incline machine',
+  'lateral': 'zijwaarts heffen side raise zijkant schouder', 'cable-lateral': 'side raise kabel', 'rear-delt': 'reverse fly achterste schouder', 'cable-rear': 'reverse fly kabel achterste schouder', 'face-pull': 'face pull touw achterste schouder bovenrug',
+  'pushdown': 'pushdown triceps kabel stang', 'rope-pushdown': 'pushdown touw rope', 'oh-ext': 'overhead triceps boven hoofd', 'skull': 'skull crusher liggend', 'pulldown': 'lat pull down latissimus rug brede', 'cable-row': 'roeien kabel row zittend', 'row-m': 'roeien machine row',
+  'db-row': 'one arm row roeien dumbbell', 'deadlift': 'deadlift doodtrekken', 'rdl': 'roemeense deadlift hamstrings', 'leg-press': 'beenpers', 'leg-ext': 'beenstrekken quadriceps', 'leg-curl': 'beenbuigen hamstrings', 'seated-leg-curl': 'beenbuigen zittend',
+  'lying-leg-curl': 'beenbuigen liggend', 'calf': 'kuiten', 'seated-calf': 'kuiten zittend', 'standing-calf': 'kuiten staand', 'hip-thrust': 'billen glutes', 'abduction': 'abductor buitenkant billen', 'adduction': 'adductor binnenkant been',
+  'crunch-m': 'buik crunch machine', 'cable-crunch': 'buik kabel', 'plank': 'buik plank', 'db-curl': 'biceps curl dumbbell', 'hammer': 'hamer curl', 'shrug-db': 'trapezius schouders ophalen', 'shrug-bb': 'trapezius', 'treadmill': 'cardio hardlopen lopen',
+  'bike': 'cardio fietsen', 'stairmaster': 'cardio trap', 'crosstrainer': 'cardio elliptical', 'rower': 'cardio roeien', 'shoulder-press-m': 'schouder press machine', 'ohp': 'military press schouder', 'dips': 'dips borst triceps',
+};
 const BASE_TPL = [
   { id: 'push', short: 'Push', name: 'Borst · Triceps · Schouders', cls: 't-push', cat: 'split', ex: ['chest-press', 'incline-press-m', 'pec-deck', 'shoulder-press-m', 'lateral', 'rope-pushdown', 'pushdown'],
     desc: 'Duwdag voor borst, schouders en triceps op de machines: chest press, incline press en chest fly, dan shoulder press en lateral raises, en afsluiten met triceps pushdowns aan touw en stang. Probeer elke week een rep of 2,5 kg meer.' },
@@ -1454,17 +1502,25 @@ function placeholder(e, si, last) {
 // ----- Sheet: oefening kiezen / nieuwe oefening -----
 function renderExSheet() {
   const root = $('#sheet-root');
-  const q = (S.sheet.q || '').toLowerCase();
-  const list = allEx().filter((e) => !q || e.name.toLowerCase().includes(q) || (GROUPS[e.group] || '').toLowerCase().includes(q));
-  const byG = Object.keys(GROUPS).map((g) => [g, list.filter((e) => e.group === g)]).filter(([, l]) => l.length);
+  const norm = (x) => String(x || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
+  const words = norm(S.sheet.q).split(' ').filter(Boolean); const g = S.sheet.g || '';
+  const hay = (e) => norm(`${e.name} ${GROUPS[e.group] || ''} ${EX_ALIAS[e.id] || ''}`);
+  const list = allEx().filter((e) => (!g || e.group === g) && words.every((w) => hay(e).includes(w)));
+  const used = new Map(); for (const w of workoutsOf(S.me).slice(0, 12)) for (const e of w.ex || []) used.set(e.id, (used.get(e.id) || 0) + 1);
+  const inDraft = new Set((S.route.name === 'planex' ? S.pex?.ex : draft?.ex || []).map((e) => e.id));
+  const recent = !words.length ? [...used.entries()].sort((a, b) => b[1] - a[1]).map(([id]) => exById(id)).filter((e) => e && (!g || e.group === g)).slice(0, 8) : [];
+  const byG = Object.keys(GROUPS).map((k) => [k, list.filter((e) => e.group === k)]).filter(([, l]) => l.length);
+  const pickBtn = (e) => `<button class="pick" data-act="add-ex" data-id="${e.id}"><span>${esc(e.name)}${e.custom ? ' <small>(eigen)</small>' : ''}</span><small>${inDraft.has(e.id) ? '<span class="pr">al in training</span>' : e.kind === 'bw' ? 'lichaamsgewicht' : e.kind === 'time' ? 'tijd' : ''}</small></button>`;
   root.innerHTML = `<div class="sheet" data-act="sheet-close"><div class="sheet-in" role="dialog" aria-label="Oefening toevoegen" data-stop>
-    <div class="sheet-head"><div class="row" style="justify-content:space-between"><h2>Oefening toevoegen</h2><button class="iconbtn" data-act="sheet-close" aria-label="Sluiten">${IC.x}</button></div>
-      <input class="in" id="ex-search" placeholder="Zoek oefening of spiergroep" value="${esc(S.sheet.q || '')}" autocomplete="off"></div>
+    <div class="sheet-head"><div class="row" style="justify-content:space-between"><h2>${S.sheet.swap ? 'Oefening vervangen' : 'Oefening toevoegen'}</h2><button class="iconbtn" data-act="sheet-close" aria-label="Sluiten">${IC.x}</button></div>
+      <input class="in" id="ex-search" placeholder="Zoek, bv. pec deck, rear delt, kabel" value="${esc(S.sheet.q || '')}" autocomplete="off">
+      <div class="chips exg" data-hscroll="exg"><button class="chip" data-act="ex-g" data-g="" aria-pressed="${!g}">Alles</button>${Object.entries(GROUPS).map(([k, n]) => `<button class="chip" data-act="ex-g" data-g="${k}" aria-pressed="${g === k}">${n}</button>`).join('')}</div></div>
     <div class="sheet-body">
-      ${byG.map(([g, l]) => `<div class="eyebrow grp-title">${GROUPS[g]}</div>${l.map((e) => `<button class="pick" data-act="add-ex" data-id="${e.id}"><span>${esc(e.name)}${e.custom ? ' <small>(eigen)</small>' : ''}</span><small>${e.kind === 'bw' ? 'lichaamsgewicht' : e.kind === 'time' ? 'tijd' : ''}</small></button>`).join('')}`).join('') || '<div class="empty">Niks gevonden.</div>'}
+      ${recent.length ? `<div class="eyebrow grp-title">Vaak gedaan</div>${recent.map(pickBtn).join('')}` : ''}
+      ${byG.map(([k, l]) => `<div class="eyebrow grp-title">${GROUPS[k]} <span class="muted">${l.length}</span></div>${l.map(pickBtn).join('')}`).join('') || '<div class="empty">Niks gevonden. Voeg hem hieronder zelf toe.</div>'}
       <div class="card" style="margin-top:16px"><h3>Nieuwe oefening</h3>
         <label class="f">Naam<input class="in" id="new-ex-name" value="${esc(S.sheet.q || '')}"></label>
-        <div class="grid2"><label class="f">Spiergroep<select class="in" id="new-ex-group">${Object.entries(GROUPS).map(([g, n]) => `<option value="${g}">${n}</option>`).join('')}</select></label>
+        <div class="grid2"><label class="f">Spiergroep<select class="in" id="new-ex-group">${Object.entries(GROUPS).map(([k, n]) => `<option value="${k}" ${k === g ? 'selected' : ''}>${n}</option>`).join('')}</select></label>
         <label class="f">Soort<select class="in" id="new-ex-kind"><option value="kg">Gewicht × reps</option><option value="bw">Lichaamsgewicht</option><option value="time">Tijd (sec)</option></select></label></div>
         <button class="btn ink" data-act="new-ex">Toevoegen</button></div>
     </div></div></div>`;
@@ -2740,6 +2796,7 @@ function restHtml() {
 }
 function viewActive() {
   if (draft.editing) return viewEditList();
+  if (S.actSum) return viewActiveSum();
   if (draft.cur == null || draft.cur >= draft.ex.length) draft.cur = 0;
   const ci = draft.cur; const e = draft.ex[ci];
   if (!e) return `<div class="wrap screen"><div class="bar-top"><button class="circle" data-act="go" data-r="home" aria-label="Terug">${IC.back}</button><h1>Training</h1><span></span></div><div class="card empty">Nog geen oefeningen.</div><button class="btn cta wide plain" data-act="pick-ex">+ Oefening toevoegen</button><button class="btn danger" data-act="discard" data-confirm>Training weggooien</button></div>`;
@@ -2759,7 +2816,7 @@ function viewActive() {
     <div class="partner-row"><span class="muted small">Training</span>${partnerSeg(draft.partner || '', 'partner', draft.user || S.me)}</div>
     ${draft.noTimer ? `<label class="f dur-row"><span>Duur (min)</span><input class="in num" id="d-dur-nt" inputmode="numeric" data-draft="dur" placeholder="${Math.max(30, draft.ex.length * 10)}" value="${esc(draft.dur || '')}"></label>` : ''}
     <div class="exhead"><div style="min-width:0"><h2>${esc(e.name)}</h2><div class="meta"><span>${GROUPS[e.group] || ''}</span>${last ? `<span>vorige ${relDay(last.date).toLowerCase()}</span>` : '<span>eerste keer</span>'}${tip ? `<span class="tip">${tip}</span>` : ''}</div></div>
-      <button class="iconbtn" data-act="ex-menu" aria-label="Opties">${IC.dots}</button></div>
+      <div class="exhead__b"><button class="iconbtn" data-act="swap-ex" aria-label="Andere oefening kiezen" title="Wisselen">${IC.swap}</button><button class="iconbtn" data-act="ex-menu" aria-label="Opties">${IC.dots}</button></div></div>
     <div class="sets">${e.sets.map((s, si) => { const ph = placeholder(e, si, last); const pv = last?.sets[si];
       return `<div class="set ${s.done ? 'done' : ''}" data-ei="${ci}" data-si="${si}"><span class="n ${si === csi ? 'cur' : ''}">${si + 1}</span>
         ${e.kind === 'time' ? '<span></span>' : `<div class="cell"><input class="in num" id="kg-${ci}-${si}" inputmode="decimal" data-f="kg" value="${s.kg}" placeholder="${ph.kg}" aria-label="Gewicht set ${si + 1}"><span class="u">${unit}</span></div>`}
@@ -2768,14 +2825,15 @@ function viewActive() {
         ${pv ? `<span class="prev">vorige: ${fmtSet(pv, e.kind)}</span>` : ''}</div>`; }).join('')}</div>
     <div class="row"><button class="btn sm" data-act="add-set">+ Set</button>${e.sets.length > 1 ? '<button class="btn sm ghost" data-act="del-set">− Set</button>' : ''}${last && e.sets.some((x) => !x.done) ? '<button class="btn sm blue" data-act="fill-last" style="margin-left:auto">Zelfde als vorige keer</button>' : ''}</div>
     <div class="navbtns" style="margin-top:14px"><button class="btn dark" data-act="ex-prev" ${ci === 0 ? 'disabled' : ''}>← Vorige</button>
-      ${ci === draft.ex.length - 1 ? '<button class="btn next" data-act="finish">Afronden ✓</button>' : '<button class="btn next" data-act="ex-next">Volgende →</button>'}</div>
+      ${ci === draft.ex.length - 1 ? '<button class="btn next" data-act="ex-sum">Overzicht →</button>' : '<button class="btn next" data-act="ex-next">Volgende →</button>'}</div>
+    <button class="btn wide add-ex-btn" data-act="pick-ex">${IC.plus} Oefening toevoegen</button>
     ${fixed ? `<button class="btn blue wide" data-act="finish" style="margin-top:6px">${draft.editing ? 'Wijzigingen opslaan' : 'Training opslaan'}</button>` : ''}
     ${fixed ? '' : '<button class="btn ghost wide" data-act="timer-off" style="margin-top:6px">Verder zonder timer</button>'}
     <button class="btn danger wide" data-act="discard" data-confirm style="margin-top:6px">${draft.editing ? 'Stop met bewerken' : draft.manual && !draft.noTimer ? 'Niet toevoegen' : 'Training annuleren'}</button>
   </div>
   <div class="pager"><div class="wrap">${ring(done / (total || 1), `${ci + 1}/${draft.ex.length}`)}
     <div class="nm"><b>${esc(e.name)}<small>${GROUPS[e.group] || ''}</small></b>
-      <div class="nums">${draft.ex.map((x, i) => `<button data-act="ex-go" data-i="${i}" class="${x.sets.every((s) => s.done) ? 'dn' : ''}" aria-current="${i === ci}" aria-label="Oefening ${i + 1}">${i + 1}</button>`).join('')}</div></div></div></div>`;
+      <div class="nums">${draft.ex.map((x, i) => `<button data-act="ex-go" data-i="${i}" class="${x.sets.every((s) => s.done) ? 'dn' : ''}" aria-current="${i === ci}" aria-label="Oefening ${i + 1}">${i + 1}</button>`).join('')}</div></div><div class="pager__act"><button class="nums__add" data-act="pick-ex" aria-label="Oefening toevoegen">${IC.plus}</button><button class="nums__list" data-act="ex-sum" aria-label="Overzicht">${IC.grid}</button></div></div></div>`;
 }
 setInterval(() => {
   if (rest && Date.now() >= rest.end) { rest = null; $('.restov')?.remove(); try { navigator.vibrate?.([200, 100, 200]); } catch { /* */ } toast('Rust voorbij, volgende set!'); }
@@ -2785,6 +2843,24 @@ setInterval(() => {
   }
 }, 1000);
 
+function viewActiveSum() {
+  const fixed = draft.manual || draft.editing;
+  const total = draft.ex.reduce((a, x) => a + x.sets.length, 0), done = draft.ex.reduce((a, x) => a + x.sets.filter((s) => s.done || (fixed && s.reps !== '')).length, 0);
+  const rows = draft.ex.map((e, i) => { const dn = e.sets.filter((s) => s.done || (fixed && s.reps !== '')); const all = e.sets.length && dn.length === e.sets.length;
+    return `<div class="erow sumrow ${all ? 'is-done' : ''}" data-i="${i}"><span class="drag-h" role="button" tabindex="0" aria-label="Sleep ${esc(e.name)} naar een andere plek">${IC_GRIP}</span>
+      <button class="erow__b" data-act="ex-go" data-i="${i}"><span class="erow__n">${all ? IC.check : i + 1}</span><span class="erow__t"><b>${esc(e.name)}</b><small>${GROUPS[e.group] || ''} · ${dn.length}/${e.sets.length} sets</small>${dn.length ? `<small class="erow__s">${dn.map((x) => fmtSet({ kg: num(x.kg) || 0, reps: num(x.reps) || 0 }, e.kind)).join(' · ')}</small>` : ''}</span></button>
+      <div class="sumrow__a"><button class="iconbtn sm" data-act="swap-i" data-i="${i}" aria-label="${esc(e.name)} vervangen">${IC.swap}</button><button class="iconbtn sm" data-act="del-i" data-i="${i}" data-confirm aria-label="${esc(e.name)} verwijderen">${IC.x}</button></div></div>`; }).join('');
+  return `<div class="wrap screen full" style="padding-bottom:170px">
+    <div class="bar-top"><button class="circle" data-act="sum-close" aria-label="Terug naar je oefening">${IC.back}</button><h1>Overzicht</h1><span class="muted small" id="clock">${fixed ? '' : mmss(elapsed() / 1000)}</span></div>
+    <section class="card sumhead"><div>${dotNum(done)}<small class="muted"> / ${total} sets</small></div><div>${dotNum(draft.ex.length)}<small class="muted"> ${draft.ex.length === 1 ? 'oefening' : 'oefeningen'}</small></div>${fadeBar(total ? done / total : 0)}
+      <p class="muted small" style="margin:0">${done >= total && total ? 'Alles gedaan. Nog iets extra doen of afronden?' : 'Tik op een oefening om verder te gaan. Sleep aan ⠿ om de volgorde te wijzigen.'}</p></section>
+    <div class="elist" id="elist">${rows || '<div class="card empty">Nog geen oefeningen.</div>'}</div>
+    <button class="btn wide add-ex-btn" data-act="pick-ex">${IC.plus} Oefening toevoegen</button>
+    ${draft.noTimer ? `<label class="f dur-row"><span>Duur (min)</span><input class="in num" id="d-dur-nt" inputmode="numeric" data-draft="dur" placeholder="${Math.max(30, draft.ex.length * 10)}" value="${esc(draft.dur || '')}"></label>` : ''}
+    <label class="f">Notitie<textarea class="in" id="d-note" data-draft="note" placeholder="Hoe ging het?">${esc(draft.note || '')}</textarea></label>
+  </div>
+  <div class="dock"><div class="wrap stack" style="gap:8px"><button class="btn cta wide" data-act="finish">Training afronden</button><button class="btn ghost wide" data-act="sum-close">Verder trainen</button></div></div>`;
+}
 function startWorkout(tplId, exIds, name, planId) {
   if (draft) { toast('Je hebt al een training open.'); go('active'); return; }
   const t = tplId ? tplById(tplId) : null;
@@ -3328,10 +3404,15 @@ document.addEventListener('click', async (ev) => {
     case 'del-set': cur().sets.pop(); saveDraft(); render(); break;
     case 'ex-prev': draft.cur = Math.max(0, draft.cur - 1); saveDraft(); S.scrollTop = true; render(); break;
     case 'ex-next': draft.cur = Math.min(draft.ex.length - 1, draft.cur + 1); saveDraft(); S.scrollTop = true; render(); break;
-    case 'ex-go': draft.cur = +t.dataset.i; saveDraft(); S.scrollTop = true; render(); break;
+    case 'ex-g': S.sheet.g = t.dataset.g; renderExSheet(); break;
+    case 'ex-sum': S.actSum = true; stopRest(); S.scrollTop = true; render(); break;
+    case 'sum-close': S.actSum = false; S.scrollTop = true; render(); break;
+    case 'swap-i': draft.cur = +t.dataset.i; saveDraft(); S.sheet = { type: 'ex', q: '', g: draft.ex[draft.cur]?.group || '', swap: true }; renderSheet(); break;
+    case 'del-i': draft.ex.splice(+t.dataset.i, 1); draft.cur = Math.min(draft.cur || 0, Math.max(0, draft.ex.length - 1)); saveDraft(); render(); break;
+    case 'ex-go': S.actSum = false; draft.cur = +t.dataset.i; saveDraft(); S.scrollTop = true; render(); break;
     case 'ex-menu': S.sheet = { type: 'exmenu' }; renderSheet(); break;
     case 'ex-del': draft.ex.splice(draft.cur, 1); draft.cur = Math.max(0, Math.min(draft.cur, draft.ex.length - 1)); S.sheet = null; saveDraft(); render(); break;
-    case 'swap-ex': S.sheet = { type: 'ex', q: GROUPS[cur()?.group] || '', swap: true }; renderSheet(); break;
+    case 'swap-ex': S.sheet = { type: 'ex', q: '', g: cur()?.group || '', swap: true }; renderSheet(); break;
     case 'pick-ex': S.sheet = { type: 'ex', q: '' }; renderSheet(); setTimeout(() => $('#ex-search')?.focus(), 50); break;
     case 'sheet-close': S.sheet = null; renderSheet(); break;
     case 'add-ex': {
@@ -3339,7 +3420,7 @@ document.addEventListener('click', async (ev) => {
       if (S.route.name === 'planex') { const e = exById(t.dataset.id); S.sheet = null; if (e) { const l = lastSession(S.me, e.id); S.pex.ex.push({ id: e.id, name: e.name, group: e.group, kind: e.kind, sets: (l?.sets || [{}, {}, {}]).map((x) => ({ kg: x.kg ?? '', reps: x.reps ?? '' })) }); } render(); openModal({ type: 'exedit', i: S.pex.ex.length - 1 }); break; }
       const swap = S.sheet?.swap; S.sheet = null;
       if (swap) { const i = draft.cur; addExToDraft(t.dataset.id); const n = draft.ex.pop(); draft.ex[i] = n; }
-      else { addExToDraft(t.dataset.id); draft.cur = draft.ex.length - 1; }
+      else { addExToDraft(t.dataset.id); draft.cur = draft.ex.length - 1; S.actSum = false; }
       saveDraft(); S.scrollTop = !draft.editing; render(); if (draft.editing && !swap) openModal({ type: 'exedit', i: draft.ex.length - 1 }); break;
     }
     case 'new-ex': {
@@ -3350,7 +3431,7 @@ document.addEventListener('click', async (ev) => {
       if (draft && !S.sheet?.standalone) { addExToDraft(id); draft.cur = draft.ex.length - 1; saveDraft(); }
       S.sheet = null; render(); toast(`${name} toegevoegd.`); break;
     }
-    case 'finish': S.sheet = null; await finishWorkout(); break;
+    case 'finish': S.sheet = null; S.actSum = false; await finishWorkout(); break;
     case 'discard': { const was = draft?.editing ? 'Bewerken gestopt.' : 'Training geannuleerd.'; draft = null; saveDraft(); rest = null; S.sheet = null; go('home'); toast(was); break; }
     case 'rest': if (rest) { rest.end += +t.dataset.d * 1000; rest.total = Math.max(rest.total, (rest.end - Date.now()) / 1000); } break;
     case 'rest-stop': stopRest(); break;
