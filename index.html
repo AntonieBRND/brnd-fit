@@ -12,7 +12,7 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}html,body{background:#05070c}.logo-loader{position:fixed;inset:-160px 0;z-index:2147483000;background:#05070c}html.intro body>*:not(.logo-loader){visibility:hidden!important}</style>
 </head><body>
 <title>BRND FIT</title>
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
@@ -1368,16 +1368,20 @@ nav.tabs .pill3 button[aria-current="page"] .pxi { animation: pop .45s cubic-bez
 .logo-loader__logo img { -webkit-user-drag: none; user-select: none; }
 
 html.intro nav.tabs, html.intro .pblur, html.intro .pblur-top { visibility: hidden !important; }
-html.intro body { overflow: hidden; }
+
 .topnav { transition: none !important; }
 html.intro-out nav.tabs .wrap { animation: nav-in .6s cubic-bezier(.2,.8,.2,1) both; }
 html.intro-out .pblur, html.intro-out .pblur-top { animation: lb-fade .6s ease both; }
 @keyframes nav-in { from { opacity: 0; transform: translateY(24px); } }
-.logo-loader { inset: -120px 0 !important; height: auto; }
-.logo-loader__track { bottom: calc(120px + 12vh) !important; }
+.logo-loader { inset: -160px 0 !important; height: auto; z-index: 2147483000 !important; background: #05070c; }
+.logo-loader__track { bottom: calc(160px + 12vh) !important; }
 html.intro #app { visibility: hidden; }
 html.intro-out #app { animation: lb-fade .55s ease both; }
 
+
+/* koppen staan meteen op hun vaste plek: zelfde afstand bovenin als tijdens scrollen */
+.screen > .topnav, .screen > .bar-top { top: calc(10px + env(safe-area-inset-top, 0px)) !important; margin-top: -10px; }
+.shd { top: calc(10px + env(safe-area-inset-top, 0px)) !important; }
 </style>
 
 <div class="logo-loader" id="loader" data-logo-loader-init aria-hidden="true">
@@ -2977,6 +2981,7 @@ function runIntro() {
 // Tijdens de intro zijn menu en glas-blur verborgen (iOS tekent glas soms heel even over de intro heen)
 function endIntro() {
   const h = document.documentElement; if (!h.classList.contains('intro')) return;
+  scrollTo(0, 0);
   h.classList.remove('intro'); h.classList.add('intro-out'); setTimeout(() => h.classList.remove('intro-out'), 900);
 }
 setTimeout(endIntro, 6000);
@@ -3003,7 +3008,7 @@ function playIntro(root) {
       .to(stack, { scale: 1, duration: 0.6, ease: 'elastic.out(1, 0.5)' })
       .to(stack, { autoAlpha: 0 }, 'impact+=0.5')
       .call(endIntro, null, 'impact+=0.55')
-      .to(bg, { autoAlpha: 0, duration: 0.55, ease: 'power2.inOut' }, 'impact+=0.6');
+      .to(root, { autoAlpha: 0, duration: 0.55, ease: 'power2.inOut' }, 'impact+=0.6');
   }
   if (bar) tl.to(bar, { scaleX: 1, duration: tl.labels.impact, ease: 'power2.inOut' }, 0).to(track, { autoAlpha: 0 }, 'impact+=0.5');
 }
@@ -3027,6 +3032,7 @@ function runIntroOld() {
 }
 
 // ---------- Kopbalk: verdwijnt bij omlaag scrollen, komt terug bij omhoog ----------
+try { history.scrollRestoration = 'manual'; } catch { /* */ }
 let lastY = 0;
 addEventListener('scroll', () => {
   const y = scrollY; const h = document.documentElement;
