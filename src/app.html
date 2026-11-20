@@ -1354,13 +1354,11 @@ nav.tabs .pill3 button[aria-current="page"] .pxi { animation: pop .45s cubic-bez
 html.intro nav.tabs, html.intro .pblur, html.intro .pblur-top { visibility: hidden !important; }
 
 .topnav { transition: none !important; }
-html.intro-out nav.tabs .wrap { animation: nav-in .6s cubic-bezier(.2,.8,.2,1) both; }
-html.intro-out .pblur, html.intro-out .pblur-top { animation: lb-fade .6s ease both; }
 @keyframes nav-in { from { opacity: 0; transform: translateY(24px); } }
 .logo-loader { inset: 0 0 auto 0 !important; height: 100vh !important; height: 100lvh !important; z-index: 2147483000 !important; background: #05070c; }
 .logo-loader__track { bottom: 12% !important; }
 html.intro #app { visibility: hidden; }
-html.intro-out #app { animation: lb-fade .55s ease both; }
+
 
 
 /* koppen staan meteen op hun vaste plek: zelfde afstand bovenin als tijdens scrollen */
@@ -2991,7 +2989,7 @@ function playIntro(root) {
       .to(stack, { scale: 1.05, duration: 0.1 }, 'impact')
       .to(stack, { scale: 1, duration: 0.6, ease: 'elastic.out(1, 0.5)' })
       .to(stack, { autoAlpha: 0 }, 'impact+=0.5')
-      .call(endIntro, null, 'impact+=0.55')
+      .call(endIntro, null, 'impact+=0.15')
       .to(root, { autoAlpha: 0, duration: 0.55, ease: 'power2.inOut' }, 'impact+=0.6');
   }
   if (bar) tl.to(bar, { scaleX: 1, duration: tl.labels.impact, ease: 'power2.inOut' }, 0).to(track, { autoAlpha: 0 }, 'impact+=0.5');
