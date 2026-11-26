@@ -2231,6 +2231,8 @@ function viewPadel() {
   return `<div class="wrap screen full" style="padding-bottom:140px">
     <div class="bar-top"><button class="circle" data-act="back" aria-label="Terug">${IC.back}</button><h1>${P.id ? 'Padel bewerken' : 'Padel loggen'}</h1><span></span></div>
     <div class="padel-hero">${phDiv(photoUrl('tpl_padel'))}${photoUrl('tpl_padel') ? '' : `<span class="padel-hero__ic">${PADEL_ICON}</span>`}<div><span class="plate t-padel">Padel</span><h1>Een uurtje padel</h1><p class="muted" style="margin:4px 0 0">In plaats van de gym. Telt mee voor je weekdoel en calorieën.</p></div></div>
+    <section class="card"><h2>Soort training</h2><div class="chips"><button class="chip" aria-pressed="true">Padel</button>${allTpl().filter((x) => !x.sport).map((x) => `<button class="chip" data-act="pd-tpl" data-id="${x.id}">${esc(x.short)}</button>`).join('')}</div>
+      <p class="muted small" style="margin:0">Per ongeluk padel? Kies de training die je wél deed.</p></section>
     <section class="card"><h2>Met wie?</h2>${partnerSeg(P.partner || '', 'pd-partner', P.owner || S.me)}</section>
     <section class="card">
       <div class="grid2"><label class="f">Datum<input class="in" type="date" id="pd-date" max="${todayStr()}" value="${P.date}"></label><label class="f">Begonnen om<input class="in" type="time" id="pd-time" value="${P.time}"></label></div>
@@ -2677,7 +2679,7 @@ function viewDetail() {
     <section class="card wprog"><div class="mini__h"><span><b>Jouw progressie</b><br><small class="muted">${t.sport ? 'Hoe vaak jullie winnen' : 'Gemiddelde krachttoename sinds je eerste keer'}</small></span></div>
       <div class="wprog__pct">${dotNum(pr.big, 'xl')}</div>${fadeBar(pr.frac)}<div class="wprog__f">${pr.foot.map((x) => `<span>${x}</span>`).join('')}</div></section>
     ${pl ? `<section class="card"><div class="sec" style="margin:0"><h2>Planning</h2>${plAvs(pl)}</div>
-        <div class="grid2"><button class="btn" data-act="plan-time-edit" data-id="${pl.id}">${IC.clock}Dag &amp; tijd</button>${t.sport ? '' : `<button class="btn" data-act="planex" data-id="${pl.id}">${IC.grid}Oefeningen</button>`}</div>
+        <div class="grid2"><button class="btn" data-act="plan-time-edit" data-id="${pl.id}">${IC.clock}Soort, dag &amp; tijd</button>${t.sport ? '' : `<button class="btn" data-act="planex" data-id="${pl.id}">${IC.grid}Oefeningen</button>`}</div>
         <button class="btn danger" data-act="del-plan" data-id="${pl.id}" data-confirm>Planning verwijderen</button></section>`
     : `<section class="card"><h2>Inplannen</h2>${partnerSeg(S.plan.partner || (t.sport ? other().id : ''), 'plan-partner')}
       ${datePicker(P.day, 'plan-day')}
@@ -3867,7 +3869,8 @@ function renderSheet() {
       <button class="pick" data-act="add-open" data-k="padel"><span><b>Padel</b><br><small>Al gespeeld, of een potje inplannen</small></span><span class="pick-ic">${PADEL_ICON}</span></button>`;
   } else if (S.sheet.type === 'sessmenu') {
     title = 'Training';
-    body = `<div class="f"><span>Met wie</span>${partnerSeg(draft.partner || '', 'partner', draft.user || S.me)}</div>
+    body = `<div class="f"><span>Soort training</span><div class="chips">${allTpl().map((x) => `<button class="chip" data-act="sess-tpl" data-id="${x.id}" aria-pressed="${draft.tpl === x.id}">${esc(x.short)}</button>`).join('')}</div></div>
+      <div class="f"><span>Met wie</span>${partnerSeg(draft.partner || '', 'partner', draft.user || S.me)}</div>
       <div class="grid2"><label class="f">Datum<input class="in" type="date" data-draft="date" max="${todayStr()}" value="${draft.date}"></label><label class="f">Duur (min)<input class="in num" inputmode="numeric" data-draft="dur" placeholder="${Math.max(30, draft.ex.length * 10)}" value="${esc(draft.dur || '')}"></label></div>
       <label class="f">Calorieën<input class="in num" inputmode="numeric" data-draft="kcal" placeholder="automatisch" value="${esc(draft.kcal || '')}"></label>
       <label class="f">Notitie<textarea class="in" data-draft="note" placeholder="Hoe ging het?">${esc(draft.note || '')}</textarea></label>
@@ -4031,6 +4034,7 @@ document.addEventListener('click', async (ev) => {
     case 'pf-time': S.planf.time = t.dataset.t; render(); break;
     case 'pf-save': {
       const F = S.planf; const pl = { user: F.user || S.me, tpl: F.tpl, date: F.day, time: F.time, partner: F.partner || '' };
+      const oldPl = F.id ? S.data.plans.find((x) => x.id === F.id) : null; if (oldPl?.ex && oldPl.tpl === F.tpl) pl.ex = oldPl.ex;
       if (await Store.put('plans', F.id || uid(), pl)) { toast(F.id ? `Aangepast: ${relDay(pl.date).toLowerCase()} om ${pl.time}.` : `Ingepland: ${relDay(pl.date).toLowerCase()} om ${pl.time}.`); S.planf = null; S.add = null; go('home'); }
       break;
     }
@@ -4039,6 +4043,25 @@ document.addEventListener('click', async (ev) => {
     case 'pd-int': readPadel(); S.padel.intensity = t.dataset.v; render(); break;
     case 'pd-res': readPadel(); S.padel.result = S.padel.result === t.dataset.v ? '' : t.dataset.v; render(); break;
     case 'pd-save': await savePadel(); break;
+    case 'pd-tpl': { // padel omzetten naar fitness (zelfde training, ander soort)
+      readPadel(); const P = S.padel; const nt = tplById(t.dataset.id); if (!nt) break;
+      if (draft && !(draft.editing && draft.editing === P.id)) { toast('Rond eerst je lopende training af.'); break; }
+      const [hh, mi] = (P.time || '07:00').split(':').map(Number); const start = parseDate(P.date) + ((hh || 0) * 60 + (mi || 0)) * 60000;
+      draft = { id: P.id || uid(), user: P.owner || S.me, tpl: nt.id, name: nt.name, date: P.date, start, note: P.note || '', cur: 0, pausedMs: 0, dur: P.dur || '', kcal: '', partner: P.partner || '', ex: [], manual: true, noTimer: true };
+      if (P.id) draft.editing = P.id;
+      for (const id of nt.ex) addExToDraft(id);
+      S.padel = null; S.scOpen = null; saveDraft(); toast(`Omgezet naar ${nt.short}. Vul je sets in.`); goNow('active', {}, { replace: true }); break;
+    }
+    case 'sess-tpl': { // soort training van de lopende/te bewerken training wisselen
+      const nt = tplById(t.dataset.id); if (!nt || !draft) break;
+      if (nt.sport) {
+        const d = draft; S.padel = { id: d.editing || null, owner: d.user || S.me, date: d.date, time: d.start ? new Date(d.start).toTimeString().slice(0, 5) : '07:00', dur: String(num(d.dur) || 60), partner: d.partner || '', intensity: 'normaal', result: '', score: '', kcal: '', note: d.note || '', rating: 0 };
+        draft = null; saveDraft(); S.sheet = null; renderSheet(); goNow('padel', {}, { replace: true }); toast('Omgezet naar padel. Sla hem op.'); break;
+      }
+      draft.tpl = nt.id; draft.name = nt.name;
+      if (!draft.ex.some((e) => e.sets.some((x) => x.done))) { draft.ex = []; for (const id of nt.ex) addExToDraft(id); }
+      saveDraft(); toast(`Training is nu ${nt.short}.`); render(); break;
+    }
     case 'fav': {
       ev.stopPropagation();
       const p = profile(); const f = new Set(p.favs || []); f.has(t.dataset.id) ? f.delete(t.dataset.id) : f.add(t.dataset.id);
